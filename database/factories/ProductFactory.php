@@ -7,7 +7,12 @@ use Faker\Generator as Faker;
 
 $factory->define(Product::class, function (Faker $faker) {
     return [
-        'name'=>$faker->name(),
-        'category'=>$faker->randomElement(['makanan','minuman','pakaian','elektronik'])
+        'agent_id'=>1,
+        'name'=>$faker->firstName(),
+        'price'=>"1000",
+        'weight'=>"100 gr",
+        'description'=>$faker->lastName(),
+        'category'=>1,
+        'status'=>"1",
     ];
 });
