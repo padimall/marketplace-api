@@ -13,7 +13,10 @@ class BuyerController extends Controller
         ]);
 
         $type = $request['request_type'];
-        $data = new Request($request['data']);
+        if(!is_null($request['data'])){
+            $data = new Request($request['data']);
+        }
+
         if($type == 1){
             return $this->showAll();
         }
