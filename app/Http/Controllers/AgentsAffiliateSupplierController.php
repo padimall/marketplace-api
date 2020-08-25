@@ -7,39 +7,105 @@ use Illuminate\Http\Request;
 
 class AgentsAffiliateSupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request){
+        $request->validate([
+            'request_type'=>'required'
+        ]);
+
+        $type = $request['request_type'];
+        $data = new Request($request['data']);
+        if($type == 1){
+            return $this->showAll();
+        }
+        else if($type == 2){
+            return $this->show($data);
+        }
+        else if($type == 3){
+            return $this->store($data);
+        }
+        else if($type == 4){
+            return $this->update($data);
+        }
+    }
+
+    public function showAll()
     {
         $data = Agents_affiliate_supplier::all();
         if(is_null($data)){
             return response()->json([
+                'status' => 0,
                 'message' => 'Resource not found!'
             ],404);
         }
-        return response()->json($data,200);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
     }
 
-    public function show($id)
+    public function show(Request $request)
     {
-        $data = Agents_affiliate_supplier::find($id);
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data = Agents_affiliate_supplier::find($request['target_id']);
         if(is_null($data)){
             return response()->json([
+                'status' => 0,
                 'message' => 'Resource not found!'
             ],404);
         }
-        return response()->json($data,200);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'supplier_id' => 'required|exists:suppliers,id',
+            'agent_id' => 'required|exists:agents,id'
+        ]);
+
         $data = $request->all();
         $response = Agents_affiliate_supplier::create($data);
-        return response()->json($response,201);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource created!'
+        ],201);
     }
 
-    public function update(Request $request, Agents_affiliate_supplier $data)
+    public function update(Request $request)
     {
-        $data->update($request->all());
-        return response()->json($data,200);
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data = Agents_affiliate_supplier::find($request['target_id']);
+
+        if(!is_null($request['supplier_id'])){
+            $request->validate([
+                'supplier_id' => 'required|exists:suppliers,id'
+            ]);
+            $data->supplier_id = $request['supplier_id'];
+        }
+
+        if(!is_null($request['agent_id'])){
+            $request->validate([
+                'agent_id' => 'required|exists:agents,id'
+            ]);
+            $data->agent_id = $request['agent_id'];
+        }
+
+        $data->save();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource updated!'
+        ],200);
     }
 
     public function delete($id){
