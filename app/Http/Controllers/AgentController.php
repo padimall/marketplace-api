@@ -13,20 +13,17 @@ class AgentController extends Controller
         ]);
 
         $type = $request['request_type'];
-        if(!is_null($request['data'])){
-            $data = new Request($request['data']);
-        }
         if($type == 1){
             return $this->showAll();
         }
         else if($type == 2){
-            return $this->show($data);
+            return $this->show($request);
         }
         else if($type == 3){
-            return $this->store($data);
+            return $this->store($request);
         }
         else if($type == 4){
-            return $this->update($data);
+            return $this->update($request);
         }
     }
 

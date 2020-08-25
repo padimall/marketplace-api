@@ -37,7 +37,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/supplier','SupplierController@index');
 
         //Agents Affiliate Supplier Route
-        Route::post('/agentsaffiliatesupplier','AgentsAffiliateSupplierController@index');
+        Route::post('/agents-affiliate-supplier','AgentsAffiliateSupplierController@index');
 
     });
 
