@@ -30,11 +30,34 @@ class BuyerController extends Controller
         else if($type == 4){
             return $this->update($request);
         }
+        else if($type == 5){
+            return $this->showLimit($request);
+        }
     }
 
     public function showAll()
     {
         $data = Buyer::all();
+        if(sizeOf($data)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function showLimit(Request $request)
+    {
+        $request->validate([
+            'limit' => 'required'
+        ]);
+
+        $data = Buyer::inRandomOrder()->limit($request['limit'])->get();
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
@@ -55,7 +78,7 @@ class BuyerController extends Controller
         ]);
 
         $data = Buyer::find($request['target_id']);
-        if(sizeOf($data)==0){
+        if(is_null($data)){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
