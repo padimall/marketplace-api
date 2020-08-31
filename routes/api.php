@@ -39,6 +39,10 @@ Route::group(['prefix' => 'v1'], function () {
         //Agents Affiliate Supplier Route
         Route::post('/agents-affiliate-supplier','AgentsAffiliateSupplierController@index');
 
+        Route::post('/product_category','ProductsCategoryController@index');
+        Route::post('/product','ProductController@index');
+        Route::post('/cart','CartController@index');
+
     });
 
 });

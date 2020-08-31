@@ -7,9 +7,13 @@ use Faker\Generator as Faker;
 
 $factory->define(Invoices_agent::class, function (Faker $faker) {
     return [
-        'invoices_id'=>1,
+        'invoices_id'=>function(){
+            return App\Invoice::inRandomOrder()->pluck('id')->first();
+        },
         'invoice_status'=>"INV status",
-        'agent_id'=>1,
+        'agent_id'=>function(){
+            return App\Agent::inRandomOrder()->pluck('id')->first();
+        },
         'status'=>1,
     ];
 });

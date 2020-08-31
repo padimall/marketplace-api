@@ -14,9 +14,9 @@ class CreateCheckoutLogisticsTable extends Migration
     public function up()
     {
         Schema::create('checkout_logistics', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('checkout_id');
-            $table->unsignedInteger('logistic_type');
+            $table->uuid('id')->primary();
+            $table->uuid('checkout_id');
+            $table->uuid('logistic_type');
             $table->timestamps();
             $table->foreign('checkout_id')->references('id')->on('checkouts');
             $table->foreign('logistic_type')->references('id')->on('logistics');

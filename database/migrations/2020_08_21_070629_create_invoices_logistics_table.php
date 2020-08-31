@@ -14,9 +14,9 @@ class CreateInvoicesLogisticsTable extends Migration
     public function up()
     {
         Schema::create('invoices_logistics', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('invoices_id');
-            $table->unsignedInteger('logistic_id');
+            $table->uuid('id')->primary();
+            $table->uuid('invoices_id');
+            $table->uuid('logistic_id');
             $table->integer('status');
             $table->timestamps();
             $table->foreign('invoices_id')->references('id')->on('invoices');

@@ -7,7 +7,11 @@ use Faker\Generator as Faker;
 
 $factory->define(Agents_affiliate_supplier::class, function (Faker $faker) {
     return [
-        'supplier_id'=>1,
-        'agent_id'=>1,
+        'supplier_id'=>function(){
+            return App\Supplier::inRandomOrder()->pluck('id')->first();
+        },
+        'agent_id'=>function(){
+            return App\Agent::inRandomOrder()->pluck('id')->first();
+        },
     ];
 });

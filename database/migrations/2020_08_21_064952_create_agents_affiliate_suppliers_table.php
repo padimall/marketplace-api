@@ -14,9 +14,9 @@ class CreateAgentsAffiliateSuppliersTable extends Migration
     public function up()
     {
         Schema::create('agents_affiliate_suppliers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('supplier_id');
-            $table->unsignedInteger('agent_id');
+            $table->uuid('id')->primary();
+            $table->uuid('supplier_id');
+            $table->uuid('agent_id');
             $table->timestamps();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
             $table->foreign('agent_id')->references('id')->on('agents');

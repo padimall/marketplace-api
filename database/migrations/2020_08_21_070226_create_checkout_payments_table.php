@@ -14,9 +14,9 @@ class CreateCheckoutPaymentsTable extends Migration
     public function up()
     {
         Schema::create('checkout_payments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('checkout_id');
-            $table->unsignedInteger('payment_type');
+            $table->uuid('id')->primary();
+            $table->uuid('checkout_id');
+            $table->uuid('payment_type');
             $table->timestamps();
             $table->foreign('checkout_id')->references('id')->on('checkouts');
             $table->foreign('payment_type')->references('id')->on('payments');

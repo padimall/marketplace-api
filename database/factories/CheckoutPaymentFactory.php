@@ -7,7 +7,11 @@ use Faker\Generator as Faker;
 
 $factory->define(Checkout_payment::class, function (Faker $faker) {
     return [
-        'checkout_id'=>1,
-        'payment_type'=>1,
+        'checkout_id'=>function(){
+            return App\Checkout::inRandomOrder()->pluck('id')->first();
+        },
+        'payment_type'=>function(){
+            return App\Payment::inRandomOrder()->pluck('id')->first();
+        },
     ];
 });

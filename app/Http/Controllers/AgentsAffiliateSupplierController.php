@@ -30,7 +30,7 @@ class AgentsAffiliateSupplierController extends Controller
     public function showAll()
     {
         $data = Agents_affiliate_supplier::all();
-        if(is_null($data)){
+        if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
@@ -50,7 +50,7 @@ class AgentsAffiliateSupplierController extends Controller
         ]);
 
         $data = Agents_affiliate_supplier::find($request['target_id']);
-        if(is_null($data)){
+        if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'

@@ -30,7 +30,7 @@ class BuyerController extends Controller
     public function showAll()
     {
         $data = Buyer::all();
-        if(is_null($data)){
+        if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
@@ -50,7 +50,7 @@ class BuyerController extends Controller
         ]);
 
         $data = Buyer::find($request['target_id']);
-        if(is_null($data)){
+        if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'

@@ -7,39 +7,143 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index()
-    {
-        $data = Cart::all();
-        if(is_null($data)){
-            return response()->json([
-                'message' => 'Resource not found!'
-            ],404);
+    public function index(Request $request){
+        $request->validate([
+            'request_type'=>'required'
+        ]);
+
+        $type = $request['request_type'];
+        if($type == 1){
+            return $this->showAll();
         }
-        return response()->json($data,200);
+        else if($type == 2){
+            return $this->show($request);
+        }
+        else if($type == 3){
+            return $this->store($request);
+        }
+        else if($type == 4){
+            return $this->update($request);
+        }
+        else if($type == 5){
+            return $this->showLimit($request);
+        }
     }
 
-    public function show($id)
+    public function showAll()
     {
-        $data = Cart::find($id);
-        if(is_null($data)){
+        $data = Cart::all();
+        if(sizeOf($data)==0){
             return response()->json([
+                'status' => 0,
                 'message' => 'Resource not found!'
             ],404);
         }
-        return response()->json($data,200);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function showLimit(Request $request)
+    {
+        $request->validate([
+            'limit' => 'required'
+        ]);
+        $data = Cart::inRandomOrder()->limit($request['limit'])->get();
+        if(sizeOf($data)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function show(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data = Cart::find($request['target_id']);
+        if(sizeOf($data)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
     }
 
     public function store(Request $request)
     {
+        //edit here
+        $request->validate([
+            'buyer_id'=> 'required|exists:buyers,id',
+            'product_id'=> 'required|exists:products,id',
+            'quantity'=> 'required',
+            'status'=> 'required',
+        ]);
+
         $data = $request->all();
         $response = Cart::create($data);
-        return response()->json($response,201);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource created!'
+        ],201);
     }
 
-    public function update(Request $request, Cart $data)
+    public function update(Request $request)
     {
-        $data->update($request->all());
-        return response()->json($data,200);
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data = Cart::find($request['target_id']);
+
+        if(!is_null($request['buyer_id'])){
+            $request->validate([
+                'buyer_id' => 'required|exists:buyers,id'
+            ]);
+            $data->buyer_id = $request['buyer_id'];
+        }
+
+        if(!is_null($request['product_id'])){
+            $request->validate([
+                'product_id' => 'required|exists:products,id'
+            ]);
+            $data->product_id = $request['product_id'];
+        }
+
+        if(!is_null($request['quantity'])){
+            $request->validate([
+                'quantity' => 'required'
+            ]);
+            $data->quantity = $request['quantity'];
+        }
+
+        if(!is_null($request['status'])){
+            $request->validate([
+                'status' => 'required'
+            ]);
+            $data->status = $request['status'];
+        }
+
+        $data->save();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource updated!'
+        ],200);
     }
 
     public function delete($id){

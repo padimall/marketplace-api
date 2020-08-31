@@ -14,8 +14,8 @@ class CreateProductsStocksTable extends Migration
     public function up()
     {
         Schema::create('products_stocks', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('product_id');
+            $table->uuid('id')->primary();
+            $table->uuid('product_id');
             $table->string('stock');
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('products');

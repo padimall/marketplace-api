@@ -30,7 +30,7 @@ class SupplierController extends Controller
     public function showAll()
     {
         $data = Supplier::all();
-        if(is_null($data)){
+        if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
@@ -50,7 +50,7 @@ class SupplierController extends Controller
         ]);
 
         $data = Supplier::find($request['target_id']);
-        if(is_null($data)){
+        if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'

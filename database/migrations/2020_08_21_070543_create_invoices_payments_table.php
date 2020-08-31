@@ -14,9 +14,9 @@ class CreateInvoicesPaymentsTable extends Migration
     public function up()
     {
         Schema::create('invoices_payments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('invoices_id');
-            $table->unsignedInteger('payment_id');
+            $table->uuid('id')->primary();
+            $table->uuid('invoices_id');
+            $table->uuid('payment_id');
             $table->datetime('pay_at');
             $table->integer('status');
             $table->timestamps();

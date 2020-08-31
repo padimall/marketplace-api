@@ -7,8 +7,13 @@ use Faker\Generator as Faker;
 
 $factory->define(Cart::class, function (Faker $faker) {
     return [
-        'buyer_id'=>1,
-        'product_id'=>1,
-        'status'=>1,
+        'buyer_id'=>function($faker){
+            return App\Buyer::inRandomOrder()->pluck('id')->first();
+        },
+        'product_id'=>function($faker){
+            return App\Product::inRandomOrder()->pluck('id')->first();
+        },
+        'quantity'=>10,
+        'status'=>1
     ];
 });

@@ -14,7 +14,7 @@ class CreateLogisticsTable extends Migration
     public function up()
     {
         Schema::create('logistics', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->timestamps();
         });

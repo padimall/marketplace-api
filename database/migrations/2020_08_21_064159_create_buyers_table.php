@@ -14,7 +14,7 @@ class CreateBuyersTable extends Migration
     public function up()
     {
         Schema::create('buyers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->string('username');
             $table->string('password');
             $table->string('email');

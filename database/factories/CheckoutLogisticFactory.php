@@ -7,7 +7,11 @@ use Faker\Generator as Faker;
 
 $factory->define(Checkout_logistic::class, function (Faker $faker) {
     return [
-        'checkout_id'=>1,
-        'logistic_type'=>1,
+        'checkout_id'=>function(){
+            return App\Checkout::inRandomOrder()->pluck('id')->first();
+        },
+        'logistic_type'=>function(){
+            return App\Logistic::inRandomOrder()->pluck('id')->first();
+        },
     ];
 });

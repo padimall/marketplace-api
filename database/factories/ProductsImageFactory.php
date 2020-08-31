@@ -7,7 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(Products_image::class, function (Faker $faker) {
     return [
-        'product_id'=>1,
+        'product_id'=>function(){
+            return App\Product::inRandomOrder()->pluck('id')->first();
+        },
         'images'=>$faker->lastName(),
     ];
 });
