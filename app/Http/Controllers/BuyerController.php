@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class BuyerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function index(Request $request){
         $request->validate([
             'request_type'=>'required'
