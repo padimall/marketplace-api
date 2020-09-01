@@ -40,7 +40,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/agents-affiliate-supplier','AgentsAffiliateSupplierController@index');
 
         Route::post('/product-category','ProductsCategoryController@index');
-        Route::post('/product','ProductController@index');
+        Route::post('/product','ProductController@index');  
         Route::post('/cart','CartController@index');
 
     });

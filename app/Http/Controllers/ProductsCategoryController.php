@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Products_category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductsCategoryController extends Controller
 {
@@ -78,6 +79,7 @@ class ProductsCategoryController extends Controller
                 'message' => 'Resource not found!'
             ],404);
         }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
@@ -89,12 +91,18 @@ class ProductsCategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'image' => 'required',
+            'image' => 'required|mimes:png,jpg,jpeg|max:2048',
             'status' => 'required'
         ]);
 
+        $filename = 'product-category-'.Str::uuid().'.jpg';
+        $request->file('image')->move(public_path("/product-category"),$filename);
+        $imageURL = url("/product-category".'/'.$filename);
+
         $data = $request->all();
+        $data['image'] = $imageURL;
         $response = Products_category::create($data);
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource created!'
@@ -118,9 +126,14 @@ class ProductsCategoryController extends Controller
 
         if(!is_null($request['image'])){
             $request->validate([
-                'image' => 'required'
+                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
             ]);
-            $data->image = $request['image'];
+
+            $filename = 'product-category-'.Str::uuid().'.jpg';
+            $request->file('image')->move(public_path("/product-category"),$filename);
+            $imageURL = url("/product-category".'/'.$filename);
+
+            $data->image = $imageURL;
         }
 
         if(!is_null($request['status'])){
