@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
-use App\Products_image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Invoices_product;
 
-class ProductController extends Controller
+class InvoicesProductController extends Controller
 {
     public function index(Request $request){
         $request->validate([
@@ -34,7 +32,7 @@ class ProductController extends Controller
 
     public function showAll()
     {
-        $data = Product::all();
+        $data = Invoices_product::all();
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
@@ -54,13 +52,14 @@ class ProductController extends Controller
             'limit' => 'required'
         ]);
 
-        $data = Product::inRandomOrder()->limit($request['limit'])->get();
+        $data = Invoices_product::inRandomOrder()->limit($request['limit'])->get();
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
             ],404);
         }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
@@ -74,7 +73,7 @@ class ProductController extends Controller
             'target_id' => 'required'
         ]);
 
-        $data = Product::find($request['target_id']);
+        $data = Invoices_product::find($request['target_id']);
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
@@ -91,36 +90,16 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
+            'invoice_id' => 'required|exists:invoices,id',
+            'product_id' => 'required|exists:products,id',
             'name'=> 'required',
             'price'=> 'required',
-            'weight'=> 'required',
-            'description'=> 'required',
-            'category'=> 'required|exists:products_categories,id',
-            'stock'=> 'required',
-            'status'=> 'required',
-            'image.*'=> 'mimes:png,jpg,jpeg|max:2048'
+            'quantity'=> 'required',
         ]);
 
         $data = $request->all();
-        $response = Product::create($data);
 
-        if(!is_null($request['image']))
-        {
-            $array_image = $data['image'];
-            for($i=0; $i<sizeOf($array_image); $i++)
-            {
-                $filename = 'product-'.Str::uuid().'.jpg';
-                $data['image'][$i]->move(public_path("/product"),$filename);
-                $imageURL = 'product/'.$filename;
-                $data_image = array(
-                    'product_id' => $response['id'],
-                    'image'=>$imageURL
-                );
-                $response_image = Products_image::create($data_image);
-            }
-        }
-
+        $response = Invoices_product::create($data);
         return response()->json([
             'status' => 1,
             'message' => 'Resource created!'
@@ -133,13 +112,20 @@ class ProductController extends Controller
             'target_id' => 'required'
         ]);
 
-        $data = Product::find($request['target_id']);
+        $data = Invoices_product::find($request['target_id']);
 
-        if(!is_null($request['supplier_id'])){
+        if(!is_null($request['invoice_id'])){
             $request->validate([
-                'supplier_id' => 'required|exists:suppliers,id'
+                'invoice_id' => 'required|exists:invoices,id'
             ]);
-            $data->supplier_id = $request['supplier_id'];
+            $data->invoice_id = $request['invoice_id'];
+        }
+
+        if(!is_null($request['product_id'])){
+            $request->validate([
+                'product_id' => 'required|exists:products,id'
+            ]);
+            $data->product_id = $request['product_id'];
         }
 
         if(!is_null($request['name'])){
@@ -156,39 +142,11 @@ class ProductController extends Controller
             $data->price = $request['price'];
         }
 
-        if(!is_null($request['weight'])){
+        if(!is_null($request['quantity'])){
             $request->validate([
-                'weight' => 'required'
+                'quantity' => 'required'
             ]);
-            $data->weight = $request['weight'];
-        }
-
-        if(!is_null($request['description'])){
-            $request->validate([
-                'description' => 'required'
-            ]);
-            $data->description = $request['description'];
-        }
-
-        if(!is_null($request['category'])){
-            $request->validate([
-                'category' => 'required|exists:products_categories,id'
-            ]);
-            $data->category = $request['category'];
-        }
-
-        if(!is_null($request['stock'])){
-            $request->validate([
-                'stock' => 'required'
-            ]);
-            $data->stock = $request['stock'];
-        }
-
-        if(!is_null($request['status'])){
-            $request->validate([
-                'status' => 'required'
-            ]);
-            $data->status = $request['status'];
+            $data->quantity = $request['quantity'];
         }
 
         $data->save();
@@ -199,7 +157,7 @@ class ProductController extends Controller
     }
 
     public function delete($id){
-        $data = Product::find($id);
+        $data = Invoices_product::find($id);
         $response = $data->delete();
         return response()->json($response,200);
     }

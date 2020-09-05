@@ -18,8 +18,8 @@ class CreateProductsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('supplier_id');
             $table->string('name');
-            $table->string('price');
-            $table->string('weight');
+            $table->integer('price');
+            $table->integer('weight');
             $table->string('description');
             $table->uuid('category');
             $table->integer('stock');

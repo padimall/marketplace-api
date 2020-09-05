@@ -26,7 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-		Passport::routes();
-        //
+        Passport::routes();
+        Passport::tokensCan([
+            'access-all-system' => 'Access all system'
+        ]);
     }
 }

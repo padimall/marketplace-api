@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ProductsStockSeeder extends Seeder
+class InvoicesProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class ProductsStockSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Products_stock::class,1)->create();
+        factory(App\Invoices_product::class,1)->create();
     }
 }

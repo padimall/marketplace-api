@@ -10,6 +10,6 @@ $factory->define(Products_image::class, function (Faker $faker) {
         'product_id'=>function(){
             return App\Product::inRandomOrder()->pluck('id')->first();
         },
-        'images'=>$faker->lastName(),
+        'image'=>'product/image.jpg',
     ];
 });

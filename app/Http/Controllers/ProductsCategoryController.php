@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Products_category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class ProductsCategoryController extends Controller
 {
@@ -97,7 +98,7 @@ class ProductsCategoryController extends Controller
 
         $filename = 'product-category-'.Str::uuid().'.jpg';
         $request->file('image')->move(public_path("/product-category"),$filename);
-        $imageURL = url("/product-category".'/'.$filename);
+        $imageURL = 'product-category/'.$filename;
 
         $data = $request->all();
         $data['image'] = $imageURL;
@@ -128,10 +129,15 @@ class ProductsCategoryController extends Controller
             $request->validate([
                 'image' => 'required|mimes:png,jpg,jpeg|max:2048'
             ]);
+            $image_target = $data->image;
+            if(File::exists(public_path($image_target)))
+            {
+                $status = File::delete(public_path($image_target));
+            }
 
             $filename = 'product-category-'.Str::uuid().'.jpg';
             $request->file('image')->move(public_path("/product-category"),$filename);
-            $imageURL = url("/product-category".'/'.$filename);
+            $imageURL = 'product-category/'.$filename;
 
             $data->image = $imageURL;
         }

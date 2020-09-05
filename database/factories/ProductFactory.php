@@ -11,8 +11,8 @@ $factory->define(Product::class, function (Faker $faker) {
             return App\Supplier::inRandomOrder()->pluck('id')->first();
         },
         'name'=>$faker->firstName(),
-        'price'=>"1000",
-        'weight'=>"100 gr",
+        'price'=>1000,
+        'weight'=>10,
         'description'=>$faker->lastName(),
         'category'=>function(){
             return App\Products_category::inRandomOrder()->pluck('id')->first();

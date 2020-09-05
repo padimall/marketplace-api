@@ -22,8 +22,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
     Route::post('signup','AuthController@signup');
     Route::post('login','AuthController@login');
+    Route::post('login-dev','AuthController@login_dev');
 
-    Route::group(['middleware' => ['auth:api']], function () {
+    Route::group(['middleware' => ['auth:api','scope:access-all-system']], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
 
@@ -40,8 +41,13 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/agents-affiliate-supplier','AgentsAffiliateSupplierController@index');
 
         Route::post('/product-category','ProductsCategoryController@index');
-        Route::post('/product','ProductController@index');  
+        Route::post('/product','ProductController@index');
+        Route::post('/product-image','ProductsImageController@index');
         Route::post('/cart','CartController@index');
+
+        Route::post('/invoice','InvoiceController@index');
+        Route::post('/invoice-product','InvoicesProductController@index');
+
 
     });
 

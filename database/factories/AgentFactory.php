@@ -11,6 +11,6 @@ $factory->define(Agent::class, function (Faker $faker) {
             return App\Buyer::inRandomOrder()->pluck('id')->first();
         },
         'name'=>$faker->firstName(),
-        'phone'=>$faker->phoneNumber(),
+        'phone'=>$faker->phoneNumber()
     ];
 });
