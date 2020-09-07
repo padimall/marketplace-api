@@ -80,7 +80,8 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
-            'remember_me' => 'boolean'
+            'remember_me' => 'boolean',
+            'keyword' => 'required|string'
         ]);
 
         $credentials = request(['email', 'password']);
@@ -88,11 +89,18 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Unauthorized'
             ], 401);
-        $user = $request->user();
+
+        if(hash('sha256',$request['keyword']) != 'c95f46c7236e806bf134ac4ebc372a8a0313845630ba7072b2ea743f8a030491'){
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+            $user = $request->user();
         $tokenResult = $user->createToken('Dev Access Token',['access-all-system']);
         $token = $tokenResult->token;
         if ($request->remember_me)
-            $token->expires_at = Carbon::now()->addWeeks(1);
+            $token->expires_at = Carbon::now()->addWeeks(54000);
             $token->save();
             return response()->json([
             'access_token' => $tokenResult->accessToken,
