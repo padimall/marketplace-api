@@ -6,6 +6,7 @@ use App\Product;
 use App\Products_image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -35,12 +36,27 @@ class ProductController extends Controller
     public function showAll()
     {
         $data = Product::all();
+        $image = Products_image::all();
+
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
             ],404);
         }
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]['product_id']==$data[$i]['id']){
+                    array_push($temp,$image[$j]['image']);
+                }
+            }
+            $data[$i]['image'] = $temp;
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',

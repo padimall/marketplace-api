@@ -11,6 +11,6 @@ class CheckoutPaymentSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Checkout_payment::class,1)->create();
+        factory(App\Checkout_payment::class,50)->create();
     }
 }

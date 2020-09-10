@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Products_category::class, function (Faker $faker) {
     return [
         'name'=>$faker->firstName(),
-        'image'=>'image.png',
+        'image'=>'product-category/image.jpg',
         'status'=>1,
     ];
 });
