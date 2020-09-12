@@ -50,7 +50,7 @@ class SupplierController extends Controller
         ]);
 
         $data = Supplier::find($request['target_id']);
-        if(sizeOf($data)==0){
+        if(is_null($data)){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'

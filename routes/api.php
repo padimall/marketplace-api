@@ -48,6 +48,12 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/invoice','InvoiceController@index');
         Route::post('/invoice-product','InvoicesProductController@index');
 
+        //Product associated with agent
+        Route::post('/product-agent','ProductController@product_agent');
+
+        //product associated with supplier
+        Route::post('/product-supplier','ProductController@product_supplier');
+
 
     });
 

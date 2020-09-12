@@ -71,6 +71,20 @@ class ProductController extends Controller
         ]);
 
         $data = Product::inRandomOrder()->limit($request['limit'])->get();
+        $image = Products_image::all();
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]['product_id']==$data[$i]['id']){
+                    array_push($temp,$image[$j]['image']);
+                }
+            }
+            $data[$i]['image'] = $temp;
+        }
+
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
@@ -91,6 +105,17 @@ class ProductController extends Controller
         ]);
 
         $data = Product::find($request['target_id']);
+        $image = DB::table('products_images')
+                ->select('image')
+                ->where('product_id',$request['target_id'])
+                ->get();
+        $temp = array();
+
+        for($i=0; $i<sizeOf($image); $i++){
+            array_push($temp,$image[$i]->image);
+        }
+
+        $data['image'] = $temp;
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
@@ -214,9 +239,62 @@ class ProductController extends Controller
         ],200);
     }
 
+    public function product_agent(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data = DB::table('products')
+                ->select('products.*')
+                ->join('agents_affiliate_suppliers','agents_affiliate_suppliers.supplier_id','=','products.supplier_id')
+                ->where('agents_affiliate_suppliers.agent_id',$request['target_id'])
+                ->get();
+
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function product_supplier(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data = DB::table('products')
+                ->select('products.*')
+                ->where('products.supplier_id',$request['target_id'])
+                ->get();
+
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
     public function delete($id){
         $data = Product::find($id);
         $response = $data->delete();
         return response()->json($response,200);
     }
+
+
 }
