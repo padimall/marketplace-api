@@ -54,6 +54,9 @@ Route::group(['prefix' => 'v1'], function () {
         //product associated with supplier
         Route::post('/product-supplier','ProductController@product_supplier');
 
+        //product search
+        Route::post('/product-search','ProductController@product_search');
+
 
     });
 

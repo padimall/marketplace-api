@@ -252,6 +252,46 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
+
+        $data = DB::table('products')
+                ->where('name','like','%'.$request['name'].'%')
+                ->get();
+
+        $array_product_id = array();
+        for ($i=0; $i<sizeOf($data); $i++)
+        {
+            array_push($array_product_id,$data[$i]->id);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$array_product_id)
+                    ->get();
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$data[$i]->id){
+                    array_push($temp,$image[$j]->image);
+                }
+            }
+            $data[$i]->image = $temp;
+        }
+
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+
     }
 
     public function product_agent(Request $request)
