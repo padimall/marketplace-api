@@ -71,7 +71,7 @@ class ProductController extends Controller
         ]);
 
         $data = Product::inRandomOrder()->limit($request['limit'])->get();
-        
+
         $array_product_id = array();
         for ($i=0; $i<sizeOf($data); $i++)
         {
@@ -103,7 +103,6 @@ class ProductController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'count' => sizeOf($data),
             'data' => $data
         ],200);
     }
@@ -266,6 +265,28 @@ class ProductController extends Controller
                 ->join('agents_affiliate_suppliers','agents_affiliate_suppliers.supplier_id','=','products.supplier_id')
                 ->where('agents_affiliate_suppliers.agent_id',$request['target_id'])
                 ->get();
+
+        $array_product_id = array();
+        for ($i=0; $i<sizeOf($data); $i++)
+        {
+            array_push($array_product_id,$data[$i]->id);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$array_product_id)
+                    ->get();
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$data[$i]->id){
+                    array_push($temp,$image[$j]->image);
+                }
+            }
+            $data[$i]->image = $temp;
+        }
 
         if(sizeOf($data)== 0){
             return response()->json([
