@@ -11,6 +11,6 @@ class CheckoutLogisticSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Checkout_logistic::class,50)->create();
+        factory(App\Checkout_logistic::class,1000)->create();
     }
 }

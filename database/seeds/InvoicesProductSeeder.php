@@ -11,6 +11,6 @@ class InvoicesProductSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Invoices_product::class,50)->create();
+        factory(App\Invoices_product::class,1000)->create();
     }
 }
