@@ -10,8 +10,8 @@ $factory->define(Checkout::class, function (Faker $faker) {
         'product_id'=>function($faker){
             return App\Product::inRandomOrder()->pluck('id')->first();
         },
-        'buyer_id'=>function($faker){
-            return App\Buyer::inRandomOrder()->pluck('id')->first();
+        'user_id'=>function($faker){
+            return App\User::inRandomOrder()->pluck('id')->first();
         },
         'name'=>$faker->firstName(),
         'price'=>"1000",

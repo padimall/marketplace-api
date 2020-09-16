@@ -24,39 +24,99 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login','AuthController@login');
     Route::post('login-dev','AuthController@login_dev');
 
-    Route::group(['middleware' => ['auth:api','scope:access-all-system']], function () {
-        Route::get('logout', 'AuthController@logout');
-        Route::get('user', 'AuthController@user');
+    Route::group(['middleware' => ['auth:api','scopes:system-token,user-token']], function () {
 
-        //Buyer Route
-        Route::post('/buyer','BuyerController@index');
+        Route::post('/user',function(){
+            return response()->json(request()->user());
+        });
 
-        //Agent Route
-        Route::post('/agent','AgentController@index');
+        Route::group(['prefix' => 'product'], function () {
+            Route::post('/all','ProductController@showAll');
+            Route::post('/detail','ProductController@show');
+            Route::post('/limit','ProductController@showLimit');
+            Route::post('/agent','ProductController@product_agent');
+            Route::post('/supplier','ProductController@product_supplier');
+            Route::post('/search','ProductController@product_search');
+        });
 
-        //Supplier Route
-        Route::post('/supplier','SupplierController@index');
+        Route::group(['prefix' => 'product-category'], function () {
+            Route::post('/all','ProductsCategoryController@showAll');
+            Route::post('/detail','ProductsCategoryController@show');
+            Route::post('/limit','ProductsCategoryController@showLimit');
+        });
 
-        //Agents Affiliate Supplier Route
-        Route::post('/agents-affiliate-supplier','AgentsAffiliateSupplierController@index');
+        Route::group(['prefix' => 'product-image'], function () {
+            Route::post('/all','ProductsImageController@showAll');
+            Route::post('/detail','ProductsImageController@show');
+            Route::post('/limit','ProductsImageController@showLimit');
+        });
 
-        Route::post('/product-category','ProductsCategoryController@index');
-        Route::post('/product','ProductController@index');
-        Route::post('/product-image','ProductsImageController@index');
-        Route::post('/cart','CartController@index');
+    });
 
-        Route::post('/invoice','InvoiceController@index');
-        Route::post('/invoice-product','InvoicesProductController@index');
+    Route::group(['middleware' => ['auth:api','scope:system-token']], function () {
 
-        //Product associated with agent
-        Route::post('/product-agent','ProductController@product_agent');
+        Route::group(['prefix' => 'agent'], function () {
+            Route::post('/all','AgentController@showAll');
+            Route::post('/detail','AgentController@show');
+            Route::post('/store','AgentController@store');
+            Route::post('/update','AgentController@update');
+            Route::post('/limit','AgentController@showLimit');
+        });
 
-        //product associated with supplier
-        Route::post('/product-supplier','ProductController@product_supplier');
+        Route::group(['prefix' => 'supplier'], function () {
+            Route::post('/all','SupplierController@showAll');
+            Route::post('/detail','SupplierController@show');
+            Route::post('/store','SupplierController@store');
+            Route::post('/update','SupplierController@update');
+            Route::post('/limit','SupplierController@showLimit');
+        });
 
-        //product search
-        Route::post('/product-search','ProductController@product_search');
+        Route::group(['prefix' => 'agents-affiliate-supplier'], function () {
+            Route::post('/all','AgentsAffiliateSupplierController@showAll');
+            Route::post('/detail','AgentsAffiliateSupplierController@show');
+            Route::post('/store','AgentsAffiliateSupplierController@store');
+            Route::post('/update','AgentsAffiliateSupplierController@update');
+            Route::post('/limit','AgentsAffiliateSupplierController@showLimit');
+        });
 
+        Route::group(['prefix' => 'product'], function () {
+            Route::post('/store','ProductController@store');
+            Route::post('/update','ProductController@update');
+        });
+
+        Route::group(['prefix' => 'product-category'], function () {
+            Route::post('/store','ProductsCategoryController@store');
+            Route::post('/update','ProductsCategoryController@update');
+        });
+
+        Route::group(['prefix' => 'product-image'], function () {
+            Route::post('/store','ProductsImageController@store');
+            Route::post('/update','ProductsImageController@update');
+        });
+
+        Route::group(['prefix' => 'cart'], function () {
+            Route::post('/all','CartController@showAll');
+            Route::post('/detail','CartController@show');
+            Route::post('/store','CartController@store');
+            Route::post('/update','CartController@update');
+            Route::post('/limit','CartController@showLimit');
+        });
+
+        Route::group(['prefix' => 'invoice'], function () {
+            Route::post('/all','InvoiceController@showAll');
+            Route::post('/detail','InvoiceController@show');
+            Route::post('/store','InvoiceController@store');
+            Route::post('/update','InvoiceController@update');
+            Route::post('/limit','InvoiceController@showLimit');
+        });
+
+        Route::group(['prefix' => 'invoice-product'], function () {
+            Route::post('/all','InvoicesProductController@showAll');
+            Route::post('/detail','InvoicesProductController@show');
+            Route::post('/store','InvoicesProductController@store');
+            Route::post('/update','InvoicesProductController@update');
+            Route::post('/limit','InvoicesProductController@showLimit');
+        });
 
     });
 

@@ -11,6 +11,6 @@ class LogisticSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Logistic::class,1000)->create();
+        factory(App\Logistic::class,100)->create();
     }
 }

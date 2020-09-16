@@ -16,8 +16,9 @@ class User extends Authenticatable
      *
      * @var array
      */
+    use \App\Http\Traits\UsesUuid;
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','address','phone'
     ];
 
     /**

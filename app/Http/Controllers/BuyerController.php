@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Buyer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BuyerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
 
     public function index(Request $request){
         $request->validate([
@@ -157,5 +154,29 @@ class BuyerController extends Controller
         $data = Buyer::find($id);
         $response = $data->delete();
         return response()->json($response,200);
+    }
+
+    public function signin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string'
+        ]);
+
+        $response = DB::table('buyers')
+                    ->where('email',$request['email'])
+                    ->where('password',hash('sha256',$request['password']))
+                    ->get();
+        if(!$response)
+            return response()->json([
+                'response' => $response,
+                'message' => 'Username or password not found!'
+            ], 404);
+
+        return response()->json([
+            'status' => $response,
+            'message' => 'Login success'
+        ]);
+
     }
 }

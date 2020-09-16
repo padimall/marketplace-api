@@ -15,11 +15,11 @@ class CreateSuppliersTable extends Migration
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('buyer_id');
+            $table->uuid('user_id');
             $table->string('name');
             $table->string('phone');
             $table->timestamps();
-            $table->foreign('buyer_id')->references('id')->on('buyers');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

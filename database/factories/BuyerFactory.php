@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Buyer::class, function (Faker $faker) {
     return [
         'username'=>$faker->firstName(),
-        'password'=>$faker->lastName(),
+        'password'=>hash('sha256','112'),
         'email'=>$faker->safeEmail(),
         'address'=>$faker->address(),
         'phone'=>$faker->phoneNumber(),

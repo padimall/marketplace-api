@@ -7,8 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Supplier::class, function (Faker $faker) {
     return [
-        'buyer_id'=>function(){
-            return App\Buyer::inRandomOrder()->pluck('id')->first();
+        'user_id'=>function(){
+            return App\User::inRandomOrder()->pluck('id')->first();
         },
         'name'=>$faker->firstName(),
         'phone'=>$faker->phoneNumber(),

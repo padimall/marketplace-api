@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class CartSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class CartSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Cart::class,100)->create();
+        factory(App\User::class,100)->create();
     }
 }

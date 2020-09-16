@@ -16,7 +16,7 @@ class CreateCheckoutsTable extends Migration
         Schema::create('checkouts', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('product_id');
-            $table->uuid('buyer_id');
+            $table->uuid('user_id');
             $table->string('name');
             $table->string('price');
             $table->string('weight');
@@ -24,7 +24,7 @@ class CreateCheckoutsTable extends Migration
             $table->integer('status');
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('buyer_id')->references('id')->on('buyers');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

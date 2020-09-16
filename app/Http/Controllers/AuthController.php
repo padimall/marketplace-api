@@ -23,12 +23,16 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
+            'address' => 'required|string',
+            'phone' => 'required|string|unique:users',
             'password' => 'required|string|confirmed'
         ]);
 
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
+            'address' => $request->address,
+            'phone' => $request->phone,
             'password' => bcrypt($request->password)
         ]);
         $user->save();
@@ -63,10 +67,14 @@ class AuthController extends Controller
             ], 401);
 
         $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
+        $tokenResult = $user->createToken('Personal Access Token',['user-token']);
         $token = $tokenResult->token;
-        if ($request->remember_me)
+        if ($request->remember_me){
             $token->expires_at = Carbon::now()->addWeeks(1);
+        }
+        else {
+            $token->expires_at = Carbon::now()->addDays(1);
+        }
             $token->save();
             return response()->json([
             'access_token' => $tokenResult->accessToken,
@@ -80,7 +88,6 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
-            'remember_me' => 'boolean',
             'keyword' => 'required|string'
         ]);
 
@@ -96,13 +103,12 @@ class AuthController extends Controller
             ], 401);
         }
 
-            $user = $request->user();
-        $tokenResult = $user->createToken('Dev Access Token',['access-all-system']);
+        $user = $request->user();
+        $tokenResult = $user->createToken('System Access Token',['system-token']);
         $token = $tokenResult->token;
-        if ($request->remember_me)
-            $token->expires_at = Carbon::now()->addWeeks(54000);
-            $token->save();
-            return response()->json([
+        $token->expires_at = Carbon::now()->addWeeks(54000);
+        $token->save();
+        return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
