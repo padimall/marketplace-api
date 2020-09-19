@@ -80,11 +80,16 @@ Route::group(['prefix' => 'v1'], function () {
 
 
         Route::group(['prefix' => 'invoice'], function () {
-            Route::post('/all','InvoiceController@showAll');
             Route::post('/detail','InvoiceController@show');
             Route::post('/store','InvoiceController@store');
             Route::post('/update','InvoiceController@update');
-            Route::post('/limit','InvoiceController@showLimit');
+            Route::post('/list','InvoiceController@list');
+        });
+
+        Route::group(['prefix' => 'invoice-product'], function () {
+            Route::post('/detail','InvoicesProductController@show');
+            Route::post('/store','InvoicesProductController@store');
+            Route::post('/update','InvoicesProductController@update');
         });
     });
 
@@ -119,11 +124,14 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
 
+        Route::group(['prefix' => 'invoice'], function () {
+            Route::post('/all','InvoiceController@showAll');
+            Route::post('/limit','InvoiceController@showLimit');
+        });
+
+
         Route::group(['prefix' => 'invoice-product'], function () {
             Route::post('/all','InvoicesProductController@showAll');
-            Route::post('/detail','InvoicesProductController@show');
-            Route::post('/store','InvoicesProductController@store');
-            Route::post('/update','InvoicesProductController@update');
             Route::post('/limit','InvoicesProductController@showLimit');
         });
 

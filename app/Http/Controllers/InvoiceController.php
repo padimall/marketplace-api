@@ -91,7 +91,6 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'supplier_id' => 'required|exists:suppliers,id',
             'amount'=> 'required',
             'status'=> 'required',
@@ -99,6 +98,7 @@ class InvoiceController extends Controller
         ]);
 
         $data = $request->all();
+        $data['user_id'] = request()->user()->id;
 
         if($response = Invoice::create($data))
         {
@@ -140,13 +140,6 @@ class InvoiceController extends Controller
 
         $data = Invoice::find($request['target_id']);
 
-        if(!is_null($request['user_id'])){
-            $request->validate([
-                'user_id' => 'required|exists:users,id'
-            ]);
-            $data->user_id = $request['user_id'];
-        }
-
         if(!is_null($request['supplier_id'])){
             $request->validate([
                 'supplier_id' => 'required|exists:suppliers,id'
@@ -172,6 +165,23 @@ class InvoiceController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource updated!'
+        ],200);
+    }
+
+    public function list(Request $request)
+    {
+        $data = Invoice::where('user_id',request()->user()->id)->get();
+
+        if(sizeOf($data)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
         ],200);
     }
 
