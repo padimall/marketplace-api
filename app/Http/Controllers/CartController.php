@@ -89,7 +89,7 @@ class CartController extends Controller
     {
         //edit here
         $request->validate([
-            'buyer_id'=> 'required|exists:buyers,id',
+            'user_id'=> 'required|exists:users,id',
             'product_id'=> 'required|exists:products,id',
             'quantity'=> 'required',
             'status'=> 'required',
@@ -111,11 +111,11 @@ class CartController extends Controller
 
         $data = Cart::find($request['target_id']);
 
-        if(!is_null($request['buyer_id'])){
+        if(!is_null($request['user_id'])){
             $request->validate([
-                'buyer_id' => 'required|exists:buyers,id'
+                'user_id' => 'required|exists:users,id'
             ]);
-            $data->buyer_id = $request['buyer_id'];
+            $data->user_id = $request['user_id'];
         }
 
         if(!is_null($request['product_id'])){

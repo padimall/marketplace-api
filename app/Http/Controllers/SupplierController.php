@@ -66,7 +66,7 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'buyer_id' => 'required|exists:buyers,id',
+            'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'phone' => 'required|unique:suppliers,phone'
         ]);
@@ -87,11 +87,11 @@ class SupplierController extends Controller
 
         $data = Supplier::find($request['target_id']);
 
-        if(!is_null($request['buyer_id'])){
+        if(!is_null($request['user_id'])){
             $request->validate([
-                'buyer_id' => 'required|exists:buyers,id'
+                'user_id' => 'required|exists:users,id'
             ]);
-            $data->buyer_id = $request['buyer_id'];
+            $data->user_id = $request['user_id'];
         }
 
         if(!is_null($request['name'])){

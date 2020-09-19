@@ -51,6 +51,14 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/limit','ProductsImageController@showLimit');
         });
 
+        Route::group(['prefix' => 'cart'], function () {
+            Route::post('/all','CartController@showAll');
+            Route::post('/detail','CartController@show');
+            Route::post('/store','CartController@store');
+            Route::post('/update','CartController@update');
+            Route::post('/limit','CartController@showLimit');
+        });
+
     });
 
     Route::group(['middleware' => ['auth:api','scope:system-token']], function () {
@@ -92,14 +100,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'product-image'], function () {
             Route::post('/store','ProductsImageController@store');
             Route::post('/update','ProductsImageController@update');
-        });
-
-        Route::group(['prefix' => 'cart'], function () {
-            Route::post('/all','CartController@showAll');
-            Route::post('/detail','CartController@show');
-            Route::post('/store','CartController@store');
-            Route::post('/update','CartController@update');
-            Route::post('/limit','CartController@showLimit');
         });
 
         Route::group(['prefix' => 'invoice'], function () {
