@@ -114,13 +114,6 @@ class InvoicesProductController extends Controller
 
         $data = Invoices_product::find($request['target_id']);
 
-        if(!is_null($request['invoice_id'])){
-            $request->validate([
-                'invoice_id' => 'required|exists:invoices,id'
-            ]);
-            $data->invoice_id = $request['invoice_id'];
-        }
-
         if(!is_null($request['product_id'])){
             $request->validate([
                 'product_id' => 'required|exists:products,id'
@@ -153,6 +146,27 @@ class InvoicesProductController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource updated!'
+        ],200);
+    }
+
+    public function list(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data= Invoices_product::where('invoice_id',$request['target_id'])->get();
+
+        if(sizeOf($data)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
         ],200);
     }
 
