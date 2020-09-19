@@ -57,6 +57,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
+            'device_id' => 'required|string',
             'remember_me' => 'boolean'
         ]);
 
@@ -76,6 +77,16 @@ class AuthController extends Controller
             $token->expires_at = Carbon::now()->addDays(1);
         }
             $token->save();
+
+            $data = User::where('id',request()->user()->id)->first();
+            if(!is_null($request['device_id'])){
+                $request->validate([
+                    'device_id' => 'required'
+                ]);
+                $data->device_id = $request['device_id'];
+            }
+            $data->save();
+
             return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
@@ -108,6 +119,7 @@ class AuthController extends Controller
         $token = $tokenResult->token;
         $token->expires_at = Carbon::now()->addWeeks(54000);
         $token->save();
+
         return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
