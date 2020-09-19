@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Products_image;
+use App\Supplier;
+use App\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -140,8 +142,16 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $supplier_data = Supplier::where('user_id',request()->user()->id)->first();
+
+        if(is_null($supplier_data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not a supplier!'
+            ],401);
+        }
+
         $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
             'name'=> 'required',
             'price'=> 'required',
             'weight'=> 'required',
@@ -153,6 +163,7 @@ class ProductController extends Controller
         ]);
 
         $data = $request->all();
+        $data['supplier_id'] = $supplier_data->id;
         $response = Product::create($data);
 
         if(!is_null($request['image']))
@@ -172,7 +183,7 @@ class ProductController extends Controller
         }
 
         return response()->json([
-            'status' => 1,
+            'status' => $supplier_data,
             'message' => 'Resource created!'
         ],201);
     }
@@ -184,13 +195,6 @@ class ProductController extends Controller
         ]);
 
         $data = Product::find($request['target_id']);
-
-        if(!is_null($request['supplier_id'])){
-            $request->validate([
-                'supplier_id' => 'required|exists:suppliers,id'
-            ]);
-            $data->supplier_id = $request['supplier_id'];
-        }
 
         if(!is_null($request['name'])){
             $request->validate([
@@ -296,14 +300,19 @@ class ProductController extends Controller
 
     public function product_agent(Request $request)
     {
-        $request->validate([
-            'target_id' => 'required'
-        ]);
+        $agent_data = Agent::where('user_id',request()->user()->id)->first();
+
+        if(is_null($agent_data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not an agent!'
+            ],401);
+        }
 
         $data = DB::table('products')
                 ->select('products.*')
                 ->join('agents_affiliate_suppliers','agents_affiliate_suppliers.supplier_id','=','products.supplier_id')
-                ->where('agents_affiliate_suppliers.agent_id',$request['target_id'])
+                ->where('agents_affiliate_suppliers.agent_id',$agent_data->id)
                 ->get();
 
         $array_product_id = array();
@@ -344,14 +353,38 @@ class ProductController extends Controller
 
     public function product_supplier(Request $request)
     {
-        $request->validate([
-            'target_id' => 'required'
-        ]);
+        $supplier_data = Supplier::where('user_id',request()->user()->id)->first();
 
-        $data = DB::table('products')
-                ->select('products.*')
-                ->where('products.supplier_id',$request['target_id'])
-                ->get();
+        if(is_null($supplier_data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not a supplier!'
+            ],401);
+        }
+
+        $data = Product::where('supplier_id',$supplier_data->id)->get();
+
+        $array_product_id = array();
+        for ($i=0; $i<sizeOf($data); $i++)
+        {
+            array_push($array_product_id,$data[$i]['id']);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$array_product_id)
+                    ->get();
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$data[$i]['id']){
+                    array_push($temp,$image[$j]->image);
+                }
+            }
+            $data[$i]['image'] = $temp;
+        }
 
         if(sizeOf($data)== 0){
             return response()->json([
