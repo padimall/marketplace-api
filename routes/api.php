@@ -65,6 +65,12 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/update','AgentController@update');
             Route::post('/store','AgentController@store');
         });
+
+        Route::group(['prefix' => 'supplier'], function () {
+            Route::post('/detail','SupplierController@show');
+            Route::post('/store','SupplierController@store');
+            Route::post('/update','SupplierController@update');
+        });
     });
 
     Route::group(['middleware' => ['auth:api','scope:system-token']], function () {
@@ -76,9 +82,6 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['prefix' => 'supplier'], function () {
             Route::post('/all','SupplierController@showAll');
-            Route::post('/detail','SupplierController@show');
-            Route::post('/store','SupplierController@store');
-            Route::post('/update','SupplierController@update');
             Route::post('/limit','SupplierController@showLimit');
         });
 

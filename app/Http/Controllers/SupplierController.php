@@ -45,11 +45,8 @@ class SupplierController extends Controller
 
     public function show(Request $request)
     {
-        $request->validate([
-            'target_id' => 'required'
-        ]);
+        $data = Supplier::where('user_id',request()->user()->id)->first();
 
-        $data = Supplier::find($request['target_id']);
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
@@ -66,12 +63,21 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'phone' => 'required|unique:suppliers,phone'
         ]);
 
+        $supplierExist = Supplier::where('user_id',request()->user()->id)->first();
+
+        if(!is_null($supplierExist)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Supplier Exist!'
+            ],422);
+        }
+
         $data = $request->all();
+        $data['user_id'] = request()->user()->id;
         $response = Supplier::create($data);
         return response()->json([
             'status' => 1,
@@ -81,18 +87,8 @@ class SupplierController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
-            'target_id' => 'required'
-        ]);
 
-        $data = Supplier::find($request['target_id']);
-
-        if(!is_null($request['user_id'])){
-            $request->validate([
-                'user_id' => 'required|exists:users,id'
-            ]);
-            $data->user_id = $request['user_id'];
-        }
+        $data = Supplier::where('user_id',request()->user()->id)->first();
 
         if(!is_null($request['name'])){
             $request->validate([
