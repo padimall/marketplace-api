@@ -150,14 +150,8 @@ class CartController extends Controller
 
     public function list(Request $request)
     {
-        $request->validate([
-            'target_id' => 'required'
-        ]);
 
-        $data = DB::table('carts')
-                ->select('*')
-                ->where('user_id',$request['target_id'])
-                ->get();
+        $data = Cart::where('user_id',request()->user()->id)->get();
 
         if(sizeOf($data)== 0){
             return response()->json([

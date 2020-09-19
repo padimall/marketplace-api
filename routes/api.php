@@ -51,14 +51,14 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/all','ProductsImageController@showAll');
             Route::post('/detail','ProductsImageController@show');
             Route::post('/limit','ProductsImageController@showLimit');
+            Route::post('/store','ProductsImageController@store');
+            Route::post('/update','ProductsImageController@update');
         });
 
         Route::group(['prefix' => 'cart'], function () {
-            Route::post('/all','CartController@showAll');
             Route::post('/detail','CartController@show');
             Route::post('/store','CartController@store');
             Route::post('/update','CartController@update');
-            Route::post('/limit','CartController@showLimit');
             Route::post('/list','CartController@list');
         });
 
@@ -100,9 +100,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/update','ProductsCategoryController@update');
         });
 
-        Route::group(['prefix' => 'product-image'], function () {
-            Route::post('/store','ProductsImageController@store');
-            Route::post('/update','ProductsImageController@update');
+        Route::group(['prefix' => 'cart'], function () {
+            Route::post('/all','CartController@showAll');
+            Route::post('/limit','CartController@showLimit');
         });
 
         Route::group(['prefix' => 'invoice'], function () {
