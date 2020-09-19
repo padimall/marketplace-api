@@ -57,6 +57,12 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/store','CartController@store');
             Route::post('/update','CartController@update');
             Route::post('/limit','CartController@showLimit');
+            Route::post('/list','CartController@list');
+        });
+
+        Route::group(['prefix' => 'agent'], function () {
+            Route::post('/detail','AgentController@show');
+            Route::post('/update','AgentController@update');
         });
 
     });
@@ -65,9 +71,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/all','AgentController@showAll');
-            Route::post('/detail','AgentController@show');
             Route::post('/store','AgentController@store');
-            Route::post('/update','AgentController@update');
             Route::post('/limit','AgentController@showLimit');
         });
 

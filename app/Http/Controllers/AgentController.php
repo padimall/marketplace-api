@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Agent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AgentController extends Controller
 {
@@ -66,13 +67,10 @@ class AgentController extends Controller
         ],200);
     }
 
-    public function show(Request $request)
+    public function show()
     {
-        $request->validate([
-            'target_id' => 'required'
-        ]);
+        $data = Agent::where('user_id',request()->user()->id)->first();
 
-        $data = Agent::find($request['target_id']);
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
@@ -89,12 +87,12 @@ class AgentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'phone' => 'required|unique:agents,phone'
         ]);
 
         $data = $request->all();
+        $data['user_id'] = request()->user()->id;
         $response = Agent::create($data);
         return response()->json([
             'status' => 1,
@@ -104,18 +102,8 @@ class AgentController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
-            'target_id' => 'required'
-        ]);
 
-        $data = Agent::find($request['target_id']);
-
-        if(!is_null($request['user_id'])){
-            $request->validate([
-                'user_id' => 'required|exists:users,id'
-            ]);
-            $data->user_id = $request['user_id'];
-        }
+        $data = Agent::where('user_id',request()->user()->id)->first();
 
         if(!is_null($request['name'])){
             $request->validate([
@@ -141,5 +129,6 @@ class AgentController extends Controller
         $data = Agent::find($id);
         $response = $data->delete();
         return response()->json($response,200);
+
     }
 }

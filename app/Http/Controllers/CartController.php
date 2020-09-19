@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -44,6 +45,7 @@ class CartController extends Controller
             'message' => 'Resource found!',
             'data' => $data
         ],200);
+
     }
 
     public function showLimit(Request $request)
@@ -144,6 +146,32 @@ class CartController extends Controller
             'status' => 1,
             'message' => 'Resource updated!'
         ],200);
+    }
+
+    public function list(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required'
+        ]);
+
+        $data = DB::table('carts')
+                ->select('*')
+                ->where('user_id',$request['target_id'])
+                ->get();
+
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],404);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+
     }
 
     public function delete($id){
