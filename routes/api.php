@@ -63,15 +63,14 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/detail','AgentController@show');
             Route::post('/update','AgentController@update');
+            Route::post('/store','AgentController@store');
         });
-
     });
 
     Route::group(['middleware' => ['auth:api','scope:system-token']], function () {
 
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/all','AgentController@showAll');
-            Route::post('/store','AgentController@store');
             Route::post('/limit','AgentController@showLimit');
         });
 

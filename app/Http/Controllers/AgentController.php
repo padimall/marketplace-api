@@ -91,6 +91,15 @@ class AgentController extends Controller
             'phone' => 'required|unique:agents,phone'
         ]);
 
+        $agentExist = Agent::where('user_id',request()->user()->id)->first();
+
+        if(!is_null($agentExist)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Agent Exist!'
+            ],422);
+        }
+
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
         $response = Agent::create($data);
