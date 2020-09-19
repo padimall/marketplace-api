@@ -137,4 +137,51 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+
+    public function update(Request $request)
+    {
+
+        $data = User::where('id',request()->user()->id)->first();
+
+        if(!is_null($request['name'])){
+            $request->validate([
+                'name' => 'required'
+            ]);
+            $data->name = md5($request['name']);
+        }
+
+        if(!is_null($request['email'])){
+            $request->validate([
+                'email' => 'required|email|unique:users,email'
+            ]);
+            $data->email = $request['email'];
+        }
+
+        if(!is_null($request['password'])){
+            $request->validate([
+                'password' => 'required'
+            ]);
+            $data->password = bcrypt($request['password']);
+        }
+
+        if(!is_null($request['address'])){
+            $request->validate([
+                'address' => 'required'
+            ]);
+            $data->address = $request['address'];
+        }
+
+        if(!is_null($request['phone'])){
+            $request->validate([
+                'phone' => 'required|unique:users,phone'
+            ]);
+            $data->phone = $request['phone'];
+        }
+
+        $data->save();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource updated!'
+        ],200);
+    }
 }
