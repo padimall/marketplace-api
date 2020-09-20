@@ -64,7 +64,8 @@ class SupplierController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'phone' => 'required|unique:suppliers,phone'
+            'phone' => 'required|unique:suppliers,phone',
+            'nib' => 'required'
         ]);
 
         $supplierExist = Supplier::where('user_id',request()->user()->id)->first();
