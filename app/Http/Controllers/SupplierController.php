@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Supplier;
+use App\Agent;
+use App\Agents_affiliate_supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -65,7 +67,8 @@ class SupplierController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:suppliers,phone',
-            'nib' => 'required'
+            'nib' => 'required',
+            'agent_code' => 'required'
         ]);
 
         $supplierExist = Supplier::where('user_id',request()->user()->id)->first();
@@ -77,9 +80,26 @@ class SupplierController extends Controller
             ],422);
         }
 
+        $agent_data = Agent::where('agent_code',$request['agent_code'])->first();
+
+        if(is_null($agent_data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Agent Not Exist!'
+            ],404);
+        }
+
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
         $response = Supplier::create($data);
+
+        $agent_affiliate_supplier = array(
+            'supplier_id' => $response['id'],
+            'agent_id' => $agent_data['id']
+        );
+
+        $save_affiliate = Agents_affiliate_supplier::create($agent_affiliate_supplier);
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource created!'
