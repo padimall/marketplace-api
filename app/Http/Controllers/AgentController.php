@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AgentController extends Controller
 {
@@ -91,6 +92,12 @@ class AgentController extends Controller
             'phone' => 'required|unique:agents,phone'
         ]);
 
+        $random = strtolower(Str::random(5));
+
+        while(Agent::where('agent_code',$random)->first()){
+            $random = strtolower(Str::random(5));
+        }
+
         $agentExist = Agent::where('user_id',request()->user()->id)->first();
 
         if(!is_null($agentExist)){
@@ -102,6 +109,7 @@ class AgentController extends Controller
 
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
+        $data['agent_code'] = $random;
         $response = Agent::create($data);
         return response()->json([
             'status' => 1,
