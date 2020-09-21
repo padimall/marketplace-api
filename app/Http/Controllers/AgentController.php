@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Agent;
+use App\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -92,10 +93,13 @@ class AgentController extends Controller
             'phone' => 'required|unique:agents,phone'
         ]);
 
-        $random = strtolower(Str::random(5));
+        $supplierExist = Supplier::where('user_id',request()->user()->id)->first();
 
-        while(Agent::where('agent_code',$random)->first()){
-            $random = strtolower(Str::random(5));
+        if(!is_null($supplierExist)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Supplier Exist!'
+            ],422);
         }
 
         $agentExist = Agent::where('user_id',request()->user()->id)->first();
@@ -105,6 +109,11 @@ class AgentController extends Controller
                 'status' => 0,
                 'message' => 'Agent Exist!'
             ],422);
+        }
+
+        $random = strtolower(Str::random(5));
+        while(Agent::where('agent_code',$random)->first()){
+            $random = strtolower(Str::random(5));
         }
 
         $data = $request->all();

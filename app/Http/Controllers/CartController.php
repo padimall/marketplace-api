@@ -90,14 +90,27 @@ class CartController extends Controller
     public function store(Request $request)
     {
         //edit here
+
         $request->validate([
-            'user_id'=> 'required|exists:users,id',
             'product_id'=> 'required|exists:products,id',
-            'quantity'=> 'required',
+            'quantity'=> 'required|integer',
             'status'=> 'required',
         ]);
 
+        $product_exist = Cart::where('product_id',$request['product_id'])->first();
+
+        if(!is_null($product_exist)){
+            $product_exist->quantity = $product_exist->quantity + $request['quantity'];
+            $product_exist->save();
+            return response()->json([
+                'status' => 1,
+                'message' => 'Product exist. Cart updated!'
+            ],200);
+        }
+
+
         $data = $request->all();
+        $data['user_id'] = request()->user()->id;
         $response = Cart::create($data);
         return response()->json([
             'status' => 1,
@@ -112,13 +125,6 @@ class CartController extends Controller
         ]);
 
         $data = Cart::find($request['target_id']);
-
-        if(!is_null($request['user_id'])){
-            $request->validate([
-                'user_id' => 'required|exists:users,id'
-            ]);
-            $data->user_id = $request['user_id'];
-        }
 
         if(!is_null($request['product_id'])){
             $request->validate([
@@ -151,7 +157,11 @@ class CartController extends Controller
     public function list(Request $request)
     {
 
-        $data = Cart::where('user_id',request()->user()->id)->get();
+        $data = DB::table('carts')
+                ->join('products','products.id','=','carts.product_id')
+                ->join('suppliers','suppliers.id','=','products.supplier_id')
+                ->select('carts.*','products.name','products.price','suppliers.name AS store')
+                ->get();
 
         if(sizeOf($data)== 0){
             return response()->json([

@@ -71,6 +71,15 @@ class SupplierController extends Controller
             'agent_code' => 'required'
         ]);
 
+        $agentExist = Agent::where('user_id',request()->user()->id)->first();
+
+        if(!is_null($agentExist)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Agent Exist!'
+            ],422);
+        }
+
         $supplierExist = Supplier::where('user_id',request()->user()->id)->first();
 
         if(!is_null($supplierExist)){
