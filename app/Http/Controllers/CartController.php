@@ -160,7 +160,9 @@ class CartController extends Controller
         $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('suppliers','suppliers.id','=','products.supplier_id')
-                ->select('carts.*','products.name','products.price','suppliers.name AS store')
+                ->select('carts.*','products.supplier_id','products.name','products.price','suppliers.name AS store')
+                ->where('carts.user_id',request()->user()->id)
+                ->orderBy('products.supplier_id','DESC')
                 ->get();
 
         if(sizeOf($data)== 0){
