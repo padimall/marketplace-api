@@ -452,6 +452,4 @@ class ProductController extends Controller
         $response = $data->delete();
         return response()->json($response,200);
     }
-
-
 }
