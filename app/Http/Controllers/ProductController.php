@@ -403,11 +403,13 @@ class ProductController extends Controller
     public function product_category(Request $request)
     {
         $request->validate([
-            'target_id' => 'required|string'
+            'name' => 'required|string'
         ]);
 
         $data = DB::table('products')
-                ->where('category',$request['target_id'])
+                ->join('products_categories','products_categories.id','=','products.category')
+                ->where('products_categories.name','like','%'.$request['name'].'%')
+                ->select('products.*','products_categories.name AS category_name')
                 ->get();
 
         $array_product_id = array();
