@@ -110,6 +110,7 @@ class SupplierController extends Controller
         }
 
         $data = $request->all();
+        $data['image'] = $imageURL;
         $data['user_id'] = request()->user()->id;
         $response = Supplier::create($data);
 

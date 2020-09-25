@@ -15,7 +15,6 @@ class AddNibToSuppliers extends Migration
     {
         Schema::table('suppliers', function (Blueprint $table) {
             $table->string('nib')->nullable();
-            $table->string('image')->nullable();
         });
     }
 
@@ -28,7 +27,6 @@ class AddNibToSuppliers extends Migration
     {
         Schema::table('suppliers', function (Blueprint $table) {
             $table->dropColumn('nib');
-            $table->dropColumn('image');
         });
     }
 }

@@ -15,6 +15,7 @@ class AddAddressAndImageToSuppliers extends Migration
     {
         Schema::table('suppliers', function (Blueprint $table) {
             $table->string('address')->nullable();
+            $table->string('image')->nullable();
         });
     }
 
@@ -27,6 +28,8 @@ class AddAddressAndImageToSuppliers extends Migration
     {
         Schema::table('suppliers', function (Blueprint $table) {
             $table->dropColumn('address');
+            $table->dropColumn('image');
+
         });
     }
 }
