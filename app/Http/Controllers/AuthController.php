@@ -159,7 +159,7 @@ class AuthController extends Controller
             $request->validate([
                 'name' => 'required'
             ]);
-            $data->name = md5($request['name']);
+            $data->name = $request['name'];
         }
 
         if(!is_null($request['email'])){
