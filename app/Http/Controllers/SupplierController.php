@@ -6,6 +6,8 @@ use App\Supplier;
 use App\Agent;
 use App\Agents_affiliate_supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class SupplierController extends Controller
 {
@@ -67,7 +69,9 @@ class SupplierController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:suppliers,phone',
+            'address'=> 'required|string',
             'nib' => 'required',
+            'image'=> 'mimes:png,jpg,jpeg|max:2048',
             'agent_code' => 'required'
         ]);
 
@@ -96,6 +100,13 @@ class SupplierController extends Controller
                 'status' => 0,
                 'message' => 'Agent Not Exist!'
             ],404);
+        }
+
+        if(!is_null($request['image']))
+        {
+            $filename = 'supplier-'.Str::uuid().'.jpg';
+            $request->file('image')->move(public_path("/supplier"),$filename);
+            $imageURL = 'supplier/'.$filename;
         }
 
         $data = $request->all();
@@ -133,6 +144,31 @@ class SupplierController extends Controller
             ]);
             $data->phone = $request['phone'];
         }
+
+        if(!is_null($request['address'])){
+            $request->validate([
+                'address' => 'required'
+            ]);
+            $data->address = $request['address'];
+        }
+
+        if(!is_null($request['image'])){
+            $request->validate([
+                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+            ]);
+            $image_target = $data->image;
+            if(File::exists(public_path($image_target)))
+            {
+                $status = File::delete(public_path($image_target));
+            }
+
+            $filename = 'supplier-'.Str::uuid().'.jpg';
+            $request->file('image')->move(public_path("/supplier"),$filename);
+            $imageURL = 'supplier/'.$filename;
+
+            $data->image = $imageURL;
+        }
+
         $data->save();
         return response()->json([
             'status' => 1,

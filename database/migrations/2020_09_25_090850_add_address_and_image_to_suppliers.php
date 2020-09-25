@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNibToSuppliers extends Migration
+class AddAddressAndImageToSuppliers extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddNibToSuppliers extends Migration
     public function up()
     {
         Schema::table('suppliers', function (Blueprint $table) {
-            $table->string('nib')->nullable();
-            $table->string('image')->nullable();
+            $table->string('address')->nullable();
         });
     }
 
@@ -27,8 +26,7 @@ class AddNibToSuppliers extends Migration
     public function down()
     {
         Schema::table('suppliers', function (Blueprint $table) {
-            $table->dropColumn('nib');
-            $table->dropColumn('image');
+            $table->dropColumn('address');
         });
     }
 }
