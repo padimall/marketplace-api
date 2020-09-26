@@ -11,6 +11,6 @@ class AgentsAffiliateSupplierSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Agents_affiliate_supplier::class,100)->create();
+        factory(App\Agents_affiliate_supplier::class,1)->create();
     }
 }

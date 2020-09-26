@@ -11,6 +11,6 @@ class BuyerSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Buyer::class,100)->create();
+        factory(App\Buyer::class,1)->create();
     }
 }
