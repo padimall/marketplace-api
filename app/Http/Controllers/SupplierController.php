@@ -102,16 +102,18 @@ class SupplierController extends Controller
             ],404);
         }
 
+        $data = $request->all();
+        $data['user_id'] = request()->user()->id;
         if(!is_null($request['image']))
         {
             $filename = 'supplier-'.Str::uuid().'.jpg';
             $request->file('image')->move(public_path("/supplier"),$filename);
             $imageURL = 'supplier/'.$filename;
+            $data['image'] = $imageURL;
         }
 
-        $data = $request->all();
-        $data['image'] = $imageURL;
-        $data['user_id'] = request()->user()->id;
+
+
         $response = Supplier::create($data);
 
         $agent_affiliate_supplier = array(
