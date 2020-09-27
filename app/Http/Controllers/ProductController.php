@@ -159,6 +159,7 @@ class ProductController extends Controller
             'category'=> 'required|exists:products_categories,id',
             'stock'=> 'required',
             'status'=> 'required',
+            'min_order'=> 'required',
             'image.*'=> 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
@@ -236,6 +237,13 @@ class ProductController extends Controller
                 'stock' => 'required'
             ]);
             $data->stock = $request['stock'];
+        }
+
+        if(!is_null($request['min_order'])){
+            $request->validate([
+                'min_order' => 'required'
+            ]);
+            $data->min_order = $request['min_order'];
         }
 
         if(!is_null($request['status'])){
