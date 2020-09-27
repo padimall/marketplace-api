@@ -8,6 +8,7 @@ use App\Agents_affiliate_supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class SupplierController extends Controller
 {
@@ -177,6 +178,29 @@ class SupplierController extends Controller
             'status' => 1,
             'message' => 'Resource updated!'
         ],200);
+    }
+
+    public function myagent(Request $request){
+        $data = Supplier::where('user_id',request()->user()->id)->first();
+        if(is_null($data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not supplier!'
+            ],404);
+        }
+
+        $myAgent =  DB::table('agents')
+                    ->join('agents_affiliate_suppliers','agents.id','=','agents_affiliate_suppliers.agent_id')
+                    ->where('agents_affiliate_suppliers.supplier_id',$data->id)
+                    ->select('agents.*')
+                    ->get();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $myAgent
+        ],200);
+
     }
 
     public function delete($id){

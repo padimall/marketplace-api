@@ -44,6 +44,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/detail','SupplierController@show');
             Route::post('/store','SupplierController@store');
             Route::post('/update','SupplierController@update');
+            Route::post('/myagent','SupplierController@myagent');
         });
 
         Route::group(['prefix' => 'product'], function () {
