@@ -193,7 +193,7 @@ class SupplierController extends Controller
                     ->join('agents_affiliate_suppliers','agents.id','=','agents_affiliate_suppliers.agent_id')
                     ->where('agents_affiliate_suppliers.supplier_id',$data->id)
                     ->select('agents.*')
-                    ->get();
+                    ->get()->first();
 
         return response()->json([
             'status' => 1,
