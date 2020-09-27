@@ -184,7 +184,7 @@ class ProductController extends Controller
         }
 
         return response()->json([
-            'status' => $supplier_data,
+            'status' => 1,
             'message' => 'Resource created!'
         ],201);
     }
