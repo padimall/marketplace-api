@@ -6,6 +6,7 @@ use App\Products_category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class ProductsCategoryController extends Controller
 {
@@ -34,7 +35,11 @@ class ProductsCategoryController extends Controller
 
     public function showAll()
     {
-        $data = Products_category::all();
+        $data = DB::table('products_categories')
+                ->leftJoin(DB::raw('(select COUNT(id) AS count_product,category from products group by category) AS product_count'),'product_count.category','=','products_categories.id')
+                ->select('product_count.count_product','products_categories.*')
+                ->get();
+                
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
