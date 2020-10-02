@@ -65,6 +65,12 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/limit','ProductsCategoryController@showLimit');
         });
 
+        Route::group(['prefix' => 'main-category'], function () {
+            Route::post('/all','MainCategoryController@showAll');
+            Route::post('/detail','MainCategoryController@show');
+            Route::post('/limit','MainCategoryController@showLimit');
+        });
+
         Route::group(['prefix' => 'product-image'], function () {
             Route::post('/all','ProductsImageController@showAll');
             Route::post('/detail','ProductsImageController@show');
@@ -119,6 +125,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'product-category'], function () {
             Route::post('/store','ProductsCategoryController@store');
             Route::post('/update','ProductsCategoryController@update');
+        });
+
+        Route::group(['prefix' => 'main-category'], function () {
+            Route::post('/store','MainCategoryController@store');
+            Route::post('/update','MainCategoryController@update');
         });
 
         Route::group(['prefix' => 'cart'], function () {
