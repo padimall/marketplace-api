@@ -165,6 +165,33 @@ class CartController extends Controller
                 ->orderBy('products.supplier_id','DESC')
                 ->get();
 
+        $flagSupplier = '';
+        $index= -1;
+        $cartData = array();
+        $tempData = array();
+        $tempProduct = array();
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            $tempSupplier = $data[$i]->supplier_id;
+            if($flagSupplier != $tempSupplier)
+            {
+                $index++;
+                array_push($tempData,array(
+                    'store' => $data[$i]->store,
+                ));
+
+                array_push($tempProduct,array(
+                    'product_id' => $data[$i]->store,
+                    'quantity' => $data[$i]->quantity,
+                ));
+                $flagSupplier = $data[$i]->supplier_id;
+                $cartData[$index]['product'] = $i;
+            }
+            else {
+
+            }
+        }
+
         if(sizeOf($data)== 0){
             return response()->json([
                 'status' => 0,

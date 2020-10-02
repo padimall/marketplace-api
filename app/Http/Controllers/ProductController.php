@@ -135,7 +135,11 @@ class ProductController extends Controller
             ));
         }
 
-        $data['image'] = $temp;
+        if(sizeof($temp)!=0)
+        {
+            $data['image'] = $temp;
+        }
+
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
