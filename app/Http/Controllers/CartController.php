@@ -160,7 +160,7 @@ class CartController extends Controller
         $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('suppliers','suppliers.id','=','products.supplier_id')
-                ->select('carts.*','products.min_order','products.supplier_id','products.name','products.price','suppliers.name AS store','suppliers.image AS store_image')
+                ->select('carts.*','products.min_order','products.supplier_id','products.name','products.price','suppliers.name AS store','suppliers.image AS store_image','suppliers.address')
                 ->where('carts.user_id',request()->user()->id)
                 ->orderBy('products.supplier_id','DESC')
                 ->get();
@@ -186,6 +186,7 @@ class CartController extends Controller
                     'supplier_id' => $data[$i]->supplier_id,
                     'store' => $data[$i]->store,
                     'store_image' => $data[$i]->store_image,
+                    'address' => $data[$i]->address,
                 ));
 
                 array_push($tempProduct,array(

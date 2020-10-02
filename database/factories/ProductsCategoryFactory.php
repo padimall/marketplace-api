@@ -10,5 +10,8 @@ $factory->define(Products_category::class, function (Faker $faker) {
         'name'=>$faker->firstName(),
         'image'=>'product-category/image.jpg',
         'status'=>1,
+        'main_category_id'=>function(){
+            return App\Main_category::inRandomOrder()->pluck('id')->first();
+        },
     ];
 });
