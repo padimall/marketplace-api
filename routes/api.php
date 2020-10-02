@@ -78,7 +78,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/detail','CartController@show');
             Route::post('/store','CartController@store');
             Route::post('/update','CartController@update');
-            Route::post('/list','CartController@list');
+            Route::post('/user','CartController@list');
         });
 
 
