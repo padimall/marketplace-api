@@ -71,6 +71,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/limit','ProductsImageController@showLimit');
             Route::post('/store','ProductsImageController@store');
             Route::post('/update','ProductsImageController@update');
+            Route::post('/delete','ProductsImageController@delete');
         });
 
         Route::group(['prefix' => 'cart'], function () {

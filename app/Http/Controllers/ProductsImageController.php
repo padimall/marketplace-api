@@ -158,9 +158,17 @@ class ProductsImageController extends Controller
         ],200);
     }
 
-    public function delete($id){
-        $data = Products_image::find($id);
+    public function delete(Request $request){
+        $request->validate([
+            'target_id' => 'required|exists:products_images,id'
+        ]);
+
+        $data = Products_image::find($request['target_id']);
         $response = $data->delete();
-        return response()->json($response,200);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource deleted!'
+        ],200);
+
     }
 }
