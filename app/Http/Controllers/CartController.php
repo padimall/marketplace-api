@@ -160,35 +160,57 @@ class CartController extends Controller
         $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('suppliers','suppliers.id','=','products.supplier_id')
-                ->select('carts.*','products.supplier_id','products.name','products.price','suppliers.name AS store')
+                ->select('carts.*','products.min_order','products.supplier_id','products.name','products.price','suppliers.name AS store','suppliers.image AS store_image')
                 ->where('carts.user_id',request()->user()->id)
                 ->orderBy('products.supplier_id','DESC')
                 ->get();
 
         $flagSupplier = '';
-        $index= -1;
+        $index = 0;
         $cartData = array();
         $tempData = array();
         $tempProduct = array();
+        $saveProductId = array();
         for($i=0; $i<sizeof($data); $i++)
         {
             $tempSupplier = $data[$i]->supplier_id;
             if($flagSupplier != $tempSupplier)
             {
-                $index++;
+                if(sizeof($tempProduct)!=0){
+                    $tempData[$index]['orders'] = $tempProduct;
+                    $tempProduct = array();
+                    $index++;
+                }
+
                 array_push($tempData,array(
+                    'supplier_id' => $data[$i]->supplier_id,
                     'store' => $data[$i]->store,
+                    'store_image' => $data[$i]->store_image,
                 ));
 
                 array_push($tempProduct,array(
-                    'product_id' => $data[$i]->store,
+                    'product_id' => $data[$i]->product_id,
+                    'name' => $data[$i]->name,
+                    'price' => $data[$i]->price,
                     'quantity' => $data[$i]->quantity,
+                    'min_order' => $data[$i]->min_order,
                 ));
                 $flagSupplier = $data[$i]->supplier_id;
-                $cartData[$index]['product'] = $i;
             }
             else {
+                array_push($tempProduct,array(
+                    'product_id' => $data[$i]->product_id,
+                    'name' => $data[$i]->name,
+                    'price' => $data[$i]->price,
+                    'quantity' => $data[$i]->quantity,
+                    'min_order' => $data[$i]->min_order,
+                ));
 
+                if($i == (sizeof($data)-1)){
+                    $tempData[$index]['orders'] = $tempProduct;
+                    $tempProduct = array();
+                    $index++;
+                }
             }
         }
 
@@ -202,7 +224,7 @@ class CartController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $data
+            'data' => $tempData
         ],200);
 
     }
