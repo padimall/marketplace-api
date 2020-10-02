@@ -55,7 +55,7 @@ class ProductController extends Controller
                 if($image[$j]['product_id']==$data[$i]['id']){
                     array_push($temp,array(
                         'id' => $image[$j]['id'],
-                        'link' => $image[$j]['image']
+                        'url' => $image[$j]['image']
                     ));
                 }
             }
@@ -95,7 +95,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]['id']){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'link' => $image[$j]->image
+                        'url' => $image[$j]->image
                     ));
                 }
             }
@@ -131,7 +131,7 @@ class ProductController extends Controller
         for($i=0; $i<sizeOf($image); $i++){
             array_push($temp,array(
                 'id' => $image[$i]->id,
-                'link' => $image[$i]->image
+                'url' => $image[$i]->image
             ));
         }
 
@@ -300,7 +300,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'link' => $image[$j]->image
+                        'url' => $image[$j]->image
                     ));
                 }
             }
@@ -357,7 +357,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'link' => $image[$j]->image
+                        'url' => $image[$j]->image
                     ));
                 }
             }
@@ -409,7 +409,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]['id']){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'link' => $image[$j]->image
+                        'url' => $image[$j]->image
                     ));
                 }
             }
@@ -460,7 +460,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'link' =>$image[$j]->image
+                        'url' =>$image[$j]->image
                     ));
                 }
             }
