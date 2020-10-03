@@ -140,7 +140,7 @@ class MainCategoryController extends Controller
         ]);
 
         $data = DB::table('products_categories')
-                ->join('main_categories','main_categories.id','=','products_categories.main_categories_id')
+                ->join('main_categories','main_categories.id','=','products_categories.main_category_id')
                 ->select('products_categories.*')
                 ->where('main_categories.id',$request['target_id'])
                 ->get();
