@@ -39,7 +39,7 @@ class ProductsCategoryController extends Controller
                 ->leftJoin(DB::raw('(select COUNT(id) AS count_product,category from products group by category) AS product_count'),'product_count.category','=','products_categories.id')
                 ->select('product_count.count_product','products_categories.*')
                 ->get();
-                
+
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
@@ -98,7 +98,8 @@ class ProductsCategoryController extends Controller
         $request->validate([
             'name' => 'required',
             'image' => 'required|mimes:png,jpg,jpeg|max:2048',
-            'status' => 'required'
+            'status' => 'required',
+            'main_category_id' => 'required|exists:main_categories,id'
         ]);
 
         $filename = 'product-category-'.Str::uuid().'.jpg';
@@ -153,6 +154,14 @@ class ProductsCategoryController extends Controller
             ]);
             $data->status = $request['status'];
         }
+
+        if(!is_null($request['main_category_id'])){
+            $request->validate([
+                'main_category_id' => 'required|exists:main_categories,id'
+            ]);
+            $data->main_category_id = $request['main_category_id'];
+        }
+
         $data->save();
         return response()->json([
             'status' => 1,
