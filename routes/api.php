@@ -45,6 +45,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/store','SupplierController@store');
             Route::post('/update','SupplierController@update');
             Route::post('/my-agent','SupplierController@myagent');
+            Route::post('/delete-image','SupplierController@delete_image');
         });
 
         Route::group(['prefix' => 'product'], function () {

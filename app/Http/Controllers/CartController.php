@@ -190,6 +190,7 @@ class CartController extends Controller
                 ));
 
                 array_push($tempProduct,array(
+                    'cart_id' => $data[$i]->id,
                     'product_id' => $data[$i]->product_id,
                     'name' => $data[$i]->name,
                     'price' => $data[$i]->price,
@@ -200,6 +201,7 @@ class CartController extends Controller
             }
             else {
                 array_push($tempProduct,array(
+                    'cart_id' => $data[$i]->id,
                     'product_id' => $data[$i]->product_id,
                     'name' => $data[$i]->name,
                     'price' => $data[$i]->price,

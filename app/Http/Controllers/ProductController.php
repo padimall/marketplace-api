@@ -126,6 +126,7 @@ class ProductController extends Controller
                 ->select('image','id')
                 ->where('product_id',$request['target_id'])
                 ->get();
+
         $temp = array();
 
         for($i=0; $i<sizeOf($image); $i++){
@@ -135,10 +136,7 @@ class ProductController extends Controller
             ));
         }
 
-        if(sizeof($temp)!=0)
-        {
-            $data['image'] = $temp;
-        }
+        $data['image'] = $temp;
 
         if(is_null($data)){
             return response()->json([
