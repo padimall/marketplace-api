@@ -211,7 +211,7 @@ class SupplierController extends Controller
         {
             $status = File::delete(public_path($image_target));
         }
-        $data->image = '';
+        $data->image = NULL;
         $data->save();
         $data->save();
         return response()->json([
