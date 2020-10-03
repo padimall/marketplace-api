@@ -133,6 +133,26 @@ class MainCategoryController extends Controller
         ],200);
     }
 
+    public function sub(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:main_categories,id'
+        ]);
+
+        $data = DB::table('products_categories')
+                ->join('main_categories','main_categories.id','=','products_categories.main_categories.id')
+                ->select('products_categories.*')
+                ->where('main_categories.id',$request['target_id'])
+                ->get();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+
+    }
+
     public function delete($id){
         $data = Main_category::find($id);
         $response = $data->delete();

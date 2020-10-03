@@ -70,6 +70,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/all','MainCategoryController@showAll');
             Route::post('/detail','MainCategoryController@show');
             Route::post('/limit','MainCategoryController@showLimit');
+            Route::post('/sub','MainCategoryController@sub');
         });
 
         Route::group(['prefix' => 'product-image'], function () {
