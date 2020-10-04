@@ -142,7 +142,7 @@ class ProductController extends Controller
         else {
             $data['image'] = NULL;
         }
-        
+
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
@@ -485,9 +485,16 @@ class ProductController extends Controller
     }
 
 
-    public function delete($id){
-        $data = Product::find($id);
+    public function delete(Request $request){
+        $request->validate([
+            'target_id' => 'required|exists:products,id'
+        ]);
+        $data = Product::find($request['target_id']);
         $response = $data->delete();
-        return response()->json($response,200);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource deleted!'
+        ],200);
     }
 }
