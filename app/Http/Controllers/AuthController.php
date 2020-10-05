@@ -65,6 +65,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
+                'status' => 0,
                 'message' => 'Unauthorized'
             ], 401);
 
@@ -106,6 +107,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
+                'status' => 0,
                 'message' => 'Unauthorized'
             ], 401);
 
@@ -137,6 +139,7 @@ class AuthController extends Controller
     {
         $request->user()->token()->revoke();
         return response()->json([
+            'status' => 1,
             'message' => 'Successfully logged out'
         ]);
     }

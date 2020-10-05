@@ -17,7 +17,14 @@ class MainCategoryController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]['image']))
+            {
+                $data[$i]['image'] = url('/').'/'.$data[$i]['image'];
+            }
         }
         return response()->json([
             'status' => 1,
@@ -36,8 +43,16 @@ class MainCategoryController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
+
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]['image']))
+            {
+                $data[$i]['image'] = url('/').'/'.$data[$i]['image'];
+            }
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
@@ -52,11 +67,17 @@ class MainCategoryController extends Controller
         ]);
 
         $data = Main_category::find($request['target_id']);
+
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+
+        if(!is_null($data['image']))
+        {
+            $data['image'] = url('/').'/'.$data['image'];
         }
 
         return response()->json([
@@ -70,7 +91,7 @@ class MainCategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg|max:2048',
+            'image' => 'required|mimes:png,jpg,jpeg|max:2008',
             'status' => 'required'
         ]);
 
@@ -105,7 +126,7 @@ class MainCategoryController extends Controller
 
         if(!is_null($request['image'])){
             $request->validate([
-                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+                'image' => 'required|mimes:png,jpg,jpeg|max:2008'
             ]);
             $image_target = $data->image;
             if(File::exists(public_path($image_target)))
@@ -144,6 +165,21 @@ class MainCategoryController extends Controller
                 ->select('products_categories.*')
                 ->where('main_categories.id',$request['target_id'])
                 ->get();
+
+        if(sizeof($data)==0)
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
+        }
 
         return response()->json([
             'status' => 1,

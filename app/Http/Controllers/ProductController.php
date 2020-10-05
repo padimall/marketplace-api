@@ -44,7 +44,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
 
         for($i=0; $i<sizeOf($data); $i++)
@@ -55,7 +55,7 @@ class ProductController extends Controller
                 if($image[$j]['product_id']==$data[$i]['id']){
                     array_push($temp,array(
                         'id' => $image[$j]['id'],
-                        'url' => $image[$j]['image']
+                        'url' => url('/').'/'.$image[$j]['image']
                     ));
                 }
             }
@@ -95,7 +95,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]['id']){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'url' => $image[$j]->image
+                        'url' => url('/').'/'.$image[$j]->image
                     ));
                 }
             }
@@ -106,7 +106,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json([
             'status' => 1,
@@ -132,7 +132,7 @@ class ProductController extends Controller
         for($i=0; $i<sizeOf($image); $i++){
             array_push($temp,array(
                 'id' => $image[$i]->id,
-                'url' => $image[$i]->image
+                'url' => url('/').'/'.$image[$i]->image
             ));
         }
 
@@ -147,7 +147,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json([
             'status' => 1,
@@ -176,7 +176,7 @@ class ProductController extends Controller
             'stock'=> 'required',
             'status'=> 'required',
             'min_order'=> 'required',
-            'image.*'=> 'mimes:png,jpg,jpeg|max:2048'
+            'image.*'=> 'mimes:png,jpg,jpeg|max:2008'
         ]);
 
         $data = $request->all();
@@ -303,7 +303,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'url' => $image[$j]->image
+                        'url' => url('/').'/'.$image[$j]->image
                     ));
                 }
             }
@@ -314,7 +314,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
 
         return response()->json([
@@ -360,7 +360,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'url' => $image[$j]->image
+                        'url' => url('/').'/'.$image[$j]->image
                     ));
                 }
             }
@@ -371,7 +371,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
 
         return response()->json([
@@ -412,7 +412,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]['id']){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'url' => $image[$j]->image
+                        'url' => url('/').'/'.$image[$j]->image
                     ));
                 }
             }
@@ -423,7 +423,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
 
         return response()->json([
@@ -463,7 +463,7 @@ class ProductController extends Controller
                 if($image[$j]->product_id==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
-                        'url' =>$image[$j]->image
+                        'url' =>url('/').'/'.$image[$j]->image
                     ));
                 }
             }
@@ -474,7 +474,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
 
         return response()->json([

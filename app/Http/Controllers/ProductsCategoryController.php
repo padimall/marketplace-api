@@ -44,7 +44,14 @@ class ProductsCategoryController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
         }
         return response()->json([
             'status' => 1,
@@ -63,7 +70,13 @@ class ProductsCategoryController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
         }
         return response()->json([
             'status' => 1,
@@ -83,7 +96,12 @@ class ProductsCategoryController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+
+        if(!is_null($data->image))
+        {
+            $data->image = url('/').'/'.$data->image;
         }
 
         return response()->json([
@@ -97,7 +115,7 @@ class ProductsCategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg|max:2048',
+            'image' => 'required|mimes:png,jpg,jpeg|max:2008',
             'status' => 'required',
             'main_category_id' => 'required|exists:main_categories,id'
         ]);
@@ -133,7 +151,7 @@ class ProductsCategoryController extends Controller
 
         if(!is_null($request['image'])){
             $request->validate([
-                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+                'image' => 'required|mimes:png,jpg,jpeg|max:2008'
             ]);
             $image_target = $data->image;
             if(File::exists(public_path($image_target)))

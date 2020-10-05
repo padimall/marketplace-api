@@ -38,7 +38,7 @@ class CartController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json([
             'status' => 1,
@@ -58,7 +58,7 @@ class CartController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json([
             'status' => 1,
@@ -78,7 +78,7 @@ class CartController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json([
             'status' => 1,
@@ -221,7 +221,7 @@ class CartController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
 
         return response()->json([

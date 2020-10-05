@@ -13,7 +13,7 @@ class PaymentController extends Controller
         if(is_null($data)){
             return response()->json([
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json($data,200);
     }
@@ -24,7 +24,7 @@ class PaymentController extends Controller
         if(is_null($data)){
             return response()->json([
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json($data,200);
     }

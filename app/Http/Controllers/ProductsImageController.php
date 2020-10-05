@@ -39,8 +39,16 @@ class ProductsImageController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
+
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
@@ -59,7 +67,14 @@ class ProductsImageController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
         }
         return response()->json([
             'status' => 1,
@@ -79,7 +94,12 @@ class ProductsImageController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+
+        if(!is_null($data->image))
+        {
+            $data->image = url('/').'/'.$data->image;
         }
         return response()->json([
             'status' => 1,
@@ -92,7 +112,7 @@ class ProductsImageController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'image.*' => 'required|mimes:jpg,png,jpeg|max:2048',
+            'image.*' => 'required|mimes:jpg,png,jpeg|max:2008',
         ]);
 
         $data = $request->all();
@@ -135,7 +155,7 @@ class ProductsImageController extends Controller
 
         if(!is_null($request['image'])){
             $request->validate([
-                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+                'image' => 'required|mimes:png,jpg,jpeg|max:2008'
             ]);
 
             $image_target = $data->image;
@@ -164,6 +184,19 @@ class ProductsImageController extends Controller
         ]);
 
         $data = Products_image::find($request['target_id']);
+        if(is_null($data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        $image_target = $data->image;
+        if(File::exists(public_path($image_target)))
+        {
+            $status = File::delete(public_path($image_target));
+        }
+
         $response = $data->delete();
         return response()->json([
             'status' => 1,

@@ -39,7 +39,7 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
         }
         return response()->json([
             'status' => 1,
@@ -56,7 +56,12 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],204);
+            ],200);
+        }
+
+        if(!is_null($data['image']))
+        {
+            $data['image']=url('/').'/'.$data['image'];
         }
         return response()->json([
             'status' => 1,
@@ -72,7 +77,7 @@ class SupplierController extends Controller
             'phone' => 'required|unique:suppliers,phone',
             'address'=> 'required|string',
             'nib' => 'required',
-            'image'=> 'mimes:png,jpg,jpeg|max:2048',
+            'image'=> 'mimes:png,jpg,jpeg|max:2008',
             'agent_code' => 'required'
         ]);
 
@@ -100,7 +105,7 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Agent Not Exist!'
-            ],204);
+            ],200);
         }
 
         $data = $request->all();
@@ -158,7 +163,7 @@ class SupplierController extends Controller
 
         if(!is_null($request['image'])){
             $request->validate([
-                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
+                'image' => 'required|mimes:png,jpg,jpeg|max:2008'
             ]);
             $image_target = $data->image;
             if(File::exists(public_path($image_target)))
@@ -186,7 +191,7 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'You are not supplier!'
-            ],204);
+            ],200);
         }
 
         $myAgent =  DB::table('agents')
