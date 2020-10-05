@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -154,6 +155,31 @@ class AuthController extends Controller
         return response()->json($request->user());
     }
 
+    public function password(Request $request)
+    {
+        $data = User::where('id',request()->user()->id)->first();
+        $request->validate([
+            'password' => 'required|string',
+            'old_password' => 'required|string'
+        ]);
+
+        if(Hash::check($request['old_password'], $data->password))
+        {
+            $data->password = bcrypt($request['password']);
+            $data->save();
+            return response()->json([
+                'status' => 1,
+                'message' => 'Password updated!'
+            ],200);
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Wrong old password!'
+            ],200);
+        }
+    }
+
     public function update(Request $request)
     {
 
@@ -171,13 +197,6 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users,email'
             ]);
             $data->email = $request['email'];
-        }
-
-        if(!is_null($request['password'])){
-            $request->validate([
-                'password' => 'required'
-            ]);
-            $data->password = bcrypt($request['password']);
         }
 
         if(!is_null($request['address'])){
