@@ -13,7 +13,7 @@ class InvoicesAgentController extends Controller
         if(is_null($data)){
             return response()->json([
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json($data,200);
     }
@@ -24,7 +24,7 @@ class InvoicesAgentController extends Controller
         if(is_null($data)){
             return response()->json([
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json($data,200);
     }

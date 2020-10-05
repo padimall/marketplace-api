@@ -44,7 +44,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
 
         for($i=0; $i<sizeOf($data); $i++)
@@ -106,7 +106,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -147,7 +147,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -314,7 +314,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
 
         return response()->json([
@@ -371,7 +371,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
 
         return response()->json([
@@ -423,7 +423,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
 
         return response()->json([
@@ -474,7 +474,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
 
         return response()->json([

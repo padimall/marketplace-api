@@ -40,7 +40,7 @@ class AgentController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -60,7 +60,7 @@ class AgentController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -77,7 +77,7 @@ class AgentController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -155,6 +155,5 @@ class AgentController extends Controller
         $data = Agent::find($id);
         $response = $data->delete();
         return response()->json($response,200);
-
     }
 }

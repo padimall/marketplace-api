@@ -39,7 +39,7 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -56,7 +56,7 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -100,7 +100,7 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Agent Not Exist!'
-            ],404);
+            ],204);
         }
 
         $data = $request->all();
@@ -186,7 +186,7 @@ class SupplierController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'You are not supplier!'
-            ],404);
+            ],204);
         }
 
         $myAgent =  DB::table('agents')

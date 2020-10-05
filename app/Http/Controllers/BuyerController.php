@@ -39,7 +39,7 @@ class BuyerController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -59,7 +59,7 @@ class BuyerController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -79,7 +79,7 @@ class BuyerController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
-            ],404);
+            ],204);
         }
         return response()->json([
             'status' => 1,
@@ -171,7 +171,7 @@ class BuyerController extends Controller
             return response()->json([
                 'response' => $response,
                 'message' => 'Username or password not found!'
-            ], 404);
+            ], 204);
 
         return response()->json([
             'status' => $response,
