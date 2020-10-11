@@ -80,6 +80,13 @@ class AgentController extends Controller
                 'message' => 'Resource not found!'
             ],200);
         }
+
+        $supplier = DB::table('suppliers')
+                    ->join('agents_affiliate_suppliers','agents_affiliate_suppliers.supplier_id','=','suppliers.id')
+                    ->where('agents_affiliate_suppliers.agent_id',$data['id'])
+                    ->select('suppliers.*')
+                    ->get();
+        $data['supplier'] = $supplier;
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
