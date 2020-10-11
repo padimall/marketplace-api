@@ -120,7 +120,7 @@ class ProductsCategoryController extends Controller
             'main_category_id' => 'required|exists:main_categories,id'
         ]);
 
-        $filename = 'product-category-'.Str::uuid().'.jpg';
+        $filename = 'product-category-'.Str::uuid().'.png';
         $request->file('image')->move(public_path("/product-category"),$filename);
         $imageURL = 'product-category/'.$filename;
 
@@ -159,7 +159,7 @@ class ProductsCategoryController extends Controller
                 $status = File::delete(public_path($image_target));
             }
 
-            $filename = 'product-category-'.Str::uuid().'.jpg';
+            $filename = 'product-category-'.Str::uuid().'.png';
             $request->file('image')->move(public_path("/product-category"),$filename);
             $imageURL = 'product-category/'.$filename;
 

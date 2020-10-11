@@ -95,7 +95,7 @@ class MainCategoryController extends Controller
             'status' => 'required'
         ]);
 
-        $filename = 'main-category-'.Str::uuid().'.jpg';
+        $filename = 'main-category-'.Str::uuid().'.png';
         $request->file('image')->move(public_path("/main-category"),$filename);
         $imageURL = 'main-category/'.$filename;
 
@@ -134,7 +134,7 @@ class MainCategoryController extends Controller
                 $status = File::delete(public_path($image_target));
             }
 
-            $filename = 'main-category-'.Str::uuid().'.jpg';
+            $filename = 'main-category-'.Str::uuid().'.png';
             $request->file('image')->move(public_path("/main-category"),$filename);
             $imageURL = 'main-category/'.$filename;
 
