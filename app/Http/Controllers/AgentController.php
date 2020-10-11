@@ -7,6 +7,7 @@ use App\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class AgentController extends Controller
 {
@@ -158,7 +159,7 @@ class AgentController extends Controller
             }
 
             $filename = 'agent-'.Str::uuid().'.jpg';
-            $request->file('agent')->move(public_path("/agent"),$filename);
+            $request->file('image')->move(public_path("/agent"),$filename);
             $imageURL = 'agent/'.$filename;
 
             $data->image = $imageURL;
