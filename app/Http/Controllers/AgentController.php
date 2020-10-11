@@ -121,6 +121,15 @@ class AgentController extends Controller
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
         $data['agent_code'] = $random;
+
+        if(!is_null($request['image']))
+        {
+            $filename = 'agent-'.Str::uuid().'.jpg';
+            $request->file('image')->move(public_path("/agent"),$filename);
+            $imageURL = 'agent/'.$filename;
+            $data['image'] = $imageURL;
+        }
+
         $response = Agent::create($data);
         return response()->json([
             'status' => 1,
