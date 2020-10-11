@@ -90,7 +90,8 @@ class AgentController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'phone' => 'required|unique:agents,phone'
+            'phone' => 'required|unique:agents,phone',
+            'image'=> 'mimes:png,jpg,jpeg|max:2008'
         ]);
 
         $supplierExist = Supplier::where('user_id',request()->user()->id)->first();
@@ -144,6 +145,25 @@ class AgentController extends Controller
             ]);
             $data->phone = $request['phone'];
         }
+
+        if(!is_null($request['image'])){
+            $request->validate([
+                'image' => 'required|mimes:png,jpg,jpeg|max:2008'
+            ]);
+
+            $image_target = $data->image;
+            if(File::exists(public_path($image_target)))
+            {
+                $status = File::delete(public_path($image_target));
+            }
+
+            $filename = 'agent-'.Str::uuid().'.jpg';
+            $request->file('agent')->move(public_path("/agent"),$filename);
+            $imageURL = 'agent/'.$filename;
+
+            $data->image = $imageURL;
+        }
+
         $data->save();
         return response()->json([
             'status' => 1,
