@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAgentIdAndChangeSupplierIdInProducts extends Migration
+class AddAdminPriceToProducts extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,7 @@ class AddAgentIdAndChangeSupplierIdInProducts extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->uuid('agent_id')->nullable();
-            $table->foreign('agent_id')->references('id')->on('agents');
-            $table->uuid('supplier_id')->nullable()->change();
+            $table->integer('admin_price')->nullable();
         });
     }
 
@@ -28,7 +26,7 @@ class AddAgentIdAndChangeSupplierIdInProducts extends Migration
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('agent_id');
+            $table->dropColumn('admin_price');
         });
     }
 }

@@ -6,35 +6,13 @@ use App\Product;
 use App\Products_image;
 use App\Supplier;
 use App\Agent;
+use App\Agents_affiliate_supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index(Request $request){
-        $request->validate([
-            'request_type'=>'required'
-        ]);
-
-        $type = $request['request_type'];
-        if($type == 1){
-            return $this->showAll();
-        }
-        else if($type == 2){
-            return $this->show($request);
-        }
-        else if($type == 3){
-            return $this->store($request);
-        }
-        else if($type == 4){
-            return $this->update($request);
-        }
-        else if($type == 5){
-            return $this->showLimit($request);
-        }
-    }
-
     public function showAll()
     {
         $data = Product::all();
@@ -158,14 +136,18 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $supplier_data = Supplier::where('user_id',request()->user()->id)->first();
-
-        if(is_null($supplier_data)){
-            return response()->json([
-                'status' => 0,
-                'message' => 'You are not a supplier!'
-            ],401);
+        $agent_data = Agent::where('user_id',request()->user()->id)->first();
+        if(is_null($agent_data)){
+            $supplier_data = Supplier::where('user_id',request()->user()->id)->first();
+            if(is_null($supplier_data)){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'You are not a supplier or an agent!'
+                ],401);
+            }
+            $myAgent = Agents_affiliate_supplier::where('supplier_id',$supplier_data->id)->first();
         }
+
 
         $request->validate([
             'name'=> 'required',
@@ -174,13 +156,30 @@ class ProductController extends Controller
             'description'=> 'required',
             'category'=> 'required|exists:products_categories,id',
             'stock'=> 'required',
-            'status'=> 'required',
             'min_order'=> 'required',
             'image.*'=> 'mimes:png,jpg,jpeg|max:2008'
         ]);
 
+        if(!is_array($request['image'])){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Use image[] instead of image!'
+            ],201);
+        }
+
         $data = $request->all();
-        $data['supplier_id'] = $supplier_data->id;
+
+        if(is_null($agent_data)){
+            $data['agent_id'] = $myAgent->agent_id;
+            $data['supplier_id'] = $supplier_data->id;
+            $data['status'] = 0;
+        }
+        else{
+            $data['agent_id'] = $agent_data->id;
+            $data['supplier_id'] = NULL;
+            $data['status'] = 1;
+        }
+
         $response = Product::create($data);
 
         if(!is_null($request['image']))
@@ -336,11 +335,7 @@ class ProductController extends Controller
             ],401);
         }
 
-        $data = DB::table('products')
-                ->select('products.*')
-                ->join('agents_affiliate_suppliers','agents_affiliate_suppliers.supplier_id','=','products.supplier_id')
-                ->where('agents_affiliate_suppliers.agent_id',$agent_data->id)
-                ->get();
+        $data = Product::where('agent_id',$agent_data->id)->get();
 
         $array_product_id = array();
         for ($i=0; $i<sizeOf($data); $i++)
@@ -393,6 +388,53 @@ class ProductController extends Controller
         }
 
         $data = Product::where('supplier_id',$supplier_data->id)->get();
+
+        $array_product_id = array();
+        for ($i=0; $i<sizeOf($data); $i++)
+        {
+            array_push($array_product_id,$data[$i]['id']);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$array_product_id)
+                    ->get();
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$data[$i]['id']){
+                    array_push($temp,array(
+                        'id' => $image[$j]->id,
+                        'url' => url('/').'/'.$image[$j]->image
+                    ));
+                }
+            }
+            $data[$i]['image'] = $temp;
+        }
+
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function product_my_supplier(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|string|exists:suppliers,id'
+        ]);
+
+        $data = Product::where('supplier_id',$request['target_id'])->get();
 
         $array_product_id = array();
         for ($i=0; $i<sizeOf($data); $i++)

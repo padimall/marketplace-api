@@ -60,6 +60,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/search','ProductController@product_search');
             Route::post('/category','ProductController@product_category');
             Route::post('/delete','ProductController@delete');
+            Route::post('/my-supplier','ProductController@product_my_supplier');
         });
 
         Route::group(['prefix' => 'product-category'], function () {

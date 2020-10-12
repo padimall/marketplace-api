@@ -77,7 +77,7 @@ class AgentController extends Controller
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
-                'message' => 'Resource not found!'
+                'message' => 'You are not an agent!'
             ],200);
         }
 
@@ -128,6 +128,7 @@ class AgentController extends Controller
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
         $data['agent_code'] = $random;
+        $data['status'] = 0;
 
         if(!is_null($request['image']))
         {

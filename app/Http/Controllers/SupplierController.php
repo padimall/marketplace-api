@@ -55,7 +55,7 @@ class SupplierController extends Controller
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
-                'message' => 'Resource not found!'
+                'message' => 'You are not a supplier!'
             ],200);
         }
 
