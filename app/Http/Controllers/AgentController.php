@@ -87,6 +87,12 @@ class AgentController extends Controller
                     ->select('suppliers.*')
                     ->get();
         $data['supplier'] = $supplier;
+
+        if(!is_null($data['image']))
+        {
+            $data['image']=url('/').'/'.$data['image'];
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',

@@ -160,11 +160,11 @@ class ProductController extends Controller
             'image.*'=> 'mimes:png,jpg,jpeg|max:2008'
         ]);
 
-        if(!is_array($request['image'])){
+        if(isset($request['image']) && !is_array($request['image'])){
             return response()->json([
                 'status' => 0,
                 'message' => 'Use image[] instead of image!'
-            ],201);
+            ],200);
         }
 
         $data = $request->all();
@@ -335,7 +335,12 @@ class ProductController extends Controller
             ],401);
         }
 
-        $data = Product::where('agent_id',$agent_data->id)->get();
+        $data = DB::table('products')
+                ->where('agent_id',$agent_data->id)
+                ->where('supplier_id',NULL)
+                ->select('*')
+                ->get();
+        // Product::where('agent_id',$agent_data->id)->get();
 
         $array_product_id = array();
         for ($i=0; $i<sizeOf($data); $i++)
