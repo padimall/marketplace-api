@@ -15,7 +15,12 @@ class ProductController extends Controller
 {
     public function showAll()
     {
-        $data = Product::all();
+        $data = DB::table('products')
+                ->where('status',1)
+                ->select('*')
+                ->get();
+
+        // Product::all();
         $image = Products_image::all();
 
         if(sizeOf($data)==0){
@@ -30,14 +35,14 @@ class ProductController extends Controller
             $temp = array();
             for($j=0; $j<sizeOf($image); $j++)
             {
-                if($image[$j]['product_id']==$data[$i]['id']){
+                if($image[$j]['product_id']==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]['id'],
                         'url' => url('/').'/'.$image[$j]['image']
                     ));
                 }
             }
-            $data[$i]['image'] = $temp;
+            $data[$i]->image = $temp;
         }
 
         return response()->json([
@@ -53,12 +58,17 @@ class ProductController extends Controller
             'limit' => 'required'
         ]);
 
-        $data = Product::inRandomOrder()->limit($request['limit'])->get();
+        $data = DB::table('products')
+                ->where('status',1)
+                ->select('*')
+                ->inRandomOrder()
+                ->limit($request['limit'])
+                ->get();
 
         $array_product_id = array();
         for ($i=0; $i<sizeOf($data); $i++)
         {
-            array_push($array_product_id,$data[$i]['id']);
+            array_push($array_product_id,$data[$i]->id);
         }
 
         $image = DB::table('products_images')
@@ -70,14 +80,14 @@ class ProductController extends Controller
             $temp = array();
             for($j=0; $j<sizeOf($image); $j++)
             {
-                if($image[$j]->product_id==$data[$i]['id']){
+                if($image[$j]->product_id==$data[$i]->id){
                     array_push($temp,array(
                         'id' => $image[$j]->id,
                         'url' => url('/').'/'.$image[$j]->image
                     ));
                 }
             }
-            $data[$i]['image'] = $temp;
+            $data[$i]->image = $temp;
         }
 
         if(sizeOf($data)==0){
@@ -489,6 +499,7 @@ class ProductController extends Controller
         $data = DB::table('products')
                 ->join('products_categories','products_categories.id','=','products.category')
                 ->where('products_categories.name','like','%'.$request['name'].'%')
+                ->where('products.status',1)
                 ->select('products.*','products_categories.name AS category_name')
                 ->get();
 
