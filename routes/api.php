@@ -55,6 +55,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/limit','ProductController@showLimit');
             Route::post('/store','ProductController@store');
             Route::post('/update','ProductController@update');
+            Route::post('/update-status','ProductController@update_status');
             Route::post('/agent','ProductController@product_agent');
             Route::post('/supplier','ProductController@product_supplier');
             Route::post('/search','ProductController@product_search');

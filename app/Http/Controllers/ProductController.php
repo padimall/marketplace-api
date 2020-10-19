@@ -214,6 +214,41 @@ class ProductController extends Controller
         ],201);
     }
 
+    public function update_status(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required',
+            'status' => 'required'
+        ]);
+
+        $data = Product::find($request['target_id']);
+        $is_agent = Agent::where('user_id',request()->user()->id)->first();
+
+        if(!is_null($is_agent)){
+            if($is_agent->id != $data->agent_id){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'This is not your supplier product!'
+                ],200);
+            }
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not an agent!'
+            ],200);
+        }
+
+        $data->status = $request['status'];
+        $data->save();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Status updated!'
+        ],200);
+
+    }
+
     public function update(Request $request)
     {
         $request->validate([
