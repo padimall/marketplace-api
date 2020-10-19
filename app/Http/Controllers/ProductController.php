@@ -222,6 +222,39 @@ class ProductController extends Controller
 
         $data = Product::find($request['target_id']);
 
+        $is_agent = Agent::where('user_id',request()->user()->id)->first();
+        $is_supplier = Supplier::where('user_id',request()->user()->id)->first();
+
+        $check_sup = false;
+
+        if(!is_null($is_agent)){
+            if($is_agent->id != $data->agent_id)
+            {
+                $check_sup = true;
+            }
+        }
+        else {
+            $check_sup = true;
+        }
+
+        if(!is_null($is_supplier) && $check_sup)
+        {
+            if($is_supplier->id != $data->supplier_id)
+            {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'This is not your product'
+                ],200);
+            }
+        }
+        else if(is_null($is_supplier) && $check_sup){
+            return response()->json([
+                'status' => 0,
+                'message' => 'This is not your product'
+            ],200);
+        }
+
+
         if(!is_null($request['name'])){
             $request->validate([
                 'name' => 'required'

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -57,13 +58,26 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'email_or_phone' => 'required|string',
             'password' => 'required|string',
             'device_id' => 'required|string',
             'remember_me' => 'boolean'
         ]);
+        
+        $validator = Validator::make(['email' => $request['email_or_phone']],['email' => 'required|email']);
+        if($validator->passes()){
+            $credentials = array(
+                'email' => $request['email_or_phone'],
+                'password' => $request['password']
+            );
+        }
+        else {
+            $credentials = array(
+                'phone' => $request['email_or_phone'],
+                'password' => $request['password']
+            );
+        }
 
-        $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
                 'status' => 0,
