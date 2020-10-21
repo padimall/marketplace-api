@@ -19,8 +19,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
+Route::get('email/verify/', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
+
+Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
+
 Route::group(['prefix' => 'v1'], function () {
     Route::post('signup','AuthController@signup');
+
     Route::post('login','AuthController@login');
     Route::post('login-dev','AuthController@login_dev');
 
@@ -108,7 +113,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
     });
 
-    Route::group(['middleware' => ['auth:api','scope:system-token']], function () {
+    Route::group(['middleware' => ['auth:api','scope:system-token','verified']], function () {
 
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/all','AgentController@showAll');

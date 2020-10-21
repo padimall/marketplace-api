@@ -30,19 +30,34 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed'
         ]);
 
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password)
-        ]);
-        $user->save();
+        $data = $request->all();
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'Successfully created user!'
-        ], 201);
+        if($user->sendEmailVerificationNotification())
+        {
+            return response()->json([
+                'status' => 1,
+                'message' => 'Successfully created user!',
+                'verification' => 1
+            ], 201);
+        }
+        else {
+            return response()->json([
+                'status' => 1,
+                'message' => 'Successfully created user!',
+                'verification' => 0
+            ], 201);
+        }
+        // $user = new User([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'address' => $request->address,
+        //     'phone' => $request->phone,
+        //     'password' => bcrypt($request->password)
+        // ]);
+        // $user->save();
+
     }
 
     /**
@@ -63,7 +78,7 @@ class AuthController extends Controller
             'device_id' => 'required|string',
             'remember_me' => 'boolean'
         ]);
-        
+
         $validator = Validator::make(['email' => $request['email_or_phone']],['email' => 'required|email']);
         if($validator->passes()){
             $credentials = array(
@@ -80,11 +95,19 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
             return response()->json([
-                'status' => 0,
+                'status' => $credentials,
                 'message' => 'Unauthorized'
             ], 401);
 
         $user = $request->user();
+        if(!$user->hasVerifiedEmail()){
+            $user->sendEmailVerificationNotification();
+            return response()->json([
+                "status" => 0,
+                "message" => "Email verification sent"
+            ]);
+        }
+
         $tokenResult = $user->createToken('Personal Access Token',['user-token']);
         $token = $tokenResult->token;
         if ($request->remember_me){
