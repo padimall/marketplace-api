@@ -33,7 +33,12 @@ class AuthController extends Controller
         $data = $request->all();
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
-        $user->sendEmailVerificationNotification();
+
+        //for send email verification
+        // $user->sendEmailVerificationNotification();
+
+        //auto mark as verified
+        $user->markEmailAsVerified();
 
         return response()->json([
             'status' => 1,
