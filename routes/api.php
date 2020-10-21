@@ -19,6 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
+Route::post('password/email', 'ForgotPasswordController@forgot');
+Route::post('password/change', 'ForgotPasswordController@changePassword')->name('password.reset');
+
+
 Route::get('email/verify/', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
 
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
