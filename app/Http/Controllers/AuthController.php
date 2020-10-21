@@ -33,22 +33,12 @@ class AuthController extends Controller
         $data = $request->all();
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
+        $user->sendEmailVerificationNotification();
 
-        if($user->sendEmailVerificationNotification())
-        {
-            return response()->json([
-                'status' => 1,
-                'message' => 'Successfully created user!',
-                'verification' => 1
-            ], 201);
-        }
-        else {
-            return response()->json([
-                'status' => 1,
-                'message' => 'Successfully created user!',
-                'verification' => 0
-            ], 201);
-        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Successfully created user!'
+        ], 201);
         // $user = new User([
         //     'name' => $request->name,
         //     'email' => $request->email,
@@ -95,7 +85,7 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
             return response()->json([
-                'status' => $credentials,
+                'status' => 0,
                 'message' => 'Unauthorized'
             ], 401);
 
