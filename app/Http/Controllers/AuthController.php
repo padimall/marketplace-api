@@ -95,13 +95,14 @@ class AuthController extends Controller
             ], 401);
 
         $user = $request->user();
-        if(!$user->hasVerifiedEmail()){
-            $user->sendEmailVerificationNotification();
-            return response()->json([
-                "status" => 0,
-                "message" => "Email verification sent"
-            ]);
-        }
+
+        // if(!$user->hasVerifiedEmail()){
+        //     $user->sendEmailVerificationNotification();
+        //     return response()->json([
+        //         "status" => 0,
+        //         "message" => "Email verification sent"
+        //     ]);
+        // }
 
         $tokenResult = $user->createToken('Personal Access Token',['user-token']);
         $token = $tokenResult->token;
