@@ -25,8 +25,8 @@ Route::get('email/verify/', 'VerificationController@verify')->name('verification
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::post('password/email', 'ForgotPasswordController@forgot');
-    Route::post('password/change', 'ForgotPasswordController@changePassword')->name('password.reset');
+    Route::post('password/forgot', 'ForgotPasswordController@forgot');
+    Route::post('password/reset', 'ForgotPasswordController@changePassword')->name('password.reset');
 
 
     Route::post('signup','AuthController@signup');
