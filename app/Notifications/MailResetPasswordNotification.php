@@ -47,7 +47,7 @@ class MailResetPasswordNotification extends Notification
                     ->line('Atur ulang kata sandi kamu dengan menekan tombol dibawah ini')
                     ->action('Atur Ulang Kata Sandi', 'https://padimallindonesia.com/reset-password?token='.$this->token.'&email='.$notifiable->email)
                     ->line('Salam,')
-                    ->line('Tim Padimall')
+                    ->line('Tim Padimall');
     }
 
     /**
