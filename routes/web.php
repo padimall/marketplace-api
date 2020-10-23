@@ -14,7 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
-    // return view('notfound');
-    return response()->view('errors.404',array(),404);
+    return ('');
 });

@@ -13,7 +13,7 @@ class ForgotPasswordController extends Controller
         ]);
         $credentials['email'] = $request['email'];
 
-        Password::sendResetLink($credentials);
+        $response = Password::sendResetLink($credentials);
 
         return response()->json([
             "status" => 1,
