@@ -13,6 +13,10 @@ class MainCategoryController extends Controller
     public function showAll()
     {
         $data = Main_category::all();
+        $data = DB::table('main_categories')
+                ->leftJoin(DB::raw('(select COUNT(id) AS count_category,main_category_id from products_categories group by main_category_id) AS category_count'),'category_count.main_category_id','=','main_categories.id')
+                ->select('category_count.count_category','main_categories.*')
+                ->get();
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,
@@ -21,9 +25,9 @@ class MainCategoryController extends Controller
         }
 
         for($i=0; $i<sizeof($data); $i++){
-            if(!is_null($data[$i]['image']))
+            if(!is_null($data[$i]->image))
             {
-                $data[$i]['image'] = url('/').'/'.$data[$i]['image'];
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
             }
         }
         return response()->json([
