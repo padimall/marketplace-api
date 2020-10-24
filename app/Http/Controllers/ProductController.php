@@ -109,7 +109,18 @@ class ProductController extends Controller
             'target_id' => 'required'
         ]);
 
-        $data = Product::find($request['target_id']);
+        // $data = Product::find($request['target_id']);
+        $data = DB::table('products')
+                ->where('id',$request['target_id'])
+                ->first();
+
+        if(is_null($data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
         $image = DB::table('products_images')
                 ->select('image','id')
                 ->where('product_id',$request['target_id'])
@@ -125,18 +136,12 @@ class ProductController extends Controller
         }
 
         if(sizeof($temp)!=0){
-            $data['image'] = $temp;
+            $data->image = $temp;
         }
         else {
-            $data['image'] = NULL;
+            $data->image = NULL;
         }
 
-        if(is_null($data)){
-            return response()->json([
-                'status' => 0,
-                'message' => 'Resource not found!'
-            ],200);
-        }
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
@@ -156,8 +161,14 @@ class ProductController extends Controller
                 ],401);
             }
             $myAgent = Agents_affiliate_supplier::where('supplier_id',$supplier_data->id)->first();
-        }
 
+            if(is_null($myAgent)){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'You are not a supplier or an agent!'
+                ],401);
+            }
+        }
 
         $request->validate([
             'name'=> 'required',
