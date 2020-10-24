@@ -41,13 +41,13 @@ class MailResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Atur Ulang Kata Sandi Akun Padimall-mu')
+                    ->subject('Atur Ulang Kata Sandi Akun PadiMall-mu')
                     ->line('Hai '.$notifiable->name.',')
                     ->line('Kami telah menerima pengajuanmu untuk mengatur ulang kata sandi Padimall kamu')
                     ->line('Atur ulang kata sandi kamu dengan menekan tombol dibawah ini')
                     ->action('Atur Ulang Kata Sandi', 'https://padimallindonesia.com/reset-password?token='.$this->token.'&email='.$notifiable->email)
                     ->line('Salam,')
-                    ->line('Tim Padimall');
+                    ->line('Tim PadiMall');
     }
 
     /**
