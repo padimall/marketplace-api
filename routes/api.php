@@ -34,6 +34,28 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login','AuthController@login');
     Route::post('login-dev','AuthController@login_dev');
 
+    Route::group(['prefix' => 'product'], function () {
+        Route::post('/all','ProductController@showAll');
+        Route::post('/detail','ProductController@show');
+        Route::post('/limit','ProductController@showLimit');
+        Route::post('/search','ProductController@product_search');
+        Route::post('/category','ProductController@product_category');
+    });
+
+    Route::group(['prefix' => 'main-category'], function () {
+        Route::post('/all','MainCategoryController@showAll');
+        Route::post('/detail','MainCategoryController@show');
+        Route::post('/limit','MainCategoryController@showLimit');
+        Route::post('/sub','MainCategoryController@sub');
+    });
+
+    Route::group(['prefix' => 'product-category'], function () {
+        Route::post('/all','ProductsCategoryController@showAll');
+        Route::post('/detail','ProductsCategoryController@show');
+        Route::post('/limit','ProductsCategoryController@showLimit');
+    });
+
+
     Route::group(['middleware' => ['auth:api','scopes:system-token,user-token']], function () {
 
         Route::post('/user',function(){
@@ -60,32 +82,15 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
         Route::group(['prefix' => 'product'], function () {
-            Route::post('/all','ProductController@showAll');
-            Route::post('/detail','ProductController@show');
-            Route::post('/limit','ProductController@showLimit');
             Route::post('/store','ProductController@store');
             Route::post('/update','ProductController@update');
             Route::post('/update-status','ProductController@update_status');
             Route::post('/agent','ProductController@product_agent');
             Route::post('/supplier','ProductController@product_supplier');
-            Route::post('/search','ProductController@product_search');
-            Route::post('/category','ProductController@product_category');
             Route::post('/delete','ProductController@delete');
             Route::post('/my-supplier','ProductController@product_my_supplier');
         });
 
-        Route::group(['prefix' => 'product-category'], function () {
-            Route::post('/all','ProductsCategoryController@showAll');
-            Route::post('/detail','ProductsCategoryController@show');
-            Route::post('/limit','ProductsCategoryController@showLimit');
-        });
-
-        Route::group(['prefix' => 'main-category'], function () {
-            Route::post('/all','MainCategoryController@showAll');
-            Route::post('/detail','MainCategoryController@show');
-            Route::post('/limit','MainCategoryController@showLimit');
-            Route::post('/sub','MainCategoryController@sub');
-        });
 
         Route::group(['prefix' => 'product-image'], function () {
             Route::post('/all','ProductsImageController@showAll');
