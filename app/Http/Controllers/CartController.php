@@ -240,7 +240,7 @@ class CartController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $tempData
+            'data' => $data
         ],200);
 
     }
