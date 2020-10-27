@@ -192,7 +192,7 @@ class CartController extends Controller
         $saveProductId = array();
         for($i=0; $i<sizeof($data); $i++)
         {
-            $tempSupplier = $data[$i]->supplier_id;
+            $tempSupplier = $data[$i]->agent_id;
             if($flagSupplier != $tempSupplier)
             {
                 if(sizeof($tempProduct)!=0){
@@ -202,7 +202,7 @@ class CartController extends Controller
                 }
 
                 array_push($tempData,array(
-                    'supplier_id' => $data[$i]->supplier_id,
+                    'agent_id' => $data[$i]->agent_id,
                     'store' => $data[$i]->store,
                     'store_image' => $data[$i]->store_image,
                     'address' => $data[$i]->address,
@@ -216,7 +216,7 @@ class CartController extends Controller
                     'quantity' => $data[$i]->quantity,
                     'min_order' => $data[$i]->min_order,
                 ));
-                $flagSupplier = $data[$i]->supplier_id;
+                $flagSupplier = $data[$i]->agent_id;
             }
             else {
                 array_push($tempProduct,array(
