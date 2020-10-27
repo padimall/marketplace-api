@@ -123,9 +123,14 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/store','InvoicesProductController@store');
             Route::post('/update','InvoicesProductController@update');
         });
+
+        Route::group(['prefix' => 'admin-price'], function () {
+            Route::post('/all','AdminPriceController@showAll');
+            Route::post('/detail','AdminPriceController@show');
+        });
     });
 
-    Route::group(['middleware' => ['auth:api','scope:system-token','verified']], function () {
+    Route::group(['middleware' => ['auth:api','scope:system-token']], function () {
 
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/all','AgentController@showAll');
@@ -136,6 +141,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/all','SupplierController@showAll');
             Route::post('/limit','SupplierController@showLimit');
         });
+
 
         Route::group(['prefix' => 'agents-affiliate-supplier'], function () {
             Route::post('/all','AgentsAffiliateSupplierController@showAll');
@@ -170,6 +176,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'invoice-product'], function () {
             Route::post('/all','InvoicesProductController@showAll');
             Route::post('/limit','InvoicesProductController@showLimit');
+        });
+
+        Route::group(['prefix' => 'admin-price'], function () {
+            Route::post('/store','AdminPriceController@store');
+            Route::post('/update','AdminPriceController@update');
         });
 
     });

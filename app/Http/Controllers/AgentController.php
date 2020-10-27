@@ -11,29 +11,6 @@ use Illuminate\Support\Facades\File;
 
 class AgentController extends Controller
 {
-    public function index(Request $request){
-        $request->validate([
-            'request_type'=>'required'
-        ]);
-
-        $type = $request['request_type'];
-        if($type == 1){
-            return $this->showAll();
-        }
-        else if($type == 2){
-            return $this->show($request);
-        }
-        else if($type == 3){
-            return $this->store($request);
-        }
-        else if($type == 4){
-            return $this->update($request);
-        }
-        else if($type == 5){
-            return $this->showLimit($request);
-        }
-    }
-
     public function showAll()
     {
         $data = Agent::all();
@@ -105,6 +82,7 @@ class AgentController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:agents,phone',
+            'address' => 'required|string',
             'image'=> 'mimes:png,jpg,jpeg|max:2008'
         ]);
 
@@ -168,6 +146,13 @@ class AgentController extends Controller
                 'phone' => 'required|unique:agents,phone'
             ]);
             $data->phone = $request['phone'];
+        }
+
+        if(!is_null($request['address'])){
+            $request->validate([
+                'address' => 'required|strings'
+            ]);
+            $data->address = $request['address'];
         }
 
         if(!is_null($request['image'])){
