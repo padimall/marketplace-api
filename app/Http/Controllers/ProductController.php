@@ -621,6 +621,35 @@ class ProductController extends Controller
         ],200);
     }
 
+    public function product_main_category(Request $request){
+        $request->validate([
+            'target_id' => 'required|exists:main_categories,id'
+        ]);
+
+        $data = DB::table('products')
+                ->join('products_categories','products_categories.id','=','products.category')
+                ->join('main_categories','main_categories.id','=','products_categories.main_category_id')
+                ->where('main_categories.id',$request['target_id'])
+                ->select('products.*')
+                ->get();
+
+        if(sizeof($data) == 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+        else {
+            return response()->json([
+                'status' => 1,
+                'message' => 'Resource found!',
+                'data' => $data
+            ],200);
+        }
+
+
+    }
+
 
     public function delete(Request $request){
         $request->validate([

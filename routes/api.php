@@ -40,6 +40,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/limit','ProductController@showLimit');
         Route::post('/search','ProductController@product_search');
         Route::post('/category','ProductController@product_category');
+        Route::post('/main-category','ProductController@product_main_category');
     });
 
     Route::group(['prefix' => 'main-category'], function () {
