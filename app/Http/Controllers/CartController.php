@@ -97,7 +97,11 @@ class CartController extends Controller
             'status'=> 'required',
         ]);
 
-        $product_exist = Cart::where('product_id',$request['product_id'])->first();
+        $product_exist = DB::table('carts')
+                    ->where('user_id',request()->user()->id)
+                    ->where('product_id',$request['product_id'])
+                    ->select('*')
+                    ->first();
 
         if(!is_null($product_exist)){
             $product_exist->quantity = $product_exist->quantity + $request['quantity'];
@@ -107,7 +111,6 @@ class CartController extends Controller
                 'message' => 'Product exist. Cart updated!'
             ],200);
         }
-
 
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
