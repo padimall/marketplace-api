@@ -184,7 +184,7 @@ class CartController extends Controller
             ],200);
         }
 
-        $flagAgent = '';
+        $flagSupplier = '';
         $index = 0;
         $cartData = array();
         $tempData = array();
@@ -192,8 +192,8 @@ class CartController extends Controller
         $saveProductId = array();
         for($i=0; $i<sizeof($data); $i++)
         {
-            $tempAgent = $data[$i]->agent_id;
-            if($flagAgent != $tempAgent)
+            $tempSupplier = $data[$i]->supplier_id;
+            if($flagSupplier != $tempSupplier)
             {
                 if(sizeof($tempProduct)!=0){
                     $tempData[$index]['orders'] = $tempProduct;
@@ -202,7 +202,7 @@ class CartController extends Controller
                 }
 
                 array_push($tempData,array(
-                    'agent_id' => $data[$i]->agent_id,
+                    'supplier_id' => $data[$i]->supplier_id,
                     'store' => $data[$i]->store,
                     'store_image' => $data[$i]->store_image,
                     'address' => $data[$i]->address,
@@ -216,7 +216,7 @@ class CartController extends Controller
                     'quantity' => $data[$i]->quantity,
                     'min_order' => $data[$i]->min_order,
                 ));
-                $flagAgent = $data[$i]->agent_id;
+                $flagSupplier = $data[$i]->supplier_id;
             }
             else {
                 array_push($tempProduct,array(
@@ -240,7 +240,7 @@ class CartController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $tempProduct
+            'data' => $tempData
         ],200);
 
     }
