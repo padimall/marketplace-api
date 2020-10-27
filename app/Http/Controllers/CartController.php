@@ -104,13 +104,22 @@ class CartController extends Controller
                     ->first();
 
         if(!is_null($product_exist)){
-            $product_exist->quantity = $product_exist->quantity + $request['quantity'];
-            $product_exist->save();
+            $quantitiy = $product_exist->quantity + $request['quantity'];
+            $update = array(
+                'quantity' => $quantitiy
+            );
+
+            $update_exist = DB::table('carts')
+                            ->where('user_id',request()->user()->id)
+                            ->where('product_id',$request['product_id'])
+                            ->update($update);
+
             return response()->json([
-                'status' => 1,
+                'status' => $update_exist,
                 'message' => 'Product exist. Cart updated!'
             ],200);
         }
+
 
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
@@ -162,11 +171,18 @@ class CartController extends Controller
 
         $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
-                ->join('suppliers','suppliers.id','=','products.supplier_id')
-                ->select('carts.*','products.min_order','products.supplier_id','products.name','products.price','suppliers.name AS store','suppliers.image AS store_image','suppliers.address')
+                ->join('agents','agents.id','=','products.agent_id')
+                ->select('carts.*','products.min_order','products.supplier_id','products.name','products.price','agents.name AS store','agents.image AS store_image')
                 ->where('carts.user_id',request()->user()->id)
-                ->orderBy('products.supplier_id','DESC')
+                ->orderBy('products.agent_id','DESC')
                 ->get();
+
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
 
         $flagSupplier = '';
         $index = 0;
@@ -220,12 +236,6 @@ class CartController extends Controller
             }
         }
 
-        if(sizeOf($data)== 0){
-            return response()->json([
-                'status' => 0,
-                'message' => 'Resource not found!'
-            ],200);
-        }
 
         return response()->json([
             'status' => 1,
