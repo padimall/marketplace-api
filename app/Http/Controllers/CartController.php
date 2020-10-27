@@ -172,7 +172,7 @@ class CartController extends Controller
         $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('agents','agents.id','=','products.agent_id')
-                ->select('carts.*','products.min_order','products.agent_id','products.name','products.price','agents.name AS store','agents.image AS store_image','agents.address')
+                ->select('carts.*','products.min_order','products.stock','products.agent_id','products.name','products.price','agents.name AS store','agents.image AS store_image','agents.address')
                 ->where('carts.user_id',request()->user()->id)
                 ->orderBy('products.agent_id','DESC')
                 ->get();
@@ -214,6 +214,7 @@ class CartController extends Controller
                     'name' => $data[$i]->name,
                     'price' => $data[$i]->price,
                     'quantity' => $data[$i]->quantity,
+                    'stock' => $data[$i]->stock,
                     'min_order' => $data[$i]->min_order,
                 ));
                 $flagAgent = $data[$i]->agent_id;
