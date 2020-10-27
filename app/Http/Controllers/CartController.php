@@ -245,9 +245,24 @@ class CartController extends Controller
 
     }
 
-    public function delete($id){
-        $data = Cart::find($id);
+    public function delete(Request $request){
+        $request->validate([
+            'target_id' => 'required|exists:carts,id'
+        ]);
+
+        $data = Cart::find($request['target_id']);
+        if(is_null($data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
         $response = $data->delete();
-        return response()->json($response,200);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource deleted!'
+        ],200);
     }
 }

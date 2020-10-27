@@ -106,6 +106,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/store','CartController@store');
             Route::post('/update','CartController@update');
             Route::post('/user','CartController@list');
+            Route::post('/delete','CartController@delete');
         });
 
 
