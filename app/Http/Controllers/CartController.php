@@ -172,7 +172,7 @@ class CartController extends Controller
         $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('agents','agents.id','=','products.agent_id')
-                ->select('carts.*','products.min_order','products.supplier_id','products.name','products.price','agents.name AS store','agents.image AS store_image')
+                ->select('carts.*','products.min_order','products.agent_id','products.name','products.price','agents.name AS store','agents.image AS store_image')
                 ->where('carts.user_id',request()->user()->id)
                 ->orderBy('products.agent_id','DESC')
                 ->get();
@@ -184,7 +184,7 @@ class CartController extends Controller
             ],200);
         }
 
-        $flagSupplier = '';
+        $flagAgent = '';
         $index = 0;
         $cartData = array();
         $tempData = array();
@@ -192,8 +192,8 @@ class CartController extends Controller
         $saveProductId = array();
         for($i=0; $i<sizeof($data); $i++)
         {
-            $tempSupplier = $data[$i]->supplier_id;
-            if($flagSupplier != $tempSupplier)
+            $tempAgent = $data[$i]->agent_id;
+            if($flagAgent != $tempAgent)
             {
                 if(sizeof($tempProduct)!=0){
                     $tempData[$index]['orders'] = $tempProduct;
@@ -202,7 +202,7 @@ class CartController extends Controller
                 }
 
                 array_push($tempData,array(
-                    'supplier_id' => $data[$i]->supplier_id,
+                    'agent_id' => $data[$i]->agent_id,
                     'store' => $data[$i]->store,
                     'store_image' => $data[$i]->store_image,
                     'address' => $data[$i]->address,
@@ -216,7 +216,7 @@ class CartController extends Controller
                     'quantity' => $data[$i]->quantity,
                     'min_order' => $data[$i]->min_order,
                 ));
-                $flagSupplier = $data[$i]->supplier_id;
+                $flagAgent = $data[$i]->agent_id;
             }
             else {
                 array_push($tempProduct,array(
