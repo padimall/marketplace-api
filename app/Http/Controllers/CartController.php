@@ -217,6 +217,12 @@ class CartController extends Controller
                     'min_order' => $data[$i]->min_order,
                 ));
                 $flagSupplier = $data[$i]->agent_id;
+
+                if($i == (sizeof($data)-1)){
+                    $tempData[$index]['orders'] = $tempProduct;
+                    $tempProduct = array();
+                    $index++;
+                }
             }
             else {
                 array_push($tempProduct,array(
