@@ -184,7 +184,7 @@ class CartController extends Controller
             ],200);
         }
 
-        $flagSupplier = '';
+        $flagAgent = '';
         $index = 0;
         $cartData = array();
         $tempData = array();
@@ -192,8 +192,8 @@ class CartController extends Controller
         $saveProductId = array();
         for($i=0; $i<sizeof($data); $i++)
         {
-            $tempSupplier = $data[$i]->agent_id;
-            if($flagSupplier != $tempSupplier)
+            $tempAgent = $data[$i]->agent_id;
+            if($flagAgent != $tempAgent)
             {
                 if(sizeof($tempProduct)!=0){
                     $tempData[$index]['orders'] = $tempProduct;
@@ -216,7 +216,7 @@ class CartController extends Controller
                     'quantity' => $data[$i]->quantity,
                     'min_order' => $data[$i]->min_order,
                 ));
-                $flagSupplier = $data[$i]->agent_id;
+                $flagAgent = $data[$i]->agent_id;
 
                 if($i == (sizeof($data)-1)){
                     $tempData[$index]['orders'] = $tempProduct;
