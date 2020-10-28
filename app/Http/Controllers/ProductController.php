@@ -639,13 +639,12 @@ class ProductController extends Controller
                 'message' => 'Resource not found!'
             ],200);
         }
-        else {
-            return response()->json([
-                'status' => 1,
-                'message' => 'Resource found!',
-                'data' => $data
-            ],200);
-        }
+        
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
 
 
     }

@@ -150,7 +150,7 @@ class AgentController extends Controller
 
         if(!is_null($request['address'])){
             $request->validate([
-                'address' => 'required|strings'
+                'address' => 'required|string'
             ]);
             $data->address = $request['address'];
         }
