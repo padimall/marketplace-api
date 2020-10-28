@@ -204,7 +204,7 @@ class CartController extends Controller
                 array_push($tempData,array(
                     'agent_id' => $data[$i]->agent_id,
                     'store' => $data[$i]->store,
-                    'store_image' => $data[$i]->store_image,
+                    'store_image' => url('/').'/'.$data[$i]->store_image,
                     'address' => $data[$i]->address,
                 ));
 
