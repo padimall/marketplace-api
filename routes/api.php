@@ -56,6 +56,12 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/limit','ProductsCategoryController@showLimit');
     });
 
+    Route::group(['prefix' => 'banner'], function () {
+        Route::post('/all','BannerController@showAll');
+        Route::post('/detail','BannerController@show');
+        Route::post('/type','BannerController@type');
+    });
+
 
     Route::group(['middleware' => ['auth:api','scopes:system-token,user-token']], function () {
 
@@ -135,6 +141,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/all','AgentController@showAll');
             Route::post('/limit','AgentController@showLimit');
+        });
+
+        Route::group(['prefix' => 'banner'], function () {
+            Route::post('/store','BannerController@store');
+            Route::post('/update','BannerController@update');
         });
 
         Route::group(['prefix' => 'supplier'], function () {

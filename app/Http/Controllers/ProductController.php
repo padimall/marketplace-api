@@ -178,7 +178,7 @@ class ProductController extends Controller
             'category'=> 'required|exists:products_categories,id',
             'stock'=> 'required',
             'min_order'=> 'required',
-            'image.*'=> 'mimes:png,jpg,jpeg|max:2008'
+            'image.*'=> 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
         if(isset($request['image']) && !is_array($request['image'])){
@@ -639,7 +639,7 @@ class ProductController extends Controller
                 'message' => 'Resource not found!'
             ],200);
         }
-        
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
