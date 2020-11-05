@@ -431,6 +431,7 @@ class ProductController extends Controller
         $data = DB::table('products')
                 ->where('agent_id',$agent_data->id)
                 ->where('supplier_id',NULL)
+                ->whereNull('deleted_at')
                 ->select('*')
                 ->get();
         // Product::where('agent_id',$agent_data->id)->get();
