@@ -9,29 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
-    public function index(Request $request){
-        $request->validate([
-            'request_type'=>'required'
-        ]);
-
-        $type = $request['request_type'];
-        if($type == 1){
-            return $this->showAll();
-        }
-        else if($type == 2){
-            return $this->show($request);
-        }
-        else if($type == 3){
-            return $this->store($request);
-        }
-        else if($type == 4){
-            return $this->update($request);
-        }
-        else if($type == 5){
-            return $this->showLimit($request);
-        }
-    }
-
     public function showAll()
     {
         $data = Invoice::all();
@@ -48,7 +25,7 @@ class InvoiceController extends Controller
         ],200);
     }
 
-    public function showLimit(Request $request)
+     public function showLimit(Request $request)
     {
         $request->validate([
             'limit' => 'required'

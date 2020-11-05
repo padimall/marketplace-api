@@ -17,6 +17,7 @@ class ProductController extends Controller
     {
         $data = DB::table('products')
                 ->where('status',1)
+                ->whereNull('deleted_at')
                 ->select('*')
                 ->get();
 
@@ -60,6 +61,7 @@ class ProductController extends Controller
 
         $data = DB::table('products')
                 ->where('status',1)
+                ->whereNull('deleted_at')
                 ->select('*')
                 ->inRandomOrder()
                 ->limit($request['limit'])
@@ -112,6 +114,7 @@ class ProductController extends Controller
         // $data = Product::find($request['target_id']);
         $data = DB::table('products')
                 ->where('id',$request['target_id'])
+                ->whereNull('deleted_at')
                 ->first();
 
         if(is_null($data)){
@@ -371,6 +374,7 @@ class ProductController extends Controller
 
         $data = DB::table('products')
                 ->where('name','like','%'.$request['name'].'%')
+                ->whereNull('deleted_at')
                 ->get();
 
         $array_product_id = array();
@@ -579,6 +583,7 @@ class ProductController extends Controller
                 ->join('products_categories','products_categories.id','=','products.category')
                 ->where('products_categories.name','like','%'.$request['name'].'%')
                 ->where('products.status',1)
+                ->whereNull('deleted_at')
                 ->select('products.*','products_categories.name AS category_name')
                 ->get();
 
@@ -630,6 +635,7 @@ class ProductController extends Controller
                 ->join('products_categories','products_categories.id','=','products.category')
                 ->join('main_categories','main_categories.id','=','products_categories.main_category_id')
                 ->where('main_categories.id',$request['target_id'])
+                ->whereNull('deleted_at')
                 ->select('products.*')
                 ->get();
 
