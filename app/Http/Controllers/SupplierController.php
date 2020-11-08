@@ -12,26 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class SupplierController extends Controller
 {
-    public function index(Request $request){
-        $request->validate([
-            'request_type'=>'required'
-        ]);
-
-        $type = $request['request_type'];
-        if($type == 1){
-            return $this->showAll();
-        }
-        else if($type == 2){
-            return $this->show($request);
-        }
-        else if($type == 3){
-            return $this->store($request);
-        }
-        else if($type == 4){
-            return $this->update($request);
-        }
-    }
-
     public function showAll()
     {
         $data = Supplier::all();
@@ -41,6 +21,14 @@ class SupplierController extends Controller
                 'message' => 'Resource not found!'
             ],200);
         }
+
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
@@ -199,6 +187,11 @@ class SupplierController extends Controller
                     ->where('agents_affiliate_suppliers.supplier_id',$data->id)
                     ->select('agents.*')
                     ->get()->first();
+
+        if(!is_null($myAgent['image']))
+        {
+            $myAgent['image']=url('/').'/'.$myAgent['image'];
+        }
 
         return response()->json([
             'status' => 1,
