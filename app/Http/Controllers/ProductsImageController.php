@@ -112,8 +112,15 @@ class ProductsImageController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'image.*' => 'required|mimes:jpg,png,jpeg|max:2008',
+            'image.*' => 'required|mimes:jpg,png,jpeg|max:2048',
         ]);
+
+        if(isset($request['image']) && !is_array($request['image'])){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Use image[] instead of image!'
+            ],200);
+        }
 
         $data = $request->all();
         if(!is_null($request['image']))
