@@ -193,6 +193,15 @@ class CartController extends Controller
         for($i=0; $i<sizeof($data); $i++)
         {
             $tempAgent = $data[$i]->agent_id;
+            $coverImage = DB::table('products_images')
+                            ->where('product_id',$data[$i]->product_id)
+                            ->select('image')
+                            ->first();
+                            
+            if(!is_null($coverImage->image)){
+                $coverImage->image = url('/').'/'.$coverImage->image;
+            }
+
             if($flagAgent != $tempAgent)
             {
                 if(sizeof($tempProduct)!=0){
@@ -214,6 +223,7 @@ class CartController extends Controller
                     'cart_id' => $data[$i]->id,
                     'product_id' => $data[$i]->product_id,
                     'name' => $data[$i]->name,
+                    'image' => $coverImage->image,
                     'price' => $data[$i]->price,
                     'quantity' => $data[$i]->quantity,
                     'stock' => $data[$i]->stock,
