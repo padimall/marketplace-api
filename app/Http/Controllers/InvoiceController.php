@@ -13,10 +13,10 @@ class InvoiceController extends Controller
     public function testXendit()
     {
         Xendit::setApiKey(env('SECRET_API_KEY'));
-        // $getBalance = \Xendit\Balance::getBalance('CASH');
+        $getBalance = \Xendit\Balance::getBalance('CASH');
         // var_dump($getBalance);
-        $getAllInvoice = \Xendit\Invoice::retrieveAll();
-        echo json_encode($getAllInvoice);
+        // $getAllInvoice = \Xendit\Invoice::retrieveAll();
+        echo json_encode($getBalance);
     }
 
     public function showAll()
