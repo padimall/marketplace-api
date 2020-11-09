@@ -126,7 +126,7 @@ class ProductController extends Controller
             ],200);
         }
 
-        $agentData = DB::table('agent')
+        $agentData = DB::table('agents')
                     ->where('id',$data->agent_id)
                     ->select('name','image','address')
                     ->first();
