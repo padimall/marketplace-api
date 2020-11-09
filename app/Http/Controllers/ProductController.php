@@ -126,6 +126,13 @@ class ProductController extends Controller
             ],200);
         }
 
+        $agentData = DB::table('agent')
+                    ->where('id',$data->agent_id)
+                    ->select('name','image','address')
+                    ->first();
+
+        $data->agent = $agentData;
+
         $image = DB::table('products_images')
                 ->select('image','id')
                 ->where('product_id',$request['target_id'])
