@@ -202,10 +202,12 @@ class CartController extends Controller
                 }
 
                 array_push($tempData,array(
-                    'agent_id' => $data[$i]->agent_id,
-                    'store' => $data[$i]->store,
-                    'store_image' => url('/').'/'.$data[$i]->store_image,
-                    'address' => $data[$i]->address,
+                    'agent' => array(
+                        'id' => $data[$i]->agent_id,
+                        'name' => $data[$i]->store,
+                        'image' => url('/').'/'.$data[$i]->store_image,
+                        'address' => $data[$i]->address
+                    )
                 ));
 
                 array_push($tempProduct,array(
