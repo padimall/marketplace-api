@@ -128,11 +128,12 @@ class ProductController extends Controller
 
         $agentData = DB::table('agents')
                     ->where('id',$data->agent_id)
-                    ->select('name','image','address')
+                    ->select('id','name','image','address')
                     ->first();
         $agentData->image = url('/').'/'.$agentData->image;
 
         $data->agent = $agentData;
+        unset($data->agent_id);
 
         $image = DB::table('products_images')
                 ->select('image','id')
