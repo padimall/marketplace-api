@@ -20,6 +20,7 @@ class AgentController extends Controller
                 'message' => 'Resource not found!'
             ],200);
         }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
@@ -63,6 +64,17 @@ class AgentController extends Controller
                     ->where('agents_affiliate_suppliers.agent_id',$data['id'])
                     ->select('suppliers.*')
                     ->get();
+
+        if(sizeof($supplier)!=0)
+        {
+            for($i=0; $i<sizeof($supplier); $i++){
+                if(!is_null($supplier[$i]->image))
+                {
+                    $supplier[$i]->image = url('/').'/'.$supplier[$i]->image;
+                }
+            }
+        }
+
         $data['supplier'] = $supplier;
 
         if(!is_null($data['image']))
