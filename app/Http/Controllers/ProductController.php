@@ -130,6 +130,7 @@ class ProductController extends Controller
                     ->where('id',$data->agent_id)
                     ->select('name','image','address')
                     ->first();
+        $agentData->image = url('/').'/'.$agentData->image;
 
         $data->agent = $agentData;
 
