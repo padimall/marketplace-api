@@ -18,7 +18,8 @@ class ProductController extends Controller
         $data = DB::table('products')
                 ->where('status',1)
                 ->whereNull('deleted_at')
-                ->select('*')
+                // ->select('*')
+                ->select('id,supplier_id,name,price,stock,agent_id')
                 ->get();
 
         // Product::all();
@@ -62,7 +63,8 @@ class ProductController extends Controller
         $data = DB::table('products')
                 ->where('status',1)
                 ->whereNull('deleted_at')
-                ->select('*')
+                // ->select('*')
+                ->select('id,supplier_id,name,price,stock,agent_id')
                 ->inRandomOrder()
                 ->limit($request['limit'])
                 ->get();
