@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Invoice;
 use App\Agent;
+use App\Cart;
 use App\Invoices_product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -77,6 +78,21 @@ class InvoiceController extends Controller
         ],200);
     }
 
+    public function store2(Request $request)
+    {
+        $request->validate([
+            'carts' => 'required|string'
+        ]);
+
+        $listCart = json_decode($request['carts'],true);
+        $cartData = Cart::whereIn('id',$listCart)->get();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource created!',
+            'detail' => $cartData
+        ],201);
+
+    }
     public function store(Request $request)
     {
         $request->validate([
