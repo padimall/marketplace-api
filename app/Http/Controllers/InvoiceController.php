@@ -170,6 +170,9 @@ class InvoiceController extends Controller
                     $tempAmount = 0;
                 }
             }
+
+            $removeCart = Cart::find($data[$i]->id);
+            $resDelete = $removeCart->delete();
         }
 
         return response()->json([
