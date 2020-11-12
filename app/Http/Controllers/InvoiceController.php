@@ -135,7 +135,7 @@ class InvoiceController extends Controller
                     'quantity' => $data[$i]->quantity
                 );
 
-                if($response_product = Invoices_product::create($data_product))
+                if($response_product = Invoices_product::create($productInvoice))
                 {
                     $tempAmount = $tempAmount + ($productInvoice['price']*$productInvoice['quantity']);
                 }
@@ -158,7 +158,7 @@ class InvoiceController extends Controller
                     'quantity' => $data[$i]->quantity
                 );
 
-                if($response_product = Invoices_product::create($data_product))
+                if($response_product = Invoices_product::create($productInvoice))
                 {
                     $tempAmount = $tempAmount + ($productInvoice['price']*$productInvoice['quantity']);
                 }
