@@ -123,7 +123,7 @@ class InvoiceController extends Controller
                 'description' => 'Pembayaran di PadiMall ke toko '.$agentData->name,
                 'amount' => $response['amount']
             ];
-
+            Xendit::setApiKey(env('SECRET_API_KEY'));
             $createInvoice = \Xendit\Invoice::create($params);
 
         }
