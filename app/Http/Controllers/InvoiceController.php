@@ -85,7 +85,7 @@ class InvoiceController extends Controller
         ]);
 
         $listCart = json_decode($request['carts'],true);
-        $cartData = DB::table('carts')
+        $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('agents','agents.id','=','products.agent_id')
                 ->select('carts.*','products.min_order','products.stock','products.agent_id','products.supplier_id','products.name','products.price','agents.name AS store','agents.image AS store_image','agents.address')
