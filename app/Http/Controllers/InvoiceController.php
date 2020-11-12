@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Invoice;
+use App\Agent;
 use App\Invoices_product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -92,6 +93,7 @@ class InvoiceController extends Controller
 
         if($response = Invoice::create($data))
         {
+            $agentData = Agent::where('id',$request['agent_id'])->first();
             $data['product'] = json_decode($data['product'],true);
 
             if(!is_null($request['product']))
@@ -114,11 +116,22 @@ class InvoiceController extends Controller
                     $response_product = Invoices_product::create($data_product);
                 }
             }
+
+            $params = [
+                'external_id' => $response['id'],
+                'payer_email' => request()->user()->email,
+                'description' => 'Pembayaran di PadiMall ke toko '.$agentData->name,
+                'amount' => $response['amount']
+            ];
+
+            $createInvoice = \Xendit\Invoice::create($params);
+
         }
 
         return response()->json([
             'status' => 1,
-            'message' => 'Resource created!'
+            'message' => 'Resource created!',
+            'detail' => $createInvoice
         ],201);
     }
 
