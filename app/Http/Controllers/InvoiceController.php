@@ -88,15 +88,93 @@ class InvoiceController extends Controller
         $cartData = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('agents','agents.id','=','products.agent_id')
-                ->select('carts.*','products.min_order','products.stock','products.agent_id','products.name','products.price','agents.name AS store','agents.image AS store_image','agents.address')
+                ->select('carts.*','products.min_order','products.stock','products.agent_id','products.supplier_id','products.name','products.price','agents.name AS store','agents.image AS store_image','agents.address')
                 ->whereIn('carts.id',$listCart)
                 ->orderBy('products.agent_id','DESC')
                 ->get();
 
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        $flagAgent = '';
+        $lastInvoice = '';
+        $tempAmount = 0;
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            $tempAgent = $data[$i]->agent_id;
+            if($flagAgent != $tempAgent)
+            {
+                if($tempAmount != 0)
+                {
+                    $updateAmount = Invoice::find($lastInvoice);
+                    $updateAmount->amount = $tempAmount;
+                    $tempAmount = 0;
+                    $updateAmount->save();
+                }
+
+                $invoice = array(
+                    'user_id' => request()->user()->id,
+                    'supplier_id' => $data[$i]['supplier_id'],
+                    'amount'=>0,
+                    'status'=>0,
+                    'agent_id'=>$data[$i]['agent_id']
+                );
+
+                $response = Invoice::create($invoice);
+                $lastInvoice = $response['id'];
+
+                $productInvoice = array(
+                    'invoice_id' => $lastInvoice,
+                    'product_id' => $data[$i]['product_id'],
+                    'name' => $data[$i]['name'],
+                    'price' => $data[$i]['price'],
+                    'quantity' => $data[$i]['quantity']
+                );
+
+                if($response_product = Invoices_product::create($data_product))
+                {
+                    $tempAmount = $tempAmount + ($productInvoice['price']*$productInvoice['quantity']);
+                }
+
+                $flagAgent = $data[$i]->agent_id;
+
+                if($i == (sizeof($data)-1)){
+                    $updateAmount = Invoice::find($lastInvoice);
+                    $updateAmount->amount = $tempAmount;
+                    $tempAmount = 0;
+                    $updateAmount->save();
+                }
+            }
+            else {
+                $productInvoice = array(
+                    'invoice_id' => $lastInvoice,
+                    'product_id' => $data[$i]['product_id'],
+                    'name' => $data[$i]['name'],
+                    'price' => $data[$i]['price'],
+                    'quantity' => $data[$i]['quantity']
+                );
+
+                if($response_product = Invoices_product::create($data_product))
+                {
+                    $tempAmount = $tempAmount + ($productInvoice['price']*$productInvoice['quantity']);
+                }
+
+                if($i == (sizeof($data)-1)){
+                    $updateAmount = Invoice::find($lastInvoice);
+                    $updateAmount->amount = $tempAmount;
+                    $updateAmount->save();
+                    $tempAmount = 0;
+                }
+            }
+        }
+
         return response()->json([
             'status' => 1,
-            'message' => 'Resource created!',
-            'detail' => $cartData
+            'message' => 'Resource created!'
         ],201);
 
     }
