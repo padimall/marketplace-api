@@ -197,14 +197,12 @@ class CartController extends Controller
                             ->where('product_id',$data[$i]->product_id)
                             ->select('image')
                             ->first();
+            $tempImage = null;
 
             if(!is_null($coverImage)){
 				if(!is_null($coverImage->image)){
-					$coverImage->image = url('/').'/'.$coverImage->image;
+					$tempImage = url('/').'/'.$coverImage->image;
 				}
-            }
-            else {
-                $coverImage->image = null;
             }
 
             if($flagAgent != $tempAgent)
@@ -228,7 +226,7 @@ class CartController extends Controller
                     'cart_id' => $data[$i]->id,
                     'product_id' => $data[$i]->product_id,
                     'name' => $data[$i]->name,
-                    'image' => $coverImage->image,
+                    'image' => $tempImage,
                     'price' => $data[$i]->price,
                     'quantity' => $data[$i]->quantity,
                     'stock' => $data[$i]->stock,
@@ -247,7 +245,7 @@ class CartController extends Controller
                     'cart_id' => $data[$i]->id,
                     'product_id' => $data[$i]->product_id,
                     'name' => $data[$i]->name,
-                    'image' => $coverImage->image,
+                    'image' => $tempImage,
                     'price' => $data[$i]->price,
                     'quantity' => $data[$i]->quantity,
                     'stock' => $data[$i]->stock,
