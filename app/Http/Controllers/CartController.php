@@ -244,8 +244,10 @@ class CartController extends Controller
                     'cart_id' => $data[$i]->id,
                     'product_id' => $data[$i]->product_id,
                     'name' => $data[$i]->name,
+                    'image' => $coverImage->image,
                     'price' => $data[$i]->price,
                     'quantity' => $data[$i]->quantity,
+                    'stock' => $data[$i]->stock,
                     'min_order' => $data[$i]->min_order,
                 ));
 
