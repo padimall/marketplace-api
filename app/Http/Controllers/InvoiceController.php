@@ -85,7 +85,14 @@ class InvoiceController extends Controller
         ]);
 
         $listCart = json_decode($request['carts'],true);
-        $cartData = Cart::whereIn('id',$listCart)->get();
+        $cartData = DB::table('carts')
+                ->join('products','products.id','=','carts.product_id')
+                ->join('agents','agents.id','=','products.agent_id')
+                ->select('carts.*','products.min_order','products.stock','products.agent_id','products.name','products.price','agents.name AS store','agents.image AS store_image','agents.address')
+                ->whereIn('carts.id',$listCart)
+                ->orderBy('products.agent_id','DESC')
+                ->get();
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource created!',
