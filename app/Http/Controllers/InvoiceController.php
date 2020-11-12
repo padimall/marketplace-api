@@ -79,10 +79,11 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
+            'agent_id' => 'required|exists:agents,id|string',
+            'supplier_id' =>'exists:supplier,id|nullable',
             'amount'=> 'required',
             'status'=> 'required',
-            'product'=> 'required',
+            'product'=> 'required|string'
         ]);
 
         //All cart automatic to invoice
