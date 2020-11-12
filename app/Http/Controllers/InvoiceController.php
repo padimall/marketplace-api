@@ -118,10 +118,10 @@ class InvoiceController extends Controller
 
                 $invoice = array(
                     'user_id' => request()->user()->id,
-                    'supplier_id' => $data[$i]['supplier_id'],
+                    'supplier_id' => $data[$i]->supplier_id,
                     'amount'=>0,
                     'status'=>0,
-                    'agent_id'=>$data[$i]['agent_id']
+                    'agent_id'=>$data[$i]->agent_id
                 );
 
                 $response = Invoice::create($invoice);
@@ -129,10 +129,10 @@ class InvoiceController extends Controller
 
                 $productInvoice = array(
                     'invoice_id' => $lastInvoice,
-                    'product_id' => $data[$i]['product_id'],
-                    'name' => $data[$i]['name'],
-                    'price' => $data[$i]['price'],
-                    'quantity' => $data[$i]['quantity']
+                    'product_id' => $data[$i]->product_id,
+                    'name' => $data[$i]->name,
+                    'price' => $data[$i]->price,
+                    'quantity' => $data[$i]->quantity
                 );
 
                 if($response_product = Invoices_product::create($data_product))
@@ -152,10 +152,10 @@ class InvoiceController extends Controller
             else {
                 $productInvoice = array(
                     'invoice_id' => $lastInvoice,
-                    'product_id' => $data[$i]['product_id'],
-                    'name' => $data[$i]['name'],
-                    'price' => $data[$i]['price'],
-                    'quantity' => $data[$i]['quantity']
+                    'product_id' => $data[$i]->product_id,
+                    'name' => $data[$i]->name,
+                    'price' => $data[$i]->price,
+                    'quantity' => $data[$i]->quantity
                 );
 
                 if($response_product = Invoices_product::create($data_product))
