@@ -64,8 +64,16 @@ class InvoiceController extends Controller
 
     public function createInvoice()
     {
+        $invoice_group = array(
+            'xendit_id' => null,
+            'amount' => 0,
+            'status' => 0,
+        );
+
+        $group_response = Invoices_group::create($invoice_group);
+
         Xendit::setApiKey(env('SECRET_API_KEY'));
-        $params = ['external_id' => '1111',
+        $params = ['external_id' => $group_response['id'],
             'payer_email' => 'rudi97278@gmail.com',
             'description' => 'Pembayaran PadiMall - ',
             'amount' => 10000
