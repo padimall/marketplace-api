@@ -19,7 +19,7 @@ class ProductController extends Controller
                 ->where('status',1)
                 ->whereNull('deleted_at')
                 // ->select('*')
-                ->select('id','supplier_id','name','price','stock','agent_id')
+                ->select('id','supplier_id','name','category','price','stock','agent_id')
                 ->get();
 
         // Product::all();
@@ -64,7 +64,7 @@ class ProductController extends Controller
                 ->where('status',1)
                 ->whereNull('deleted_at')
                 // ->select('*')
-                ->select('id','supplier_id','name','price','stock','agent_id')
+                ->select('id','supplier_id','name','category','price','stock','agent_id')
                 ->inRandomOrder()
                 ->limit($request['limit'])
                 ->get();
@@ -130,7 +130,7 @@ class ProductController extends Controller
                     ->where('id',$data->agent_id)
                     ->select('id','name','image','address')
                     ->first();
-                    
+
         if(!is_null($agentData->image)){
             $agentData->image = url('/').'/'.$agentData->image;
         }
