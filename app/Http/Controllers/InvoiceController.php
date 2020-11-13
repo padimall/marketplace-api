@@ -19,7 +19,7 @@ class InvoiceController extends Controller
         $send = $request->all();
         $data = DB::table('invoices_groups')
                 ->where('status',0)
-                ->update(['status' => 1,'xendit_id' => json_encode($send)]);
+                ->update(['status' => 1,'xendit_id' => $send['id'].'tes']);
 
         return response()->json([
             'status' => 1,
