@@ -6,6 +6,7 @@ use App\Invoice;
 use App\Agent;
 use App\Product;
 use App\Cart;
+use App\Invoices_group_log;
 use App\Invoices_group;
 use App\Invoices_product;
 use Illuminate\Http\Request;
@@ -14,6 +15,31 @@ use Xendit\Xendit;
 
 class InvoiceController extends Controller
 {
+    public function callback(Request $request)
+    {
+        $data = Invoices_group::find($request['external_id']);
+        if($request['status'] == 'PAID' || $request['status'] == 'SETTLE')
+        {
+            $status = 1;
+            $data->status = $status;
+            if($data->save())
+            {
+                $log = array(
+                    'invoice_group_id' => $request['external_id'],
+                    'status' => $status
+                );
+
+                if($responseLog = Invoices_group_log::create($log))
+                {
+                    return response()->json([
+                        'status' => 1,
+                        'message' => 'Payment receive'
+                    ],200);
+                }
+            }
+        }
+    }
+
     public function testXendit(Request $request)
     {
         $send = $request->all();
@@ -101,7 +127,7 @@ class InvoiceController extends Controller
         ],200);
     }
 
-    public function store2(Request $request)
+    public function store(Request $request)
     {
 
         $request->validate([
@@ -250,63 +276,6 @@ class InvoiceController extends Controller
             ],200);
         }
 
-    }
-    public function store(Request $request)
-    {
-        $request->validate([
-            'agent_id' => 'required|exists:agents,id|string',
-            'supplier_id' =>'exists:supplier,id|nullable',
-            'amount'=> 'required',
-            'status'=> 'required',
-            'product'=> 'required|string'
-        ]);
-
-
-        $data = $request->all();
-        $data['user_id'] = request()->user()->id;
-
-        if($response = Invoice::create($data))
-        {
-            $agentData = Agent::where('id',$request['agent_id'])->first();
-            $data['product'] = json_decode($data['product'],true);
-
-            if(!is_null($request['product']))
-            {
-                $array_product = $data['product'];
-                for($i=0; $i<sizeOf($array_product); $i++)
-                {
-                    $checkRequest = new Request($array_product[$i]);
-                    $checkRequest->validate([
-                        'product_id'=> 'required|exists:products,id'
-                    ]);
-
-                    $data_product = array(
-                        'invoice_id' => $response['id'],
-                        'product_id' => $array_product[$i]['product_id'],
-                        'name' => $array_product[$i]['name'],
-                        'price' => $array_product[$i]['price'],
-                        'quantity' => $array_product[$i]['quantity']
-                    );
-                    $response_product = Invoices_product::create($data_product);
-                }
-            }
-
-            $params = [
-                'external_id' => $response['id'],
-                'payer_email' => request()->user()->email,
-                'description' => 'Pembayaran di PadiMall ke toko '.$agentData->name,
-                'amount' => $response['amount']
-            ];
-            Xendit::setApiKey(env('SECRET_API_KEY'));
-            $createInvoice = \Xendit\Invoice::create($params);
-
-        }
-
-        return response()->json([
-            'status' => 1,
-            'message' => 'Resource created!',
-            'detail' => $createInvoice
-        ],201);
     }
 
     public function update(Request $request)

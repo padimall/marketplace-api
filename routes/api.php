@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 */
 Route::post('test','InvoiceController@testXendit');
 Route::get('test2','InvoiceController@createInvoice');
+Route::get('callback','InvoiceController@callback');
 Route::get('email/verify/', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
 
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
@@ -123,7 +124,6 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/store','InvoiceController@store');
             Route::post('/update','InvoiceController@update');
             Route::post('/list','InvoiceController@list');
-            Route::post('/store2','InvoiceController@store2');
         });
 
         Route::group(['prefix' => 'invoice-product'], function () {
