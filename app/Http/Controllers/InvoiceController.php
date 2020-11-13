@@ -16,11 +16,14 @@ class InvoiceController extends Controller
 {
     public function testXendit()
     {
-        Xendit::setApiKey(env('SECRET_API_KEY'));
-        $getBalance = \Xendit\Balance::getBalance('CASH');
-        // var_dump($getBalance);
-        // $getAllInvoice = \Xendit\Invoice::retrieveAll();
-        echo json_encode($getBalance);
+        $data = DB::table('invoices_groups')
+                ->where('status',0)
+                ->update(['status' => 1]);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Testing boy!'
+        ],200);
     }
 
     public function showAll()
