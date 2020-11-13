@@ -18,6 +18,15 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $data = Invoices_group::find($request['external_id']);
+
+        if(is_null($data))
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'External id not found'
+            ],200);
+        }
+
         if($request['status'] == 'PAID' || $request['status'] == 'SETTLE')
         {
             $status = 1;
