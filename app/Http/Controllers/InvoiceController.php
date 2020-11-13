@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Invoice;
 use App\Agent;
 use App\Cart;
+use App\Invoices_group;
 use App\Invoices_product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +81,7 @@ class InvoiceController extends Controller
 
     public function store2(Request $request)
     {
+
         $request->validate([
             'carts' => 'required|string'
         ]);
@@ -100,9 +102,20 @@ class InvoiceController extends Controller
             ],200);
         }
 
+        $invoice_group = array(
+            'xendit_id' => null,
+            'amount' => 0,
+            'status' => 0,
+        );
+
+        $group_response = Invoices_group::create($invoice_group);
+
+
         $flagAgent = '';
         $lastInvoice = '';
+        $lastStore = '';
         $tempAmount = 0;
+        $totalAmount = 0;
         for($i=0; $i<sizeof($data); $i++)
         {
             $tempAgent = $data[$i]->agent_id;
@@ -110,6 +123,8 @@ class InvoiceController extends Controller
             {
                 if($tempAmount != 0)
                 {
+                    $totalAmount = $totalAmount + $tempAmount;
+
                     $updateAmount = Invoice::find($lastInvoice);
                     $updateAmount->amount = $tempAmount;
                     $tempAmount = 0;
@@ -121,11 +136,13 @@ class InvoiceController extends Controller
                     'supplier_id' => $data[$i]->supplier_id,
                     'amount'=>0,
                     'status'=>0,
-                    'agent_id'=>$data[$i]->agent_id
+                    'agent_id'=>$data[$i]->agent_id,
+                    'invoices_group_id' =>$group_response['id'],
                 );
 
                 $response = Invoice::create($invoice);
                 $lastInvoice = $response['id'];
+                $lastStore = $data[$i]->store;
 
                 $productInvoice = array(
                     'invoice_id' => $lastInvoice,
@@ -143,6 +160,7 @@ class InvoiceController extends Controller
                 $flagAgent = $data[$i]->agent_id;
 
                 if($i == (sizeof($data)-1)){
+                    $totalAmount = $totalAmount + $tempAmount;
                     $updateAmount = Invoice::find($lastInvoice);
                     $updateAmount->amount = $tempAmount;
                     $tempAmount = 0;
@@ -164,6 +182,7 @@ class InvoiceController extends Controller
                 }
 
                 if($i == (sizeof($data)-1)){
+                    $totalAmount = $totalAmount + $tempAmount;
                     $updateAmount = Invoice::find($lastInvoice);
                     $updateAmount->amount = $tempAmount;
                     $updateAmount->save();
@@ -174,6 +193,9 @@ class InvoiceController extends Controller
             $removeCart = Cart::find($data[$i]->id);
             $resDelete = $removeCart->delete();
         }
+
+        $group_response->amount = $totalAmount;
+        $group_response->save();
 
         return response()->json([
             'status' => 1,
