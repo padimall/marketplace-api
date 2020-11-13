@@ -27,6 +27,23 @@ class InvoiceController extends Controller
         ],200);
     }
 
+    public function createInvoice()
+    {
+        Xendit::setApiKey(env('SECRET_API_KEY'));
+        $params = ['external_id' => '1111',
+            'payer_email' => 'rudi97278@gmail.com',
+            'description' => 'Pembayaran PadiMall - ',
+            'amount' => 10000
+        ];
+
+        $createInvoice = \Xendit\Invoice::create($params);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Testing boy!',
+            'detail' => $createInvoice
+        ],200);
+    }
+
     public function showAll()
     {
         $data = Invoice::all();

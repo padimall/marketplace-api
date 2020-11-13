@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 Route::post('test','InvoiceController@testXendit');
+Route::get('test2','InvoiceController@createInvoice');
 Route::get('email/verify/', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
 
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
