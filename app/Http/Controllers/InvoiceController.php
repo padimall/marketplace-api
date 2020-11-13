@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Invoice;
 use App\Agent;
+use App\Product;
 use App\Cart;
 use App\Invoices_group;
 use App\Invoices_product;
