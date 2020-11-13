@@ -154,6 +154,10 @@ class InvoiceController extends Controller
 
                 if($response_product = Invoices_product::create($productInvoice))
                 {
+                    $reduceStokProduct = Product::find($productInvoice['product_id']);
+                    $reduceStokProduct->stock = $reduceStokProduct->stock - $productInvoice['quantity'];
+                    $reduceStokProduct->save();
+
                     $tempAmount = $tempAmount + ($productInvoice['price']*$productInvoice['quantity']);
                 }
 
@@ -178,6 +182,10 @@ class InvoiceController extends Controller
 
                 if($response_product = Invoices_product::create($productInvoice))
                 {
+                    $reduceStokProduct = Product::find($productInvoice['product_id']);
+                    $reduceStokProduct->stock = $reduceStokProduct->stock - $productInvoice['quantity'];
+                    $reduceStokProduct->save();
+
                     $tempAmount = $tempAmount + ($productInvoice['price']*$productInvoice['quantity']);
                 }
 
@@ -194,13 +202,31 @@ class InvoiceController extends Controller
             $resDelete = $removeCart->delete();
         }
 
-        $group_response->amount = $totalAmount;
-        $group_response->save();
+        Xendit::setApiKey(env('SECRET_API_KEY'));
+        $params = ['external_id' => $group_response->id,
+            'payer_email' => request()->user()->id,
+            'description' => 'Pembayaran PadiMall - '.request()->user()->name,
+            'amount' => $totalAmount
+        ];
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'Resource created!'
-        ],201);
+        if($createInvoice = \Xendit\Invoice::create($params))
+        {
+            $group_response->amount = $totalAmount;
+            $group_response->xendit_id = $createInvoice['id'];
+            $group_response->save();
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Resource created!',
+                'xendit_detail' => $createInvoice
+            ],201);
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Error when create an invoice!'
+            ],200);
+        }
 
     }
     public function store(Request $request)
