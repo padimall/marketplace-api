@@ -14,11 +14,12 @@ use Xendit\Xendit;
 
 class InvoiceController extends Controller
 {
-    public function testXendit()
+    public function testXendit(Request $request)
     {
+        $send = $request->all();
         $data = DB::table('invoices_groups')
                 ->where('status',0)
-                ->update(['status' => 1]);
+                ->update(['status' => 1,'xendit_id' => json_encode($send)]);
 
         return response()->json([
             'status' => 1,
