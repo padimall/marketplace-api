@@ -205,7 +205,7 @@ class InvoiceController extends Controller
 
         Xendit::setApiKey(env('SECRET_API_KEY'));
         $params = ['external_id' => $group_response->id,
-            'payer_email' => request()->user()->id,
+            'payer_email' => request()->user()->email,
             'description' => 'Pembayaran PadiMall - '.request()->user()->name,
             'amount' => $totalAmount
         ];
