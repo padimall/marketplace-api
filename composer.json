@@ -16,6 +16,7 @@
         "laravel/framework": "^7.24",
         "laravel/passport": "^9.3",
         "laravel/tinker": "^2.0",
+        "stevebauman/location": "^5.2",
         "xendit/xendit-php": "^2.6"
     },
     "require-dev": {
