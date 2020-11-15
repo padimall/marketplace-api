@@ -124,7 +124,7 @@ class AgentController extends Controller
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
         $data['agent_code'] = $random;
-        $data['status'] = 0;
+        $data['status'] = 1;
 
         if(!is_null($request['image']))
         {
