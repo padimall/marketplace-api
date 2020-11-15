@@ -56,7 +56,7 @@ class AuthController extends Controller
         $location = Location::get();
 
         $logDaftar = array(
-            'nama' => $request['name'],
+            'user' => $request['name'],
             'location' => $location->countryName
         );
 
