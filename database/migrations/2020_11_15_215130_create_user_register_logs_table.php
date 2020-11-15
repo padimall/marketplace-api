@@ -14,7 +14,7 @@ class CreateUserRegisterLogsTable extends Migration
     public function up()
     {
         Schema::create('user_register_logs', function (Blueprint $table) {
-            $table->uuid();
+            $table->id();
             $table->string('user');
             $table->string('location');
             $table->timestamps();
