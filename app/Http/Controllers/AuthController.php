@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
+use App\User_register_log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Stevebauman\Location\Facades\Location;
 
 class AuthController extends Controller
 {
@@ -20,6 +22,17 @@ class AuthController extends Controller
      * @param  [string] password_confirmation
      * @return [string] message
      */
+
+    public function getLog()
+    {
+        $data = User_register_log::all();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
     public function signup(Request $request)
     {
         $request->validate([
@@ -39,6 +52,15 @@ class AuthController extends Controller
 
         //auto mark as verified
         $user->markEmailAsVerified();
+
+        $location = Location::get();
+
+        $logDaftar = array(
+            'nama' => $request['name'],
+            'location' => $location
+        );
+
+        $userRegisterLog = User_register_log::create($logDaftar);
 
         return response()->json([
             'status' => 1,
