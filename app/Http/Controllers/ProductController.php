@@ -6,6 +6,7 @@ use App\Product;
 use App\Products_image;
 use App\Supplier;
 use App\Agent;
+use App\User;
 use App\Agents_affiliate_supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,6 +19,7 @@ class ProductController extends Controller
         $totalProduct = DB::table('products')->where('status',1)->whereNull('deleted_at')->count();
         $totalAgent = DB::table('agents')->count();
         $totalSupplier = DB::table('suppliers')->count();
+        $totalUser = DB::table('users')->count();
 
 
 
@@ -28,6 +30,7 @@ class ProductController extends Controller
                 'product' => $totalProduct,
                 'agent' => $totalAgent,
                 'supplier' => $totalSupplier,
+                'user' => $totalUser,
             )
         ],200);
     }
