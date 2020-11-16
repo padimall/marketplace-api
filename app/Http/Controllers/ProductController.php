@@ -410,6 +410,7 @@ class ProductController extends Controller
 
         $data = DB::table('products')
                 ->where('name','like','%'.$request['name'].'%')
+				->where('status',1)
                 ->whereNull('deleted_at')
                 ->get();
 
