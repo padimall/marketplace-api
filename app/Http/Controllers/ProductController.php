@@ -13,6 +13,25 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+    public function total()
+    {
+        $totalProduct = DB::table('products')->where('status',1)->whereNull('deleted_at')->count();
+        $totalAgent = DB::table('agents')->count();
+        $totalSupplier = DB::table('suppliers')->count();
+
+
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'total' => array(
+                'product' => $totalProduct,
+                'agent' => $totalAgent,
+                'supplier' => $totalSupplier,
+            )
+        ],200);
+    }
+
     public function showAll()
     {
         $data = DB::table('products')

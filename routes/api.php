@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 Route::post('test','InvoiceController@testXendit');
+Route::post('total','ProductController@total');
 Route::post('register-logs','AuthController@getLog');
 Route::get('test2','InvoiceController@createInvoice');
 Route::post('callback','InvoiceController@callback');
