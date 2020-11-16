@@ -58,7 +58,8 @@ class AuthController extends Controller
 
         $logDaftar = array(
             'user' => $request['name'],
-            'location' => $location->cityName.'/'.$location->countryName
+            'city' => $location->cityName,
+            'country' => $location->countryName
         );
 
         $userRegisterLog = User_register_log::create($logDaftar);
