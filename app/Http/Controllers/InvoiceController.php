@@ -65,7 +65,8 @@ class InvoiceController extends Controller
     public function createInvoice()
     {
         $invoice_group = array(
-            'xendit_id' => null,
+            'external_payment_id' => null,
+            'payment_id' => null,
             'amount' => 0,
             'status' => 0,
         );
@@ -148,7 +149,9 @@ class InvoiceController extends Controller
     {
 
         $request->validate([
-            'carts' => 'required|string'
+            'carts' => 'required|string',
+            'payment_id' => 'required|string|exists:payments,id',
+            'logistic_id' => 'required|string|exists:logistics,id'
         ]);
 
         $listCart = json_decode($request['carts'],true);
@@ -168,13 +171,13 @@ class InvoiceController extends Controller
         }
 
         $invoice_group = array(
-            'xendit_id' => null,
+            'external_payment_id' => null,
+            'payment_id' => $request['payment_id'],
             'amount' => 0,
             'status' => 0,
         );
 
         $group_response = Invoices_group::create($invoice_group);
-
 
         $flagAgent = '';
         $lastInvoice = '';
