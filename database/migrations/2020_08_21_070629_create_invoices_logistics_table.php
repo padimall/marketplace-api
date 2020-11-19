@@ -17,6 +17,7 @@ class CreateInvoicesLogisticsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('invoices_id');
             $table->uuid('logistic_id');
+            $table->string('resi');
             $table->integer('status');
             $table->timestamps();
             $table->foreign('invoices_id')->references('id')->on('invoices');
