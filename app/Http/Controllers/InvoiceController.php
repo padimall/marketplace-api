@@ -66,7 +66,7 @@ class InvoiceController extends Controller
     {
         $invoice_group = array(
             'external_payment_id' => null,
-            'payment_id' => null,
+            'payment_id' => 'd3ff5f4c-7bb8-4927-ac29-55703660f556',
             'amount' => 0,
             'status' => 0,
         );
