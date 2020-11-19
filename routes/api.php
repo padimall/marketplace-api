@@ -120,6 +120,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/delete','CartController@delete');
         });
 
+        Route::group(['prefix' => 'checkout'], function () {
+            Route::post('/user','CheckoutController@checkout');
+        });
 
         Route::group(['prefix' => 'invoice'], function () {
             Route::post('/detail','InvoiceController@show');
