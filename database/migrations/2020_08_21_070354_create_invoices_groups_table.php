@@ -17,9 +17,10 @@ class CreateInvoicesGroupsTable extends Migration
             $table->uuid('id')->primary();
             $table->integer('amount');
             $table->string('external_payment_id')->nullable();
-            $table->string('payment_type')->nullable();
+            $table->uuid('payment_id');
             $table->integer('status');
             $table->timestamps();
+            $table->foreign('payment_id')->references('id')->on('payments');
         });
     }
 
