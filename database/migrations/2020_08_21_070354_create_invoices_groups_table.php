@@ -16,7 +16,8 @@ class CreateInvoicesGroupsTable extends Migration
         Schema::create('invoices_groups', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->integer('amount');
-            $table->string('xendit_id')->nullable();
+            $table->string('external_payment_id')->nullable();
+            $table->string('payment_type');
             $table->integer('status');
             $table->timestamps();
         });
