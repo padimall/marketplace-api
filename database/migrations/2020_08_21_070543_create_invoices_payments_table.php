@@ -15,12 +15,12 @@ class CreateInvoicesPaymentsTable extends Migration
     {
         Schema::create('invoices_payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('invoices_id');
+            $table->uuid('invoice_id');
             $table->uuid('payment_id');
             $table->datetime('pay_at');
             $table->integer('status');
             $table->timestamps();
-            $table->foreign('invoices_id')->references('id')->on('invoices');
+            $table->foreign('invoice_id')->references('id')->on('invoices');
             $table->foreign('payment_id')->references('id')->on('payments');
         });
     }

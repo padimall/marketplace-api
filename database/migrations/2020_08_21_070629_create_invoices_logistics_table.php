@@ -15,12 +15,12 @@ class CreateInvoicesLogisticsTable extends Migration
     {
         Schema::create('invoices_logistics', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('invoices_id');
+            $table->uuid('invoice_id');
             $table->uuid('logistic_id');
-            $table->string('resi');
+            $table->string('resi')->nullable();
             $table->integer('status');
             $table->timestamps();
-            $table->foreign('invoices_id')->references('id')->on('invoices');
+            $table->foreign('invoice_id')->references('id')->on('invoices');
             $table->foreign('logistic_id')->references('id')->on('logistics');
         });
     }

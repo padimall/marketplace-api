@@ -6,9 +6,11 @@ use App\Invoice;
 use App\Agent;
 use App\Product;
 use App\Cart;
+use App\Payment;
 use App\Invoices_group_log;
 use App\Invoices_group;
 use App\Invoices_product;
+use App\Invoices_logistic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Xendit\Xendit;
@@ -151,10 +153,12 @@ class InvoiceController extends Controller
         $request->validate([
             'carts' => 'required|string',
             'payment_id' => 'required|string|exists:payments,id',
-            'logistic_id' => 'required|string|exists:logistics,id'
+            'logistics' => 'required|string'
         ]);
 
         $listCart = json_decode($request['carts'],true);
+        $listLogistic = json_decode($request['logistics'],true);
+
         $data = DB::table('carts')
                 ->join('products','products.id','=','carts.product_id')
                 ->join('agents','agents.id','=','products.agent_id')
@@ -211,6 +215,15 @@ class InvoiceController extends Controller
                 $response = Invoice::create($invoice);
                 $lastInvoice = $response['id'];
                 $lastStore = $data[$i]->store;
+
+                $logisticData = array(
+                    'invoice_id'=> $response['id'],
+                    'logistic_id'=> $listLogistic[$data[$i]->agent_id],
+                    'resi'=>null,
+                    'status'=>0
+                );
+
+                $inputLogistic = Invoices_logistic::create($logisticData);
 
                 $productInvoice = array(
                     'invoice_id' => $lastInvoice,
@@ -270,32 +283,34 @@ class InvoiceController extends Controller
             $resDelete = $removeCart->delete();
         }
 
-        Xendit::setApiKey(env('SECRET_API_KEY'));
-        $params = ['external_id' => $group_response->id,
-            'payer_email' => request()->user()->email,
-            'description' => 'Pembayaran PadiMall - '.request()->user()->name,
-            'amount' => $totalAmount
-        ];
+        $payment = Payment::find($request['payment_id']);
 
-        if($createInvoice = \Xendit\Invoice::create($params))
-        {
-            $group_response->amount = $totalAmount;
-            $group_response->xendit_id = $createInvoice['id'];
-            $group_response->save();
+        if($payment->gate == 'XENDIT'){
+            Xendit::setApiKey(env('SECRET_API_KEY'));
+            $params = ['external_id' => $group_response->id,
+                'payer_email' => request()->user()->email,
+                'description' => 'Pembayaran PadiMall - '.request()->user()->name,
+                'amount' => $totalAmount
+            ];
 
-            return response()->json([
-                'status' => 1,
-                'message' => 'Resource created!',
-                'xendit_detail' => $createInvoice
-            ],201);
+            if($createInvoice = \Xendit\Invoice::create($params))
+            {
+                $group_response->amount = $totalAmount;
+                $group_response->xendit_id = $createInvoice['id'];
+                $group_response->save();
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Resource created!',
+                ],201);
+            }
+            else {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Error when create an invoice!'
+                ],200);
+            }
         }
-        else {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Error when create an invoice!'
-            ],200);
-        }
-
     }
 
     public function update(Request $request)

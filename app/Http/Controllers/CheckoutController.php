@@ -121,9 +121,9 @@ class CheckoutController extends Controller
                     'phone' => request()->user()->phone,
                     'address' => request()->user()->address
                 ),
-                'payment' => $payment,
-                'logistic' => $logistic,
-                'checkout' => $tempData
+                'payments' => $payment,
+                'logistics' => $logistic,
+                'checkouts' => $tempData
             )
         ],200);
     }
