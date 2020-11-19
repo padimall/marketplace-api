@@ -296,7 +296,7 @@ class InvoiceController extends Controller
             if($createInvoice = \Xendit\Invoice::create($params))
             {
                 $group_response->amount = $totalAmount;
-                $group_response->xendit_id = $createInvoice['id'];
+                $group_response->external_payment_id = $createInvoice['id'];
                 $group_response->save();
 
                 return response()->json([
