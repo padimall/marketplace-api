@@ -17,7 +17,8 @@ class CreatePaymentsTable extends Migration
             $table->uuid('id')->primary();
             $table->string('payment_type');
             $table->string('payment_method');
-            $table->string('detail');
+            $table->string('payment_method_code');
+            $table->integer('status');
             $table->timestamps();
         });
     }
