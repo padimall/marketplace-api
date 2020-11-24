@@ -414,9 +414,9 @@ class ProductController extends Controller
 
         $data = DB::table('products')
                 ->join('products_categories','products_categories.id','=','products.category')
-                ->where('name','like','%'.$request['name'].'%')
-				->where('status',1)
-                ->whereNull('deleted_at')
+                ->where('products.name','like','%'.$request['name'].'%')
+				->where('products.status',1)
+                ->whereNull('products.deleted_at')
                 ->select('products.*','products_categories.name AS category_name')
                 ->get();
 
