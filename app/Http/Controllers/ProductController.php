@@ -38,10 +38,11 @@ class ProductController extends Controller
     public function showAll()
     {
         $data = DB::table('products')
-                ->where('status',1)
-                ->whereNull('deleted_at')
+                ->join('products_categories','products_categories.id','=','products.category')
+                ->where('products.status',1)
+                ->whereNull('products.deleted_at')
                 // ->select('*')
-                ->select('id','supplier_id','name','category','price','stock','agent_id')
+                ->select('products.id','products.supplier_id','products.name','products.category','products_categories.name AS category_name','products.price','products.stock','products.agent_id')
                 ->get();
 
         // Product::all();
@@ -83,10 +84,11 @@ class ProductController extends Controller
         ]);
 
         $data = DB::table('products')
-                ->where('status',1)
-                ->whereNull('deleted_at')
+                ->join('products_categories','products_categories.id','=','products.category')
+                ->where('products.status',1)
+                ->whereNull('products.deleted_at')
                 // ->select('*')
-                ->select('id','supplier_id','name','category','price','stock','agent_id')
+                ->select('products.id','products.supplier_id','products.name','products.category','products_categories.name AS category_name','products.price','products.stock','products.agent_id')
                 ->inRandomOrder()
                 ->limit($request['limit'])
                 ->get();
@@ -137,8 +139,10 @@ class ProductController extends Controller
 
         // $data = Product::find($request['target_id']);
         $data = DB::table('products')
-                ->where('id',$request['target_id'])
-                ->whereNull('deleted_at')
+                ->join('products_categories','products_categories.id','=','products.category')
+                ->where('products.id',$request['target_id'])
+                ->whereNull('products.deleted_at')
+                ->select('products.*','products_categories.name AS category_name')
                 ->first();
 
         if(is_null($data)){
@@ -409,9 +413,11 @@ class ProductController extends Controller
         ]);
 
         $data = DB::table('products')
+                ->join('products_categories','products_categories.id','=','products.category')
                 ->where('name','like','%'.$request['name'].'%')
 				->where('status',1)
                 ->whereNull('deleted_at')
+                ->select('products.*','products_categories.name AS category_name')
                 ->get();
 
         $array_product_id = array();
