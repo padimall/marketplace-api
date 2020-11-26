@@ -21,6 +21,13 @@ class AgentController extends Controller
             ],200);
         }
 
+        for($i=0; $i<sizeof($data); $i++){
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
