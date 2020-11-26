@@ -14,6 +14,7 @@ use App\Invoices_logistic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Xendit\Xendit;
+use GuzzleHttp\Client;
 
 class InvoiceController extends Controller
 {
@@ -311,6 +312,69 @@ class InvoiceController extends Controller
                 ],200);
             }
         }
+    }
+
+    public function add_resi(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:invoices,id',
+            'resi'=>'required|string'
+        ]);
+
+        $data = DB::table('invoices_logistics')
+                ->where('invoice_id',$request['target_id'])
+                ->update(['resi' => $request['resi']]);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource updated!'
+        ],200);
+    }
+
+    public function track(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:invoices,id'
+        ]);
+
+        $data = DB::table('invoices_logistics')
+                ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
+                ->select('invoices_logistics.*','logistics.name')
+                ->where('invoices_logistics.invoice_id',$request['target_id'])
+                ->first();
+
+        if(is_null($data->resi)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resi not found!'
+            ],200);
+        }
+        else {
+            $client = new Client();
+            $header1 = [
+                "headers" =>[
+                    'Content-Type' => 'application/json',
+                    'X-Requested-With' => 'XMLHttpRequest',
+                ]
+            ];
+
+            if($data->name == 'PADISTIC')
+            {
+                $input_string = "target_id=".$data->resi;
+                $res = $client->request('POST','https://api-logistic.padimall.id/v1/tracking/package?',$input_string,[
+                    'header' => $header1
+                ]);
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Resource found!',
+                    'data' => $res
+                ],200);
+
+            }
+        }
+
+
     }
 
     public function update(Request $request)

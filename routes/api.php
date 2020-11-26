@@ -128,6 +128,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/detail','InvoiceController@show');
             Route::post('/store','InvoiceController@store');
             Route::post('/update','InvoiceController@update');
+            Route::post('/track','InvoiceController@track');
             Route::post('/list','InvoiceController@list');
         });
 
