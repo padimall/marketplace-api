@@ -364,6 +364,7 @@ class InvoiceController extends Controller
                 $res = $client->request('POST','http://api-logistic.padimall.id/api/v1/tracking/package?'.$input_string,[
                     'headers' => $header1,
                 ]);
+                $res = json_decode($res->getBody(),true);
 
                 return response()->json([
                     'status' => 1,
