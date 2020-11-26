@@ -360,9 +360,11 @@ class InvoiceController extends Controller
 
             if($data->name == 'PADISTIC')
             {
-                $input_string = "target_id=".$data->resi;
-                $res = $client->request('POST','https://api-logistic.padimall.id/v1/tracking/package?',$input_string,[
-                    'header' => $header1
+                $res = $client->request('POST','https://api-logistic.padimall.id/v1/tracking/package?',[
+                    'header' => $header1,
+                    'form_params' => [
+                        'target_id' => $data->resi
+                    ]
                 ]);
 
                 return response()->json([
