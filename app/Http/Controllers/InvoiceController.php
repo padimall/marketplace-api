@@ -368,7 +368,7 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found!',
-                    'data' => json_,
+                    'data' => $res,
                     'data2'=>$data
                 ],200);
 
