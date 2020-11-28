@@ -60,7 +60,8 @@ class InvoiceController extends Controller
     public function tess(){
         $up_data = DB::table('invoices')
                     ->where('status',0)
-                    ->update(['status' => 0]);
+                    ->update(['status' => 0])
+                    ->get();
 
         return response()->json([
             'status' => 1,
