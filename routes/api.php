@@ -19,7 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-Route::post('test','InvoiceController@tess');
 Route::post('total','ProductController@total');
 Route::post('register-logs','AuthController@getLog');
 Route::post('callback','InvoiceController@callback');

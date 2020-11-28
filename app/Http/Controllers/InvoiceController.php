@@ -41,6 +41,19 @@ class InvoiceController extends Controller
                             ->where('invoices_group_id',$data->id)
                             ->update(['status' => $status]);
 
+                $list_inv = DB::table('invoices')
+                            ->where('invoices_group_id',$data->id)
+                            ->select('id')
+                            ->get();
+
+                for($i=0; $i<sizeof($list_inv); $i++){
+                    $log_inv = array(
+                        'invoice_id' => $log_inv[$i]->id,
+                        'status' => $status
+                    );
+                    $save_log_inv = Invoices_log::create($log_inv);
+                }
+
                 $log = array(
                     'invoice_group_id' => $request['external_id'],
                     'status' => $status
@@ -57,18 +70,6 @@ class InvoiceController extends Controller
         }
     }
 
-    public function tess(){
-        $up_data = DB::table('invoices')
-                    ->where('status',0)
-                    ->update(['status' => 1]);
-
-        return response()->json([
-            'status' => 1,
-            'message' => 'Payment receive',
-            'data' => $up_data
-        ],200);
-
-    }
 
     public function testXendit(Request $request)
     {
@@ -318,6 +319,18 @@ class InvoiceController extends Controller
                 ->where('invoice_id',$request['target_id'])
                 ->where('resi',NULL)
                 ->update(['resi' => $request['resi']]);
+
+        $up_invoice = DB::table('invoices')
+                     ->where('id',$request['target_id'])
+                     ->where('status',1)
+                     ->update(['status' => 2]);
+
+        $log_inv = array(
+            'invoice_id' => $request['target_id'],
+            'status' => 2
+        );
+
+        $save_log = Invoices_log::create($log_inv);
 
         return response()->json([
             'status' => 1,
