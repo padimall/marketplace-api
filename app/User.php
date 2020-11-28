@@ -19,7 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     use \App\Http\Traits\UsesUuid;
     protected $fillable = [
-        'name', 'email', 'password','address','phone'
+        'name', 'email', 'password','address','phone','is_admin'
     ];
 
     /**

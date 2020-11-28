@@ -79,6 +79,41 @@ class AuthController extends Controller
 
     }
 
+    public function signup_admin(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'address' => 'required|string',
+            'phone' => 'required|string|unique:users',
+            'password' => 'required|string|confirmed',
+            'keyword' => 'required|string'
+        ]);
+
+        if(hash('sha256',$request['keyword']) != 'a9eafe15a90225a6f53a9d25650edb7c243168d7d217c05fa202f0697f3350ac'){
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $data = $request->all();
+        $data['is_admin'] = 1;
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
+
+        //for send email verification
+        // $user->sendEmailVerificationNotification();
+
+        //auto mark as verified
+        $user->markEmailAsVerified();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Successfully created user!'
+        ], 201);
+
+    }
+
     /**
      * Login user and create token
      *
@@ -171,17 +206,28 @@ class AuthController extends Controller
 
         if(hash('sha256',$request['keyword']) != 'c95f46c7236e806bf134ac4ebc372a8a0313845630ba7072b2ea743f8a030491'){
             return response()->json([
+                'status' => 0,
                 'message' => 'Unauthorized'
             ], 401);
         }
 
         $user = $request->user();
+
+        if($user->is_admin != 1)
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         $tokenResult = $user->createToken('System Access Token',['system-token']);
         $token = $tokenResult->token;
         $token->expires_at = Carbon::now()->addWeeks(54000);
         $token->save();
 
         return response()->json([
+            'status' => 1,
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()

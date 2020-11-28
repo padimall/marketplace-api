@@ -34,9 +34,11 @@ Route::group(['prefix' => 'v1'], function () {
 
 
     Route::post('signup','AuthController@signup');
+    Route::post('signup-admin','AuthController@signup_admin');
 
     Route::post('login','AuthController@login');
     Route::post('login-dev','AuthController@login_dev');
+    Route::post('login-admin','AuthController@login_dev');
 
     Route::group(['prefix' => 'product'], function () {
         Route::post('/all','ProductController@showAll');
