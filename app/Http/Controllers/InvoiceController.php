@@ -339,8 +339,7 @@ class InvoiceController extends Controller
 
         return response()->json([
             'status' => 1,
-            'message' => 'Resource updated!',
-            'data' => $up_invoice
+            'message' => 'Resource updated!'
         ],200);
     }
 
