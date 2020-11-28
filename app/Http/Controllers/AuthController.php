@@ -92,6 +92,7 @@ class AuthController extends Controller
 
         if(hash('sha256',$request['keyword']) != 'a9eafe15a90225a6f53a9d25650edb7c243168d7d217c05fa202f0697f3350ac'){
             return response()->json([
+                'status' => 0,
                 'message' => 'Unauthorized'
             ], 401);
         }
@@ -109,7 +110,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 1,
-            'message' => 'Successfully created user!'
+            'message' => 'Successfully created admin!'
         ], 201);
 
     }
