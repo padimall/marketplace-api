@@ -41,17 +41,20 @@ class InvoiceController extends Controller
                             ->where('invoices_group_id',$data->id)
                             ->update(['status' => $status]);
 
-                $list_inv = DB::table('invoices')
+                if($up_data)
+                {
+                    $list_inv = DB::table('invoices')
                             ->where('invoices_group_id',$data->id)
                             ->select('id')
                             ->get();
 
-                for($i=0; $i<sizeof($list_inv); $i++){
-                    $log_inv = array(
-                        'invoice_id' => $log_inv[$i]->id,
-                        'status' => $status
-                    );
-                    $save_log_inv = Invoices_log::create($log_inv);
+                    for($i=0; $i<sizeof($list_inv); $i++){
+                        $log_inv = array(
+                            'invoice_id' => $log_inv[$i]->id,
+                            'status' => $status
+                        );
+                        $save_log_inv = Invoices_log::create($log_inv);
+                    }
                 }
 
                 $log = array(
@@ -325,12 +328,14 @@ class InvoiceController extends Controller
                      ->where('status',1)
                      ->update(['status' => 2]);
 
-        $log_inv = array(
-            'invoice_id' => $request['target_id'],
-            'status' => 2
-        );
+        if($up_invoice){
+            $log_inv = array(
+                'invoice_id' => $request['target_id'],
+                'status' => 2
+            );
+            $save_log = Invoices_log::create($log_inv);
+        }
 
-        $save_log = Invoices_log::create($log_inv);
 
         return response()->json([
             'status' => 1,

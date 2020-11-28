@@ -14,7 +14,7 @@ class CreateInvoicesLogsTable extends Migration
     public function up()
     {
         Schema::create('invoices_logs', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->uuid('invoice_id');
             $table->integer('status');
             $table->timestamps();
