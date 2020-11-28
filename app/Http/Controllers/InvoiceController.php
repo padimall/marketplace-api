@@ -50,9 +50,10 @@ class InvoiceController extends Controller
 
                     for($i=0; $i<sizeof($list_inv); $i++){
                         $log_inv = array(
-                            'invoice_id' => $log_inv[$i]->id,
+                            'invoice_id' => $list_inv[$i]->id,
                             'status' => $status
                         );
+
                         $save_log_inv = Invoices_log::create($log_inv);
                     }
                 }
