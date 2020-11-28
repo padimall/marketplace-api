@@ -19,10 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-Route::post('test','InvoiceController@testXendit');
+Route::post('test','InvoiceController@tess');
 Route::post('total','ProductController@total');
 Route::post('register-logs','AuthController@getLog');
-Route::get('test2','InvoiceController@createInvoice');
 Route::post('callback','InvoiceController@callback');
 Route::get('email/verify/', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
 

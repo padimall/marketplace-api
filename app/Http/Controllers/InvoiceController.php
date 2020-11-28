@@ -11,6 +11,7 @@ use App\Invoices_group_log;
 use App\Invoices_group;
 use App\Invoices_product;
 use App\Invoices_logistic;
+use App\Invoices_log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Xendit\Xendit;
@@ -36,6 +37,10 @@ class InvoiceController extends Controller
             $data->status = $status;
             if($data->save())
             {
+                $up_data = DB::table('invoices')
+                            ->where('invoices_group_id',$data->id)
+                            ->update(['status' => $status]);
+
                 $log = array(
                     'invoice_group_id' => $request['external_id'],
                     'status' => $status
@@ -52,6 +57,19 @@ class InvoiceController extends Controller
         }
     }
 
+    public function tess(){
+        $up_data = DB::table('invoices')
+                    ->where('status',0)
+                    ->update(['status' => 0]);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Payment receive',
+            'data' => $up_data
+        ],200);
+
+    }
+
     public function testXendit(Request $request)
     {
         $send = $request->all();
@@ -65,31 +83,6 @@ class InvoiceController extends Controller
         ],200);
     }
 
-    public function createInvoice()
-    {
-        $invoice_group = array(
-            'external_payment_id' => null,
-            'payment_id' => 'd3ff5f4c-7bb8-4927-ac29-55703660f556',
-            'amount' => 0,
-            'status' => 0,
-        );
-
-        $group_response = Invoices_group::create($invoice_group);
-
-        Xendit::setApiKey(env('SECRET_API_KEY'));
-        $params = ['external_id' => $group_response['id'],
-            'payer_email' => 'rudi97278@gmail.com',
-            'description' => 'Pembayaran PadiMall - ',
-            'amount' => 10000
-        ];
-
-        $createInvoice = \Xendit\Invoice::create($params);
-        return response()->json([
-            'status' => 1,
-            'message' => 'Testing boy!',
-            'detail' => $createInvoice
-        ],200);
-    }
 
     public function showAll()
     {
@@ -323,6 +316,7 @@ class InvoiceController extends Controller
 
         $data = DB::table('invoices_logistics')
                 ->where('invoice_id',$request['target_id'])
+                ->where('resi',NULL)
                 ->update(['resi' => $request['resi']]);
 
         return response()->json([
