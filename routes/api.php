@@ -148,6 +148,11 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['middleware' => ['auth:api','scope:system-token']], function () {
 
+        Route::group(['prefix' => 'user'], function () {
+            Route::post('/all','AuthController@showAll');
+            Route::post('/detail','AuthController@show');
+        });
+
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/all','AgentController@showAll');
             Route::post('/limit','AgentController@showLimit');

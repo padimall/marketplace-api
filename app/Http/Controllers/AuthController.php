@@ -259,6 +259,52 @@ class AuthController extends Controller
         return response()->json($request->user());
     }
 
+    public function showAll(){
+        $data = DB::table('users')
+                ->select('id','name','email','email_verified_at','address','phone','created_at','updated_at','device_id')
+                ->where('is_admin',0)
+                ->get();
+
+        if(sizeOf($data)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function show(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:users,id'
+        ]);
+
+        $data = DB::table('users')
+                ->where('id',$request['target_id'])
+                ->select('id','name','email','email_verified_at','address','phone','created_at','updated_at','device_id')
+                ->where('is_admin',0)
+                ->first();
+
+        if(is_null($data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Request not found!'
+            ],200);
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+
+    }
+
     public function password(Request $request)
     {
         $data = User::where('id',request()->user()->id)->first();

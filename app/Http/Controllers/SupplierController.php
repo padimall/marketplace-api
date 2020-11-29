@@ -38,7 +38,17 @@ class SupplierController extends Controller
 
     public function show(Request $request)
     {
-        $data = Supplier::where('user_id',request()->user()->id)->first();
+
+        if(!is_null($request['target_id'])){
+            $request->validate([
+                'target_id' => 'required|exists:suppliers,id'
+            ]);
+
+            $data = Supplier::where('user_id',$request['target_id'])->first();
+        }
+        else {
+            $data = Supplier::where('user_id',request()->user()->id)->first();
+        }
 
         if(is_null($data)){
             return response()->json([

@@ -57,7 +57,17 @@ class AgentController extends Controller
 
     public function show()
     {
-        $data = Agent::where('user_id',request()->user()->id)->first();
+        if(!is_null($request['target_id'])){
+            $request->validate([
+                'target_id' => 'required|exists:agents,id'
+            ]);
+
+            $data = Agent::where('user_id',$request['target_id'])->first();
+        }
+        else {
+            $data = Agent::where('user_id',request()->user()->id)->first();
+        }
+
 
         if(is_null($data)){
             return response()->json([
@@ -198,7 +208,7 @@ class AgentController extends Controller
             'message' => 'Resource updated!'
         ],200);
     }
-	
+
 	public function delete_image(Request $request)
     {
         $data = Agent::where('user_id',request()->user()->id)->first();
