@@ -58,6 +58,8 @@ class AgentController extends Controller
     public function show(Request $request)
     {
         if(!is_null($request['target_id'])){
+            $this->middleware(['auth:api', 'scopes:system-token']);
+
             $request->validate([
                 'target_id' => 'required|exists:agents,id'
             ]);
