@@ -188,9 +188,9 @@ class SupplierController extends Controller
                     ->select('agents.*')
                     ->get()->first();
 
-        if(!is_null($myAgent['image']))
+        if(!is_null($myAgent->image))
         {
-            $myAgent['image']=url('/').'/'.$myAgent['image'];
+            $myAgent->image=url('/').'/'.$myAgent->image;
         }
 
         return response()->json([
