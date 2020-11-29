@@ -55,7 +55,7 @@ class AgentController extends Controller
         ],200);
     }
 
-    public function show()
+    public function show(Request $request)
     {
         if(!is_null($request['target_id'])){
             $request->validate([
