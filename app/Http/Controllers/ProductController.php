@@ -680,6 +680,7 @@ class ProductController extends Controller
                 ->join('main_categories','main_categories.id','=','products_categories.main_category_id')
                 ->where('main_categories.id',$request['target_id'])
                 ->whereNull('products.deleted_at')
+				->where('products.status',1)
                 ->select('products.*')
                 ->get();
 
