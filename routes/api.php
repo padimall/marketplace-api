@@ -155,6 +155,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['prefix' => 'agent'], function () {
             Route::post('/all','AgentController@showAll');
+            Route::post('/detail-id','AgentController@detail_id');
             Route::post('/limit','AgentController@showLimit');
         });
 
@@ -165,6 +166,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['prefix' => 'supplier'], function () {
             Route::post('/all','SupplierController@showAll');
+            Route::post('/detail-id','SupplierController@detail_id');
             Route::post('/limit','SupplierController@showLimit');
         });
 

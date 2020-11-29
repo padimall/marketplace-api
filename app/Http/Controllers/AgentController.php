@@ -55,33 +55,54 @@ class AgentController extends Controller
         ],200);
     }
 
-    public function show(Request $request)
+    public function detail_id(Request $request)
     {
-        if(!is_null($request['target_id'])){
-            if(!$this->middleware(['auth:api', 'scopes:system-token']))
-            {
-                return response()->json([
-                    'status' => 0,
-                    'message' => 'Unauthorized'
-                ], 401);
-            }
+        $request->validate([
+            'target_id' => 'required|exists:agents,id'
+        ]);
 
+        $data = Agent::where('id',$request['target_id'])->first();
 
-            $request->validate([
-                'target_id' => 'required|exists:agents,id'
-            ]);
+        if(is_null($data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
 
-            $data = Agent::where('id',$request['target_id'])->first();
+        $supplier = DB::table('suppliers')
+                    ->join('agents_affiliate_suppliers','agents_affiliate_suppliers.supplier_id','=','suppliers.id')
+                    ->where('agents_affiliate_suppliers.agent_id',$data['id'])
+                    ->select('suppliers.*')
+                    ->get();
 
-            if(is_null($data)){
-                return response()->json([
-                    'status' => 0,
-                    'message' => 'Resource not found!'
-                ],200);
+        if(sizeof($supplier)!=0)
+        {
+            for($i=0; $i<sizeof($supplier); $i++){
+                if(!is_null($supplier[$i]->image))
+                {
+                    $supplier[$i]->image = url('/').'/'.$supplier[$i]->image;
+                }
             }
         }
-        else {
-            $data = Agent::where('user_id',request()->user()->id)->first();
+
+        $data['supplier'] = $supplier;
+
+        if(!is_null($data['image']))
+        {
+            $data['image']=url('/').'/'.$data['image'];
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function show(Request $request)
+    {
+        $data = Agent::where('user_id',request()->user()->id)->first();
 
             if(is_null($data)){
                 return response()->json([
@@ -89,7 +110,6 @@ class AgentController extends Controller
                     'message' => 'You are not an agent!'
                 ],200);
             }
-        }
 
         $supplier = DB::table('suppliers')
                     ->join('agents_affiliate_suppliers','agents_affiliate_suppliers.supplier_id','=','suppliers.id')

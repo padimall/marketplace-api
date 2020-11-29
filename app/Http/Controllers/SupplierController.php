@@ -39,16 +39,33 @@ class SupplierController extends Controller
     public function show(Request $request)
     {
 
-        if(!is_null($request['target_id'])){
-            $request->validate([
-                'target_id' => 'required|exists:suppliers,id'
-            ]);
+        $data = Supplier::where('user_id',request()->user()->id)->first();
 
-            $data = Supplier::where('user_id',$request['target_id'])->first();
+        if(is_null($data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not a supplier!'
+            ],200);
         }
-        else {
-            $data = Supplier::where('user_id',request()->user()->id)->first();
+
+        if(!is_null($data['image']))
+        {
+            $data['image']=url('/').'/'.$data['image'];
         }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function detail_id(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:suppliers,id'
+        ]);
+
+        $data = Supplier::where('id',$request['target_id'])->first();
 
         if(is_null($data)){
             return response()->json([
