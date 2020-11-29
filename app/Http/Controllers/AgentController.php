@@ -62,18 +62,24 @@ class AgentController extends Controller
                 'target_id' => 'required|exists:agents,id'
             ]);
 
-            $data = Agent::where('user_id',$request['target_id'])->first();
+            $data = Agent::where('id',$request['target_id'])->first();
+
+            if(is_null($data)){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Resource not found!'
+                ],200);
+            }
         }
         else {
             $data = Agent::where('user_id',request()->user()->id)->first();
-        }
 
-
-        if(is_null($data)){
-            return response()->json([
-                'status' => 0,
-                'message' => 'You are not an agent!'
-            ],200);
+            if(is_null($data)){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'You are not an agent!'
+                ],200);
+            }
         }
 
         $supplier = DB::table('suppliers')

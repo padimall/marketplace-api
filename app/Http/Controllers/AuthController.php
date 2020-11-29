@@ -293,7 +293,7 @@ class AuthController extends Controller
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
-                'message' => 'Request not found!'
+                'message' => 'Resource not found!'
             ],200);
         }
 
