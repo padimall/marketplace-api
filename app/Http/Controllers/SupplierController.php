@@ -211,7 +211,6 @@ class SupplierController extends Controller
         }
         $data->image = NULL;
         $data->save();
-        $data->save();
         return response()->json([
             'status' => 1,
             'message' => 'Image deleted!'

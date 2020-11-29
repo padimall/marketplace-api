@@ -198,6 +198,23 @@ class AgentController extends Controller
             'message' => 'Resource updated!'
         ],200);
     }
+	
+	public function delete_image(Request $request)
+    {
+        $data = Agent::where('user_id',request()->user()->id)->first();
+        $image_target = $data->image;
+        if(File::exists(public_path($image_target)))
+        {
+            $status = File::delete(public_path($image_target));
+        }
+        $data->image = NULL;
+        $data->save();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Image deleted!'
+        ],200);
+
+    }
 
     public function delete($id){
         $data = Agent::find($id);
