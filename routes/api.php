@@ -82,7 +82,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/detail','AgentController@show');
             Route::post('/update','AgentController@update');
             Route::post('/store','AgentController@store');
-			Route::post('/delete-image','SupplierController@delete_image');
+			Route::post('/delete-image','AgentController@delete_image');
         });
 
         Route::group(['prefix' => 'supplier'], function () {
