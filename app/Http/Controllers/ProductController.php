@@ -627,7 +627,7 @@ class ProductController extends Controller
                 ->join('products_categories','products_categories.id','=','products.category')
                 ->where('products_categories.name','like','%'.$request['name'].'%')
                 ->where('products.status',1)
-                ->whereNull('deleted_at')
+                ->whereNull('products.deleted_at')
                 ->select('products.*','products_categories.name AS category_name')
                 ->get();
 
@@ -679,7 +679,7 @@ class ProductController extends Controller
                 ->join('products_categories','products_categories.id','=','products.category')
                 ->join('main_categories','main_categories.id','=','products_categories.main_category_id')
                 ->where('main_categories.id',$request['target_id'])
-                ->whereNull('deleted_at')
+                ->whereNull('products.deleted_at')
                 ->select('products.*')
                 ->get();
 
