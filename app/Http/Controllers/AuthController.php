@@ -46,6 +46,7 @@ class AuthController extends Controller
 
         $data = $request->all();
         $data['password'] = bcrypt($data['password']);
+		$data['is_admin'] = 0;
         $user = User::create($data);
 
         //for send email verification
