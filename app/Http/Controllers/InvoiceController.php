@@ -449,7 +449,7 @@ class InvoiceController extends Controller
         for($i=0; $i<sizeof($data); $i++)
         {
             $temp = array();
-            for($j=0; $j<sizeof($product); $i++)
+            for($j=0; $j<sizeof($product); $j++)
             {
                 if($data[$i]->id == $product[$j]->invoice_id)
                 {
