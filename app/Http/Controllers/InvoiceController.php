@@ -443,7 +443,7 @@ class InvoiceController extends Controller
         }
 
         $product = DB::table('invoices_products')
-                    ->whereIn($listInvoice)
+                    ->whereIn('invoice_id',$listInvoice)
                     ->get();
 
         return response()->json([
