@@ -92,9 +92,9 @@ class ProductsCategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg|max:2008',
+            'image' => 'required|mimes:png,jpg,jpeg|max:2048',
             'status' => 'required',
-            'main_category_id' => 'required|exists:main_categories,id'
+            'main_category_id' => 'required|exists:main_categories,id|string'
         ]);
 
         $filename = 'product-category-'.Str::uuid().'.png';

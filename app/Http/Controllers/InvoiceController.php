@@ -435,10 +435,22 @@ class InvoiceController extends Controller
                 'message' => 'Resource not found!'
             ],200);
         }
+
+        $listInvoice = array();
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            array_push($listInvoice,$data[$i]->id);
+        }
+
+        $product = DB::table('invoices_products')
+                    ->whereIn($listInvoice)
+                    ->get();
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $data
+            'data' => $data,
+            'product' => $product
         ],200);
     }
 
