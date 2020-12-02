@@ -205,13 +205,13 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 200);
 
         if(hash('sha256',$request['keyword']) != 'c95f46c7236e806bf134ac4ebc372a8a0313845630ba7072b2ea743f8a030491'){
             return response()->json([
                 'status' => 0,
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 200);
         }
 
         $user = $request->user();
@@ -221,7 +221,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 200);
         }
 
         $tokenResult = $user->createToken('System Access Token',['system-token']);
