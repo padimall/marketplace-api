@@ -446,6 +446,20 @@ class InvoiceController extends Controller
                     ->whereIn('invoice_id',$listInvoice)
                     ->get();
 
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeof($product); $i++)
+            {
+                if($data[$i]->id == $product[$j]->invoice_id)
+                {
+                    array_push($temp,$product[$j]);
+                    unset($product[$j]);
+                }
+                $data[$i]->products = $temp;
+            }
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
