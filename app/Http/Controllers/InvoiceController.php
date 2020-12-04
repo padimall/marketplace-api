@@ -566,10 +566,10 @@ class InvoiceController extends Controller
                     if($bank[$i]['bank_code'] == $data->method_code)
                     {
                         $show = array(
-                            'bank_code' => $bank[$i]->bank_code,
-                            'bank_account_number' => $bank[$i]->bank_code,
-                            'transfer_amount' => $bank[$i]->transfer_amount,
-                            'bank_branch' => $bank[$i]->bank_branch,
+                            'bank_code' => $bank[$i]['bank_code'],
+                            'bank_account_number' => $bank[$i]['bank_code'],
+                            'transfer_amount' => $bank[$i]['transfer_amount'],
+                            'bank_branch' => $bank[$i]['bank_branch'],
                         );
                     }
                 }
