@@ -101,14 +101,14 @@ class CartController extends Controller
                     ->where('id',$request['product_id'])
                     ->first();
 
-        $quantity = $product->stock;
+        $stock = $product->stock;
 
-        if($request['quantity'] > $quantity)
+        if($request['quantity'] > $stock)
         {
             return response()->json([
                 'status' => 0,
                 'message' => 'Not enough stock!'
-            ],201);
+            ],200);
         }
 
         $product_exist = DB::table('carts')
@@ -118,9 +118,18 @@ class CartController extends Controller
                     ->first();
 
         if(!is_null($product_exist)){
-            $quantitiy = $product_exist->quantity + $request['quantity'];
+            $quantity = $product_exist->quantity + $request['quantity'];
+
+            if($quantity > $stock)
+            {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Not enough stock!'
+                ],200);
+            }
+
             $update = array(
-                'quantity' => $quantitiy
+                'quantity' => $quantity
             );
 
             $update_exist = DB::table('carts')
