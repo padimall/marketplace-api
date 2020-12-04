@@ -103,7 +103,7 @@ class CartController extends Controller
 
         $quantity = $product->stock;
 
-        if($request['quantity'] > $quantitiy)
+        if($request['quantity'] > $quantity)
         {
             return response()->json([
                 'status' => 0,
