@@ -142,18 +142,24 @@ class InvoiceController extends Controller
             ],200);
         }
 
+
         $logistic = DB::table('invoices_logistics')
-                    ->where('invoice_id',$data->id)
+                    ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
+                    ->where('invoices_logistics.invoice_id',$data->id)
+                    ->select('logistics.name')
                     ->first();
 
-        $payment = DB::table('invoices_payments')
-                    ->where('invoice_id',$data->id)
+        $payment = DB::table('invoices_groups')
+                    ->join('payments','payments.id','=','invoices_groups.payment_id')
+                    ->where('invoices_groups.id',$data->invoices_group_id)
+                    ->select('gate','method','method_code')
                     ->first();
 
         $product = DB::table('invoices_products')
                     ->where('invoice_id',$data->id)
                     ->get();
 
+        $data['user'] = request()->user();
         $data['logistic'] = $logistic;
         $data['payment'] = $payment;
         $data['products'] = $product;
