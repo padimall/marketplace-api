@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Invoice;
 use App\Agent;
+use App\Supplier;
 use App\Product;
 use App\Cart;
 use App\Payment;
@@ -156,7 +157,7 @@ class InvoiceController extends Controller
         $data['logistic'] = $logistic;
         $data['payment'] = $payment;
         $data['products'] = $product;
-        
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
