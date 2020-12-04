@@ -178,6 +178,7 @@ class InvoiceController extends Controller
             'payment_id' => $request['payment_id'],
             'amount' => 0,
             'status' => 0,
+            'user_id' => request()->user()->id
         );
 
         $group_response = Invoices_group::create($invoice_group);
