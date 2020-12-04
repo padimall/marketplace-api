@@ -428,7 +428,29 @@ class InvoiceController extends Controller
 
     public function list(Request $request)
     {
-        $data = Invoice::where('user_id',request()->user()->id)->get();
+        $request->validate([
+            'status' => 'required|integer'
+        ]);
+
+        $group = Invoices_group::where('user_id',request()->user()->id)->get();
+
+        if(sizeOf($group)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        $listGroup = array();
+        for($i=0; $i<sizeof($group); $i++)
+        {
+            array_push($listGroup,$group[$i]->id);
+        }
+
+        $data = DB::table('invoices')
+                    ->whereIn('invoices_group_id',$listGroup)
+                    ->where('status',$request['status'])
+                    ->get();
 
         if(sizeOf($data)==0){
             return response()->json([
@@ -436,6 +458,8 @@ class InvoiceController extends Controller
                 'message' => 'Resource not found!'
             ],200);
         }
+
+        // $data = Invoice::where('user_id',request()->user()->id)->get();
 
         $listInvoice = array();
         for($i=0; $i<sizeof($data); $i++)
@@ -463,7 +487,7 @@ class InvoiceController extends Controller
             {
                 if($image[$j]->product_id==$product[$i]->product_id){
                     $product[$i]->image = url('/').'/'.$image[$j]->image;
-                    continue;
+                    break;
                 }
             }
         }
@@ -481,10 +505,23 @@ class InvoiceController extends Controller
             }
         }
 
+        for($i=0; $i<sizeof($group); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeof($data); $j++)
+            {
+                if($group[$i]->id == $data[$j]->invoices_group_id)
+                {
+                    array_push($temp,$data[$j]);
+                }
+                $group[$i]->invoices = $temp;
+            }
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $data
+            'invoice_groups' => $group
         ],200);
     }
 
