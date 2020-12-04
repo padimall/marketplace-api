@@ -558,11 +558,34 @@ class InvoiceController extends Controller
             Xendit::setApiKey(env('SECRET_API_KEY'));
             $getInvoice = \Xendit\Invoice::retrieve($external);
 
-            return response()->json([
-                'status' => 1,
-                'message' => 'Resource found',
-                'data' => $getInvoice
-            ],200);
+            if($data->method == "BANK")
+            {
+                $bank = $getInvoice->available_banks;
+                for($i=0; $i<sizeof($bank); $i++)
+                {
+                    if($bank[$i]->bank_code == $data->method_code)
+                    {
+                        $show = array(
+                            'bank_code' => $bank[$i]->bank_code,
+                            'bank_account_number' => $bank[$i]->bank_code,
+                            'transfer_amount' => $bank[$i]->transfer_amount,
+                            'bank_branch' => $bank[$i]->bank_branch,
+                        );
+                    }
+                }
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Resource found',
+                    'data' => $show
+                ],200);
+            }
+            else {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Payment method not found'
+                ],200);
+            }
         }
         else {
             return response()->json([
