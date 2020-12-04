@@ -97,6 +97,20 @@ class CartController extends Controller
             'status'=> 'required',
         ]);
 
+        $product = DB::table('products')
+                    ->where('id',$request['product_id'])
+                    ->first();
+
+        $quantity = $product->stock;
+
+        if($request['quantity'] > $quantitiy)
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Not enough stock!'
+            ],201);
+        }
+
         $product_exist = DB::table('carts')
                     ->where('user_id',request()->user()->id)
                     ->where('product_id',$request['product_id'])
