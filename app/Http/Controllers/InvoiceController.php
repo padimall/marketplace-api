@@ -449,25 +449,20 @@ class InvoiceController extends Controller
         for($i=0; $i<sizeof($data); $i++)
         {
             $temp = array();
-            $size = sizeof($product);
-            $j = 0;
-            while($j<$size){
+            for($j=0; $j<sizeof($product); $j++)
+            {
                 if($data[$i]->id == $product[$j]->invoice_id)
                 {
                     array_push($temp,$product[$j]);
-                    unset($product[$j]);
-                    $size--;
                 }
                 $data[$i]->products = $temp;
-                $j++;
             }
         }
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $data,
-            'product' => $product
+            'data' => $data
         ],200);
     }
 
