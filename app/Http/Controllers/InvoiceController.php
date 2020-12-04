@@ -450,13 +450,16 @@ class InvoiceController extends Controller
         {
             $temp = array();
             $size = sizeof($product);
-            for($j=0; $j<$size; $j++)
-            {
+            $j = 0;
+            while($j<$size){
                 if($data[$i]->id == $product[$j]->invoice_id)
                 {
                     array_push($temp,$product[$j]);
+                    unset($product[$j]);
+                    $size--;
                 }
                 $data[$i]->products = $temp;
+                $j++;
             }
         }
 
