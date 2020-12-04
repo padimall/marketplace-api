@@ -196,10 +196,10 @@ class InvoiceController extends Controller
             'address' => request()->user()->address,
         );
 
-        $data['user'] = $user;
-        $data['logistic'] = $logistic;
-        $data['payment'] = $payment;
-        $data['products'] = $product;
+        $data->user = $user;
+        $data->logistic = $logistic;
+        $data->payment = $payment;
+        $data->products = $product;
 
         return response()->json([
             'status' => 1,
