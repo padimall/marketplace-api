@@ -557,14 +557,13 @@ class InvoiceController extends Controller
 
             Xendit::setApiKey(env('SECRET_API_KEY'));
             $getInvoice = \Xendit\Invoice::retrieve($external);
-            $getInvoice = json_decode($getInvoice,true);
 
             if($data->method == "BANK")
             {
-                $bank = $getInvoice->available_banks;
+                $bank = $getInvoice['available_banks'];
                 for($i=0; $i<sizeof($bank); $i++)
                 {
-                    if($bank[$i]->bank_code == $data->method_code)
+                    if($bank[$i]['bank_code'] == $data->method_code)
                     {
                         $show = array(
                             'bank_code' => $bank[$i]->bank_code,
