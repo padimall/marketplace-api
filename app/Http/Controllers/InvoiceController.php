@@ -136,7 +136,6 @@ class InvoiceController extends Controller
         // $data = Invoice::find($request['target_id']);
         $data = DB::table('invoices')
                     ->join('agents','agents.id','=','invoices.agent_id')
-                    ->whereIn('invoices.invoices_group_id',$listGroup)
                     ->where('invoices.id',$request['target_id'])
                     ->select('invoices.*','agents.image')
                     ->first();
