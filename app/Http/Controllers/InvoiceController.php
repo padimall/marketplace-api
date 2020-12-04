@@ -446,6 +446,27 @@ class InvoiceController extends Controller
                     ->whereIn('invoice_id',$listInvoice)
                     ->get();
 
+        $listProduct = array();
+        for($i=0; $i<sizeof($product); $i++)
+        {
+            array_push($listProduct,$product[$i]->product_id);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$listProduct)
+                    ->get();
+
+        for($i=0; $i<sizeOf($product); $i++)
+        {
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$product[$i]->product_id){
+                    $product[$i]->image = url('/').'/'.$image[$j]->image;
+                    continue;
+                }
+            }
+        }
+
         for($i=0; $i<sizeof($data); $i++)
         {
             $temp = array();
