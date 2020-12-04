@@ -133,13 +133,24 @@ class InvoiceController extends Controller
             'target_id' => 'required'
         ]);
 
-        $data = Invoice::find($request['target_id']);
+        // $data = Invoice::find($request['target_id']);
+        $data = DB::table('invoices')
+                    ->join('agents','agents.id','=','invoices.agent_id')
+                    ->whereIn('invoices.invoices_group_id',$listGroup)
+                    ->where('invoices.id',$request['target_id'])
+                    ->select('invoices.*','agents.image')
+                    ->first();
 
         if(is_null($data)){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
             ],200);
+        }
+
+        if(!is_null($data->image))
+        {
+            $data->image = url('/').'/'.$data->image;
         }
 
 
@@ -158,6 +169,27 @@ class InvoiceController extends Controller
         $product = DB::table('invoices_products')
                     ->where('invoice_id',$data->id)
                     ->get();
+
+        $listProduct = array();
+        for($i=0; $i<sizeof($product); $i++)
+        {
+            array_push($listProduct,$product[$i]->product_id);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$listProduct)
+                    ->get();
+
+        for($i=0; $i<sizeOf($product); $i++)
+        {
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$product[$i]->product_id){
+                    $product[$i]->image = url('/').'/'.$image[$j]->image;
+                    break;
+                }
+            }
+        }
 
         $user = array(
             'name' => request()->user()->name,
