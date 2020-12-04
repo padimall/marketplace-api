@@ -556,7 +556,7 @@ class InvoiceController extends Controller
             $external = $data->external_payment_id;
 
             Xendit::setApiKey(env('SECRET_API_KEY'));
-            $getInvoice = \Xendit\Invoice::retrieve($id);
+            $getInvoice = \Xendit\Invoice::retrieve($external);
 
             return response()->json([
                 'status' => 1,
