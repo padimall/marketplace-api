@@ -567,7 +567,7 @@ class InvoiceController extends Controller
                     {
                         $show = array(
                             'bank_code' => $bank[$i]['bank_code'],
-                            'bank_account_number' => $bank[$i]['bank_code'],
+                            'bank_account_number' => $bank[$i]['bank_account_number'],
                             'transfer_amount' => $bank[$i]['transfer_amount'],
                             'bank_branch' => $bank[$i]['bank_branch'],
                         );
