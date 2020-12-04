@@ -448,8 +448,10 @@ class InvoiceController extends Controller
         }
 
         $data = DB::table('invoices')
-                    ->whereIn('invoices_group_id',$listGroup)
-                    ->where('status',$request['status'])
+                    ->join('agents','agents.id','=','invoices.agent_id')
+                    ->whereIn('invoices.invoices_group_id',$listGroup)
+                    ->where('invoices.status',$request['status'])
+                    ->select('invoices.*','agents.image')
                     ->get();
 
         if(sizeOf($data)==0){
@@ -464,6 +466,10 @@ class InvoiceController extends Controller
         $listInvoice = array();
         for($i=0; $i<sizeof($data); $i++)
         {
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
             array_push($listInvoice,$data[$i]->id);
         }
 
