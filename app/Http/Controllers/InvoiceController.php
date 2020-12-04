@@ -159,7 +159,13 @@ class InvoiceController extends Controller
                     ->where('invoice_id',$data->id)
                     ->get();
 
-        $data['user'] = request()->user();
+        $user = array(
+            'name' => request()->user()->name,
+            'phone' => request()->user()->phone,
+            'address' => request()->user()->address,
+        );
+
+        $data['user'] = $user;
         $data['logistic'] = $logistic;
         $data['payment'] = $payment;
         $data['products'] = $product;
