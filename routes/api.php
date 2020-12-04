@@ -132,6 +132,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/track','InvoiceController@track');
             Route::post('/list','InvoiceController@list');
             Route::post('/add-resi','InvoiceController@add_resi');
+            Route::post('/pay','InvoiceController@pay');
         });
 
         Route::group(['prefix' => 'invoice-product'], function () {

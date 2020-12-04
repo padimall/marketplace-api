@@ -531,6 +531,51 @@ class InvoiceController extends Controller
         ],200);
     }
 
+    public function pay(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:invoices_groups,id'
+        ]);
+
+        $data = DB::table('invoices_groups')
+                ->join('payments','payments.id','=','invoices_groups.payment_id')
+                ->where('id',$request['target_id'])
+                ->select('invoices_groups.*','payments.gate','payments.method','payments.method_code')
+                ->first();
+
+        if(is_null($data))
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        if($data->gate == "XENDIT")
+        {
+            $external = $data->external_payment_id;
+
+            Xendit::setApiKey(env('SECRET_API_KEY'));
+            $getInvoice = \Xendit\Invoice::retrieve($id);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Resource found',
+                'data' => $getInvoice
+            ],200);
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Payment method not found'
+            ],200);
+        }
+
+
+
+
+    }
+
     public function delete($id){
         $data = Invoice::find($id);
         $response = $data->delete();
