@@ -490,10 +490,6 @@ class InvoiceController extends Controller
 
     public function list(Request $request)
     {
-        $request->validate([
-            'status' => 'required|integer'
-        ]);
-
         $group = Invoices_group::where('user_id',request()->user()->id)->get();
 
         if(sizeOf($group)==0){
@@ -509,12 +505,27 @@ class InvoiceController extends Controller
             array_push($listGroup,$group[$i]->id);
         }
 
-        $data = DB::table('invoices')
+        if(!is_null($request['status'])){
+            $request->validate([
+                'status' => 'required|integer'
+            ]);
+
+            $data = DB::table('invoices')
                     ->join('agents','agents.id','=','invoices.agent_id')
                     ->whereIn('invoices.invoices_group_id',$listGroup)
                     ->where('invoices.status',$request['status'])
                     ->select('invoices.*','agents.image')
                     ->get();
+        }
+        else {
+            $data = DB::table('invoices')
+                    ->join('agents','agents.id','=','invoices.agent_id')
+                    ->whereIn('invoices.invoices_group_id',$listGroup)
+                    ->select('invoices.*','agents.image')
+                    ->get();
+        }
+
+
 
         if(sizeOf($data)==0){
             return response()->json([
