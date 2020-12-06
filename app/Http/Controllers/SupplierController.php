@@ -54,6 +54,7 @@ class SupplierController extends Controller
 
                 $product = DB::table('products')
                             ->where('supplier_id',$data->id)
+                            ->where('status',2)
                             ->update(['status' => 1]);
 
                 return response()->json([
@@ -68,7 +69,7 @@ class SupplierController extends Controller
 
                 $product = DB::table('products')
                             ->where('supplier_id',$data->id)
-                            ->update(['status' => 0]);
+                            ->update(['status' => 2]);
 
                 return response()->json([
                     'status' => 1,
