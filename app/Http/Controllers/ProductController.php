@@ -729,6 +729,33 @@ class ProductController extends Controller
             'target_id' => 'required|exists:products,id'
         ]);
         $data = Product::find($request['target_id']);
+
+        $agent = Agent::where('user_id',request()->user()->id)->first();
+
+        $supplier = Supplier::where('user_id',request()->user()->id)->first();
+
+        if($supplier->id == $data->supplier_id || $agent->id == $data->agent_id){
+            $response = $data->delete();
+            return response()->json([
+                'status' => 1,
+                'message' => 'Resource deleted!'
+            ],200);
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'This is not your product!'
+            ],200);
+        }
+
+    }
+
+    public function delete_admin(Request $request){
+        $request->validate([
+            'target_id' => 'required|exists:products,id'
+        ]);
+        $data = Product::find($request['target_id']);
+
         $response = $data->delete();
 
         return response()->json([

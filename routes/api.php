@@ -186,6 +186,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/limit','AgentsAffiliateSupplierController@showLimit');
         });
 
+        Route::group(['prefix' => 'product'], function () {
+            Route::post('/admin-delete','ProductsCategoryController@delete_admin');
+        });
+
         Route::group(['prefix' => 'product-category'], function () {
             Route::post('/store','ProductsCategoryController@store');
             Route::post('/update','ProductsCategoryController@update');
