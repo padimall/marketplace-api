@@ -36,6 +36,55 @@ class SupplierController extends Controller
         ],200);
     }
 
+    public function update_status(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:suppliers,id',
+            'status' => 'required|between:0,1'
+        ]);
+
+        $data = Supplier::where('id',$request['target_id'])->first();
+
+        if($request['status'] == 0 || $request['status'] == 1)
+        {
+            if($request['status'] == 1){
+                $data->status = 1;
+
+                $data->save();
+
+                $product = DB::table('products')
+                            ->where('supplier_id',$data->id)
+                            ->update(['status' => 1]);
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Supplier activated! Products shown!'
+                ],200);
+            }
+            else if($request['status'] == 0)
+            {
+                $data->status = 0;
+                $data->save();
+
+                $product = DB::table('products')
+                            ->where('supplier_id',$data->id)
+                            ->update(['status' => 0]);
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Supplier de-activated! Products hidden!'
+                ],200);
+            }
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'status is 0 or 1'
+            ],200);
+        }
+
+    }
+
     public function show(Request $request)
     {
 

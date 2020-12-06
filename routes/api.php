@@ -173,6 +173,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/all','SupplierController@showAll');
             Route::post('/detail-id','SupplierController@detail_id');
             Route::post('/limit','SupplierController@showLimit');
+            Route::post('/update-status','SupplierController@update_status');
         });
 
 
