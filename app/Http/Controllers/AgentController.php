@@ -209,9 +209,13 @@ class AgentController extends Controller
 
                 $data->save();
 
+                $product = DB::table('products')
+                            ->where('agent_id',$data->id)
+                            ->update(['status' => 1]);
+
                 return response()->json([
                     'status' => 1,
-                    'message' => 'Agent activated!'
+                    'message' => 'Agent activated! Products shown!'
                 ],200);
             }
             else if($request['status'] == 0)
@@ -225,7 +229,7 @@ class AgentController extends Controller
 
                 return response()->json([
                     'status' => 1,
-                    'message' => 'Agent activated!'
+                    'message' => 'Agent de-activated! Products hidden!'
                 ],200);
             }
         }
