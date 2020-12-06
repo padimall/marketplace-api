@@ -211,7 +211,6 @@ class AgentController extends Controller
 
                 $product = DB::table('products')
                             ->where('agent_id',$data->id)
-                            ->where('status',2)
                             ->update(['status' => 1]);
 
                 return response()->json([
@@ -226,7 +225,7 @@ class AgentController extends Controller
 
                 $product = DB::table('products')
                             ->where('agent_id',$data->id)
-                            ->update(['status' => 2]);
+                            ->update(['status' => 0]);
 
                 return response()->json([
                     'status' => 1,
