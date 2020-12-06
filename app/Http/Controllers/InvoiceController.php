@@ -658,46 +658,47 @@ class InvoiceController extends Controller
 
         $testing = array();
         array_push($testing,$data);
-        for($i=0; $i<sizeof($data); $i++)
-        {
-            $logistic = DB::table('invoices_logistics')
-                        ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
-                        ->where('invoices_logistics.invoice_id',$data[$i]->id)
-                        ->select('logistics.name')
-                        ->first();
 
-            $product = DB::table('invoices_products')
-                        ->where('invoice_id',$data[$i]->id)
-                        ->get();
+        // for($i=0; $i<sizeof($data); $i++)
+        // {
+        //     $logistic = DB::table('invoices_logistics')
+        //                 ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
+        //                 ->where('invoices_logistics.invoice_id',$data[$i]->id)
+        //                 ->select('logistics.name')
+        //                 ->first();
+
+        //     $product = DB::table('invoices_products')
+        //                 ->where('invoice_id',$data[$i]->id)
+        //                 ->get();
 
 
 
-            $listProduct = array();
-            for($i=0; $i<sizeof($product); $i++)
-            {
-                array_push($listProduct,$product[$i]->product_id);
-            }
+        //     $listProduct = array();
+        //     for($i=0; $i<sizeof($product); $i++)
+        //     {
+        //         array_push($listProduct,$product[$i]->product_id);
+        //     }
 
-            $image = DB::table('products_images')
-                        ->whereIn('product_id',$listProduct)
-                        ->get();
+        //     $image = DB::table('products_images')
+        //                 ->whereIn('product_id',$listProduct)
+        //                 ->get();
 
-            for($i=0; $i<sizeOf($product); $i++)
-            {
-                for($j=0; $j<sizeOf($image); $j++)
-                {
-                    if($image[$j]->product_id==$product[$i]->product_id){
-                        $product[$i]->image = url('/').'/'.$image[$j]->image;
-                        break;
-                    }
-                }
-            }
+        //     for($i=0; $i<sizeOf($product); $i++)
+        //     {
+        //         for($j=0; $j<sizeOf($image); $j++)
+        //         {
+        //             if($image[$j]->product_id==$product[$i]->product_id){
+        //                 $product[$i]->image = url('/').'/'.$image[$j]->image;
+        //                 break;
+        //             }
+        //         }
+        //     }
 
-            $data[$i]->logistic = $logistic;
-            $data[$i]->products = $product;
-        }
+        //     $data[$i]->logistic = $logistic;
+        //     $data[$i]->products = $product;
+        // }
 
-        $group->invoices = $data;
+        // $group->invoices = $data;
 
         return response()->json([
             'status' => 1,
