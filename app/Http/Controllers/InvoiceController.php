@@ -604,6 +604,105 @@ class InvoiceController extends Controller
         ],200);
     }
 
+    public function invoice_group_detail(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:invoices_groups,id'
+        ]);
+
+        // $group = Invoices_group::where('id',$request['target_id'])->first();
+        $group = DB::table('invoices_groups')
+                    ->join('payments','payments.id','=','invoices_groups.payment_id')
+                    ->where('invoices_groups.id',$data->invoices_group_id)
+                    ->select('invoices_groups.*','payments.gate','payments.method','payments.method_code')
+                    ->first();
+
+        if(is_null($group)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        $group->payment = array(
+            'gate' => $group->gate,
+            'method' => $group->method,
+            'method_code' => $group->method_code,
+        );
+
+        unset($group->gate);
+        unset($group->method);
+        unset($group->method_code);
+
+        $user = array(
+            'name' => request()->user()->name,
+            'phone' => request()->user()->phone,
+            'address' => request()->user()->address,
+        );
+
+        $group->user = $user;
+
+        $data = DB::table('invoices')
+                    ->join('agents','agents.id','=','invoices.agent_id')
+                    ->where('invoices.invoices_group_id',$request['target_id'])
+                    ->select('invoices.*','agents.name AS agent_name','agents.image')
+                    ->get();
+
+        if(sizeof($data) == 0)
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            $logistic = DB::table('invoices_logistics')
+                        ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
+                        ->where('invoices_logistics.invoice_id',$data[$i]->id)
+                        ->select('invoices_logistics.invoice_id','logistics.name')
+                        ->first();
+
+            $product = DB::table('invoices_products')
+                        ->where('invoice_id',$data[$i]->id)
+                        ->get();
+
+            $listProduct = array();
+            for($i=0; $i<sizeof($product); $i++)
+            {
+                array_push($listProduct,$product[$i]->product_id);
+            }
+
+            $image = DB::table('products_images')
+                        ->whereIn('product_id',$listProduct)
+                        ->get();
+
+            for($i=0; $i<sizeOf($product); $i++)
+            {
+                for($j=0; $j<sizeOf($image); $j++)
+                {
+                    if($image[$j]->product_id==$product[$i]->product_id){
+                        $product[$i]->image = url('/').'/'.$image[$j]->image;
+                        break;
+                    }
+                }
+            }
+
+            $data[$i]->logistic = $logistic;
+            $data[$i]->products = $product;
+        }
+
+        $group->invoices = $data;
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $group
+        ],200);
+
+    }
+
     public function invoice_seller(Request $request)
     {
         $agent_data = Agent::where('user_id',request()->user()->id)->first();
