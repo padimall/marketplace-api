@@ -200,7 +200,7 @@ class AgentController extends Controller
             'status' => 'required|between:0,1|integer'
         ]);
 
-        $data = Agent::where('user_id',$request['target_id'])->first();
+        $data = Agent::where('id',$request['target_id'])->first();
 
         if($request['status'] == 0 || $request['status'] == 1)
         {
