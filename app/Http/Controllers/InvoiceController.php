@@ -613,7 +613,7 @@ class InvoiceController extends Controller
         // $group = Invoices_group::where('id',$request['target_id'])->first();
         $group = DB::table('invoices_groups')
                     ->join('payments','payments.id','=','invoices_groups.payment_id')
-                    ->where('invoices_groups.id',$data->invoices_group_id)
+                    ->where('invoices_groups.id',$request['target_id'])
                     ->select('invoices_groups.*','payments.gate','payments.method','payments.method_code')
                     ->first();
 
