@@ -19,8 +19,9 @@ class ProductController extends Controller
         $totalProduct = DB::table('products')->where('status',1)->whereNull('deleted_at')->count();
         $totalAgent = DB::table('agents')->count();
         $totalSupplier = DB::table('suppliers')->count();
-        $totalUser = DB::table('users')->count();
-
+        $totalUser = DB::table('users')
+                    ->where('is_admin',0)
+                    ->count();
 
 
         return response()->json([
