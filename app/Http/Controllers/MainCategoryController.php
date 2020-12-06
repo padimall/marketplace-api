@@ -16,6 +16,7 @@ class MainCategoryController extends Controller
         $data = DB::table('main_categories')
                 ->leftJoin(DB::raw('(select COUNT(id) AS count_category,main_category_id from products_categories group by main_category_id) AS category_count'),'category_count.main_category_id','=','main_categories.id')
                 ->select('category_count.count_category','main_categories.*')
+                ->where('main_categories.status',1)
                 ->get();
         if(sizeOf($data)==0){
             return response()->json([
@@ -168,6 +169,7 @@ class MainCategoryController extends Controller
                 ->join('main_categories','main_categories.id','=','products_categories.main_category_id')
                 ->select('products_categories.*')
                 ->where('main_categories.id',$request['target_id'])
+                ->where('products_categories.status',1)
                 ->get();
 
         if(sizeof($data)==0)
@@ -193,33 +195,33 @@ class MainCategoryController extends Controller
 
     }
 
-    public function delete(Request $request){
-        $request->validate([
-            'target_id'
-        ]);
+    // public function delete(Request $request){
+    //     $request->validate([
+    //         'target_id'
+    //     ]);
 
-        $data = Main_category::find($request['target_id']);
+    //     $data = Main_category::find($request['target_id']);
 
-        if(is_null($data))
-        {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Resource not found!'
-            ],200);
-        }
+    //     if(is_null($data))
+    //     {
+    //         return response()->json([
+    //             'status' => 0,
+    //             'message' => 'Resource not found!'
+    //         ],200);
+    //     }
 
-        $image_target = $data->image;
+    //     $image_target = $data->image;
 
-        if(File::exists(public_path($image_target)))
-        {
-            $status = File::delete(public_path($image_target));
-        }
+    //     if(File::exists(public_path($image_target)))
+    //     {
+    //         $status = File::delete(public_path($image_target));
+    //     }
 
-        $response = $data->delete();
+    //     $response = $data->delete();
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'Banner deleted!'
-        ],200);
-    }
+    //     return response()->json([
+    //         'status' => 1,
+    //         'message' => 'Banner deleted!'
+    //     ],200);
+    // }
 }

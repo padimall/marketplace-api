@@ -15,6 +15,7 @@ class ProductsCategoryController extends Controller
         $data = DB::table('products_categories')
                 ->leftJoin(DB::raw('(select COUNT(id) AS count_product,category from products group by category) AS product_count'),'product_count.category','=','products_categories.id')
                 ->select('product_count.count_product','products_categories.*')
+                ->where('products_categories.status',1)
                 ->get();
 
         if(sizeOf($data)==0){
