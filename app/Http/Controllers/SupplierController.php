@@ -174,6 +174,7 @@ class SupplierController extends Controller
 
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
+        $data['status'] = 1;
         if(!is_null($request['image']))
         {
             $filename = 'supplier-'.Str::uuid().'.jpg';
@@ -181,8 +182,6 @@ class SupplierController extends Controller
             $imageURL = 'supplier/'.$filename;
             $data['image'] = $imageURL;
         }
-
-
 
         $response = Supplier::create($data);
 
