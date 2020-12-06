@@ -729,12 +729,27 @@ class ProductController extends Controller
             'target_id' => 'required|exists:products,id'
         ]);
         $data = Product::find($request['target_id']);
+        $cekAgent = false;
+        $cekSupplier = false;
 
         $agent = Agent::where('user_id',request()->user()->id)->first();
-
         $supplier = Supplier::where('user_id',request()->user()->id)->first();
 
-        if($supplier['id'] == $data->supplier_id || $agent['id'] == $data->agent_id){
+        if(!is_null($agent))
+        {
+            if($agent->id == $data->agent_id){
+                $cekAgent = true;
+            }
+        }
+        else {
+            if(!is_null($supplier)){
+                if($supplier->id == $data->supplier_id){
+                    $cekSupplier = true;
+                }
+            }
+        }
+
+        if($cekAgent || $cekSupplier){
             $response = $data->delete();
             return response()->json([
                 'status' => 1,
