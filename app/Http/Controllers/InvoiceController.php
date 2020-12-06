@@ -669,7 +669,7 @@ class InvoiceController extends Controller
                         ->where('invoice_id',$data[$i]->id)
                         ->get();
 
-            array_push($testing,$product);
+            array_push($testing,$i);
 
             $listProduct = array();
             for($i=0; $i<sizeof($product); $i++)
