@@ -161,6 +161,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/all','AgentController@showAll');
             Route::post('/detail-id','AgentController@detail_id');
             Route::post('/limit','AgentController@showLimit');
+            Route::post('/update-status','AgentController@update_status');
         });
 
         Route::group(['prefix' => 'banner'], function () {

@@ -193,6 +193,51 @@ class AgentController extends Controller
         ],201);
     }
 
+    public function update_status(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:agents,id',
+            'status' => 'required|between:0,1|integer'
+        ]);
+
+        $data = Agent::where('user_id',$request['target_id'])->first();
+
+        if($request['status'] == 0 || $request['status'] == 1)
+        {
+            if($request['status'] == 1){
+                $data->status = 1;
+
+                $data->save();
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Agent activated!'
+                ],200);
+            }
+            else if($request['status'] == 0)
+            {
+                $data->status = 0;
+                $data->save();
+
+                $product = DB::table('products')
+                            ->where('agent_id',$data->id)
+                            ->update(['status' => 0]);
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Agent activated!'
+                ],200);
+            }
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'status is 0 or 1'
+            ],200);
+        }
+
+    }
+
     public function update(Request $request)
     {
 
