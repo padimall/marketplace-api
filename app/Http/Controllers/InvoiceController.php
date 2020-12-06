@@ -514,14 +514,14 @@ class InvoiceController extends Controller
                     ->join('agents','agents.id','=','invoices.agent_id')
                     ->whereIn('invoices.invoices_group_id',$listGroup)
                     ->where('invoices.status',$request['status'])
-                    ->select('invoices.*','agents.image','agents.name')
+                    ->select('invoices.*','agents.name AS agent_name','agents.image')
                     ->get();
         }
         else {
             $data = DB::table('invoices')
                     ->join('agents','agents.id','=','invoices.agent_id')
                     ->whereIn('invoices.invoices_group_id',$listGroup)
-                    ->select('invoices.*','agents.image')
+                    ->select('invoices.*','agents.name AS agent_name','agents.image')
                     ->get();
         }
 
