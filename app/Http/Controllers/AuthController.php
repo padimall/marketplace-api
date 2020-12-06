@@ -55,16 +55,16 @@ class AuthController extends Controller
         //auto mark as verified
         $user->markEmailAsVerified();
 
-        // $ip = request()->ip();
-        // $location = Location::get($ip);
+        $ip = request()->ip();
+        $location = Location::get($ip);
 
-        // $logDaftar = array(
-        //     'user' => $request['name'],
-        //     'city' => $location->cityName,
-        //     'country' => $location->countryName
-        // );
+        $logDaftar = array(
+            'user' => $request['name'],
+            'city' => $location['cityName'],
+            'country' => $location['countryName']
+        );
 
-        // $userRegisterLog = User_register_log::create($logDaftar);
+        $userRegisterLog = User_register_log::create($logDaftar);
 
         return response()->json([
             'status' => 1,
