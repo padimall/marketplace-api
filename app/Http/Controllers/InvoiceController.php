@@ -657,7 +657,7 @@ class InvoiceController extends Controller
         }
 
         $testing = array();
-        array_push($testing,$data);
+        array_push($testing,sizeof($data));
 
         // for($i=0; $i<sizeof($data); $i++)
         // {
