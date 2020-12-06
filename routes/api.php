@@ -167,6 +167,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'banner'], function () {
             Route::post('/store','BannerController@store');
             Route::post('/update','BannerController@update');
+            Route::post('/delete','BannerController@delete');
         });
 
         Route::group(['prefix' => 'supplier'], function () {

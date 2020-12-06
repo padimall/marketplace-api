@@ -147,9 +147,51 @@ class BannerController extends Controller
         ],200);
     }
 
-    public function delete($id){
-        $data = Banner::find($id);
+    public function delete_image(Request $request)
+    {
+        $data = Agent::where('user_id',request()->user()->id)->first();
+        $image_target = $data->image;
+
+        if(File::exists(public_path($image_target)))
+        {
+            $status = File::delete(public_path($image_target));
+        }
+        $data->image = NULL;
+        $data->save();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Image deleted!'
+        ],200);
+
+    }
+
+    public function delete(Request $request){
+        $request->validate([
+            'target_id'
+        ]);
+
+        $data = Banner::find($request['target_id']);
+
+        if(is_null($data))
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        $image_target = $data->image;
+
+        if(File::exists(public_path($image_target)))
+        {
+            $status = File::delete(public_path($image_target));
+        }
+
         $response = $data->delete();
-        return response()->json($response,200);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Banner deleted!'
+        ],200);
     }
 }
