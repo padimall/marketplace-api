@@ -480,6 +480,13 @@ class ProductController extends Controller
                 ->get();
         // Product::where('agent_id',$agent_data->id)->get();
 
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
         $array_product_id = array();
         for ($i=0; $i<sizeOf($data); $i++)
         {
@@ -505,12 +512,70 @@ class ProductController extends Controller
             $data[$i]->image = $temp;
         }
 
+        
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function product_agent_id(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:agents,id'
+        ]);
+
+        $agent_data = Agent::where('id',$request['target_id'])->first();
+
+        if(is_null($agent_data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not an agent!'
+            ],200);
+        }
+
+        $data = DB::table('products')
+                ->where('agent_id',$agent_data->id)
+                ->where('supplier_id',NULL)
+                ->whereNull('deleted_at')
+                ->select('*')
+                ->get();
+        // Product::where('agent_id',$agent_data->id)->get();
+
         if(sizeOf($data)== 0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
             ],200);
         }
+
+        $array_product_id = array();
+        for ($i=0; $i<sizeOf($data); $i++)
+        {
+            array_push($array_product_id,$data[$i]->id);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$array_product_id)
+                    ->get();
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$data[$i]->id){
+                    array_push($temp,array(
+                        'id' => $image[$j]->id,
+                        'url' => url('/').'/'.$image[$j]->image
+                    ));
+                }
+            }
+            $data[$i]->image = $temp;
+        }
+
 
         return response()->json([
             'status' => 1,
@@ -531,6 +596,13 @@ class ProductController extends Controller
         }
 
         $data = Product::where('supplier_id',$supplier_data->id)->get();
+
+        if(sizeOf($data)== 0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
 
         $array_product_id = array();
         for ($i=0; $i<sizeOf($data); $i++)
@@ -557,11 +629,59 @@ class ProductController extends Controller
             $data[$i]['image'] = $temp;
         }
 
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
+    public function product_supplier_id(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:suppliers,id'
+        ]);
+        $supplier_data = Supplier::where('id',$request['target_id'])->first();
+
+        if(is_null($supplier_data)){
+            return response()->json([
+                'status' => 0,
+                'message' => 'You are not a supplier!'
+            ],200);
+        }
+
+        $data = Product::where('supplier_id',$supplier_data->id)->get();
+
         if(sizeOf($data)== 0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found!'
             ],200);
+        }
+
+        $array_product_id = array();
+        for ($i=0; $i<sizeOf($data); $i++)
+        {
+            array_push($array_product_id,$data[$i]['id']);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$array_product_id)
+                    ->get();
+
+        for($i=0; $i<sizeOf($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$data[$i]['id']){
+                    array_push($temp,array(
+                        'id' => $image[$j]->id,
+                        'url' => url('/').'/'.$image[$j]->image
+                    ));
+                }
+            }
+            $data[$i]['image'] = $temp;
         }
 
         return response()->json([
