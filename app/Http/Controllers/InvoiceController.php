@@ -622,7 +622,7 @@ class InvoiceController extends Controller
             $data = DB::table('invoices')
                 ->join('suppliers','suppliers.id','=','invoices.supplier_id')
                 ->where('invoices.supplier_id',$supplier_data->id)
-                ->select('invoices.*','suppliers.image')
+                ->select('invoices.*','suppliers.name AS supplier_name','suppliers.image')
                 ->get();
 
             if(sizeOf($data)==0){
@@ -638,7 +638,7 @@ class InvoiceController extends Controller
             $data = DB::table('invoices')
                 ->join('agents','agents.id','=','invoices.agent_id')
                 ->where('invoices.agent_id',$agent_data->id)
-                ->select('invoices.*','agents.image')
+                ->select('invoices.*','agents.name AS agents_name','agents.image')
                 ->get();
 
             if(sizeOf($data)==0){
