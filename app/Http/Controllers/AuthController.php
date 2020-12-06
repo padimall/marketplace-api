@@ -59,9 +59,9 @@ class AuthController extends Controller
         $location = Location::get($ip);
 
         $logDaftar = array(
-            'user' => $request['name'],
-            'city' => $location['cityName'],
-            'country' => $location['countryName']
+            'user' => $request->name,
+            'city' => $location->cityName,
+            'country' => $location->countryName
         );
 
         $userRegisterLog = User_register_log::create($logDaftar);
