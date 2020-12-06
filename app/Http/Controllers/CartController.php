@@ -8,28 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
-    public function index(Request $request){
-        $request->validate([
-            'request_type'=>'required'
-        ]);
-
-        $type = $request['request_type'];
-        if($type == 1){
-            return $this->showAll();
-        }
-        else if($type == 2){
-            return $this->show($request);
-        }
-        else if($type == 3){
-            return $this->store($request);
-        }
-        else if($type == 4){
-            return $this->update($request);
-        }
-        else if($type == 5){
-            return $this->showLimit($request);
-        }
-    }
 
     public function showAll()
     {
@@ -103,29 +81,19 @@ class CartController extends Controller
 
         $stock = $product->stock;
 
-        if($request['quantity'] > $stock)
-        {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Not enough stock!'
-            ],200);
-        }
-
         $product_exist = DB::table('carts')
-                    ->where('user_id',request()->user()->id)
-                    ->where('product_id',$request['product_id'])
-                    ->select('*')
-                    ->first();
+                        ->where('user_id',request()->user()->id)
+                        ->where('product_id',$request['product_id'])
+                        ->select('*')
+                        ->first();
 
         if(!is_null($product_exist)){
             $quantity = $product_exist->quantity + $request['quantity'];
-
+            $message = 'Product exist. Cart updated';
             if($quantity > $stock)
             {
-                return response()->json([
-                    'status' => 0,
-                    'message' => 'Not enough stock!'
-                ],200);
+                $quantity = $stock;
+                $message = 'Cart set to max stock';
             }
 
             $update = array(
@@ -138,19 +106,26 @@ class CartController extends Controller
                             ->update($update);
 
             return response()->json([
-                'status' => $update_exist,
-                'message' => 'Product exist. Cart updated!'
+                'status' => 1,
+                'message' => $message
             ],200);
         }
+        else {
+            $data = $request->all();
+            $message = 'Resource created!';
+            if($data['quantity'] > $stock)
+            {
+                $data['quantity'] = $stock;
+                $message = 'Resource created! Cart set to max stock!';
+            }
 
-
-        $data = $request->all();
-        $data['user_id'] = request()->user()->id;
-        $response = Cart::create($data);
-        return response()->json([
-            'status' => 1,
-            'message' => 'Resource created!'
-        ],201);
+            $data['user_id'] = request()->user()->id;
+            $response = Cart::create($data);
+            return response()->json([
+                'status' => 1,
+                'message' => $message
+            ],201);
+        }
     }
 
     public function update(Request $request)
