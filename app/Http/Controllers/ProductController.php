@@ -734,7 +734,7 @@ class ProductController extends Controller
 
         $supplier = Supplier::where('user_id',request()->user()->id)->first();
 
-        if($supplier->id == $data->supplier_id || $agent->id == $data->agent_id){
+        if($supplier['id'] == $data->supplier_id || $agent['id'] == $data->agent_id){
             $response = $data->delete();
             return response()->json([
                 'status' => 1,
