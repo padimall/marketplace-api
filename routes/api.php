@@ -134,6 +134,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/add-resi','InvoiceController@add_resi');
             Route::post('/pay','InvoiceController@pay');
             Route::post('/seller','InvoiceController@invoice_seller');
+            Route::post('/group-detail','InvoiceController@invoice_group_detail');
 
         });
 
