@@ -657,6 +657,7 @@ class InvoiceController extends Controller
         }
 
         $testing = array();
+        array_push($testing,$data);
         for($i=0; $i<sizeof($data); $i++)
         {
             $logistic = DB::table('invoices_logistics')
@@ -669,7 +670,7 @@ class InvoiceController extends Controller
                         ->where('invoice_id',$data[$i]->id)
                         ->get();
 
-            array_push($testing,$i);
+
 
             $listProduct = array();
             for($i=0; $i<sizeof($product); $i++)
