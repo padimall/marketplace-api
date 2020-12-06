@@ -656,17 +656,20 @@ class InvoiceController extends Controller
             ],200);
         }
 
+        $testing = array();
         for($i=0; $i<sizeof($data); $i++)
         {
             $logistic = DB::table('invoices_logistics')
                         ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
                         ->where('invoices_logistics.invoice_id',$data[$i]->id)
-                        ->select('invoices_logistics.invoice_id','logistics.name')
+                        ->select('logistics.name')
                         ->first();
 
             $product = DB::table('invoices_products')
                         ->where('invoice_id',$data[$i]->id)
                         ->get();
+
+            array_push($testing,$product);
 
             $listProduct = array();
             for($i=0; $i<sizeof($product); $i++)
@@ -698,7 +701,7 @@ class InvoiceController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $group
+            'data' => $testing
         ],200);
 
     }
