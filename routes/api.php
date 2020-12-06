@@ -187,7 +187,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
         Route::group(['prefix' => 'product'], function () {
-            Route::post('/admin-delete','ProductsCategoryController@delete_admin');
+            Route::post('/admin-delete','ProductController@delete_admin');
         });
 
         Route::group(['prefix' => 'product-category'], function () {
