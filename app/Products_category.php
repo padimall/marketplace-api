@@ -8,5 +8,5 @@ class Products_category extends Model
 {
 
     use \App\Http\Traits\UsesUuid;
-    protected $fillable = ['name','status','image'];
+    protected $fillable = ['name','status','image','main_category_id'];
 }
