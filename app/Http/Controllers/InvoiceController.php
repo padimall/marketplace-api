@@ -683,6 +683,108 @@ class InvoiceController extends Controller
         ],200);
     }
 
+    public function invoice_seller(Request $request)
+    {
+        $agent_data = Agent::where('user_id',request()->user()->id)->first();
+
+        if(is_null($agent_data)){
+
+            $supplier_data = Supplier::where('user_id',request()->user()->id)->first();
+
+            if(is_null($supplier_data)){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'You are not a supplier nor an agent!'
+                ],401);
+            }
+
+            $data = DB::table('invoices')
+                ->join('suppliers','suppliers.id','=','invoices.supplier_id')
+                ->where('invoices.supplier_id',$supplier_data->id)
+                ->select('invoices.*','suppliers.image')
+                ->get();
+
+            if(sizeOf($data)==0){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Resource not found!'
+                ],200);
+            }
+
+
+        }
+        else {
+            $data = DB::table('invoices')
+                ->join('agents','agents.id','=','invoices.agent_id')
+                ->where('invoices.agent_id',$agent_data->id)
+                ->select('invoices.*','agents.image')
+                ->get();
+
+            if(sizeOf($data)==0){
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Resource not found!'
+                ],200);
+            }
+        }
+
+        $listInvoice = array();
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
+            array_push($listInvoice,$data[$i]->id);
+        }
+
+        $product = DB::table('invoices_products')
+                    ->whereIn('invoice_id',$listInvoice)
+                    ->get();
+
+        $listProduct = array();
+        for($i=0; $i<sizeof($product); $i++)
+        {
+            array_push($listProduct,$product[$i]->product_id);
+        }
+
+        $image = DB::table('products_images')
+                    ->whereIn('product_id',$listProduct)
+                    ->get();
+
+        for($i=0; $i<sizeOf($product); $i++)
+        {
+            for($j=0; $j<sizeOf($image); $j++)
+            {
+                if($image[$j]->product_id==$product[$i]->product_id){
+                    $product[$i]->image = url('/').'/'.$image[$j]->image;
+                    break;
+                }
+            }
+        }
+
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            $temp = array();
+            for($j=0; $j<sizeof($product); $j++)
+            {
+                if($data[$i]->id == $product[$j]->invoice_id)
+                {
+                    array_push($temp,$product[$j]);
+                }
+                $data[$i]->products = $temp;
+            }
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+
+
+    }
+
     public function invoice_supplier(Request $request)
     {
         $supplier_data = Supplier::where('user_id',request()->user()->id)->first();
