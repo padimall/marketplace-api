@@ -136,18 +136,32 @@ class CartController extends Controller
 
         $data = Cart::find($request['target_id']);
 
-        if(!is_null($request['product_id'])){
-            $request->validate([
-                'product_id' => 'required|exists:products,id'
-            ]);
-            $data->product_id = $request['product_id'];
-        }
+        // if(!is_null($request['product_id'])){
+        //     $request->validate([
+        //         'product_id' => 'required|exists:products,id'
+        //     ]);
+        //     $data->product_id = $request['product_id'];
+        // }
 
         if(!is_null($request['quantity'])){
             $request->validate([
                 'quantity' => 'required'
             ]);
-            $data->quantity = $request['quantity'];
+
+            $product = DB::table('products')
+                    ->where('id',$data->product_id)
+                    ->first();
+
+            $stock = $product->stock;
+
+            if($request['quantity'] > $stock)
+            {
+                $data->quantity = $stock;
+            }
+            else {
+                $data->quantity = $request['quantity'];
+            }
+
         }
 
         if(!is_null($request['status'])){
