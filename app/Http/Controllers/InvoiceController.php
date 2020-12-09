@@ -74,6 +74,47 @@ class InvoiceController extends Controller
                 }
             }
         }
+        else if($request['status'] == 'PAID')
+        {
+            $status = 4;
+            $data->status = $status;
+            if($data->save())
+            {
+                $up_data = DB::table('invoices')
+                            ->where('invoices_group_id',$data->id)
+                            ->update(['status' => $status]);
+
+                if($up_data)
+                {
+                    $list_inv = DB::table('invoices')
+                            ->where('invoices_group_id',$data->id)
+                            ->select('id')
+                            ->get();
+
+                    for($i=0; $i<sizeof($list_inv); $i++){
+                        $log_inv = array(
+                            'invoice_id' => $list_inv[$i]->id,
+                            'status' => $status
+                        );
+
+                        $save_log_inv = Invoices_log::create($log_inv);
+                    }
+                }
+
+                $log = array(
+                    'invoice_group_id' => $request['external_id'],
+                    'status' => $status
+                );
+
+                if($responseLog = Invoices_group_log::create($log))
+                {
+                    return response()->json([
+                        'status' => 1,
+                        'message' => 'Payment expired'
+                    ],200);
+                }
+            }
+        }
     }
 
 
