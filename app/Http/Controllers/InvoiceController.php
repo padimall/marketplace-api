@@ -893,7 +893,9 @@ class InvoiceController extends Controller
                         $show = array(
                             'external_id' => $getInvoice['id'],
                             'invoice_url' => $getInvoice['invoice_url'],
+                            'status' => $getInvoice['status'],
                             'bank_code' => $bank[$i]['bank_code'],
+                            'expiry_date' => $getInvoice['expiry_date'],
                             'bank_account_number' => $bank[$i]['bank_account_number'],
                             'transfer_amount' => $bank[$i]['transfer_amount'],
                             'bank_branch' => $bank[$i]['bank_branch'],
@@ -904,7 +906,7 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
-                    'data' => $getInvoice
+                    'data' => $show
                 ],200);
             }
             else {
