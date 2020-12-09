@@ -32,7 +32,8 @@ class InvoiceController extends Controller
             ],200);
         }
 
-        if($request['status'] == 'PAID' || $request['status'] == 'SETTLE')
+        
+        if($request['status'] == 'PAID' || $request['status'] == 'SETTLED')
         {
             $status = 1;
             $data->status = $status;
@@ -850,6 +851,7 @@ class InvoiceController extends Controller
                     {
                         $show = array(
                             'external_id' => $getInvoice['id'],
+                            'invoice_url' => $getInvoice['invoice_url'],
                             'bank_code' => $bank[$i]['bank_code'],
                             'bank_account_number' => $bank[$i]['bank_account_number'],
                             'transfer_amount' => $bank[$i]['transfer_amount'],
