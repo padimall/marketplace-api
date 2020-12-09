@@ -153,13 +153,21 @@ class CartController extends Controller
                     ->first();
 
             $stock = $product->stock;
+            $min_order = $product->min_order;
+
 
             if($request['quantity'] > $stock)
             {
                 $data->quantity = $stock;
             }
             else {
-                $data->quantity = $request['quantity'];
+                if($request['quantity'] < $min_order)
+                {
+                    $data->quantity = $min_order;
+                }
+                else{
+                    $data->quantity = $request['quantity'];
+                }
             }
 
         }
