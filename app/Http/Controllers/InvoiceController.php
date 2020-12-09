@@ -137,7 +137,7 @@ class InvoiceController extends Controller
         $data = DB::table('invoices')
                     ->join('agents','agents.id','=','invoices.agent_id')
                     ->where('invoices.id',$request['target_id'])
-                    ->select('invoices.*','agents.image')
+                    ->select('invoices.*','agents.name AS agent_name','agents.image')
                     ->first();
 
         if(is_null($data)){
@@ -658,6 +658,11 @@ class InvoiceController extends Controller
 
         for($in=0; $in<sizeof($data); $in++)
         {
+            if(!is_null($data[$i]->image))
+            {
+                $data[$i]->image = url('/').'/'.$data[$i]->image;
+            }
+            
             $logistic = DB::table('invoices_logistics')
                         ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
                         ->where('invoices_logistics.invoice_id',$data[$in]->id)
