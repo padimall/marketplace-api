@@ -490,7 +490,10 @@ class InvoiceController extends Controller
 
     public function list(Request $request)
     {
-        $group = Invoices_group::where('user_id',request()->user()->id)->get();
+        $group = DB::table('invoices_groups')
+                ->where('user_id',request()->user()->id)
+                ->get();
+        // Invoices_group::where('user_id',)->get();
 
         if(sizeOf($group)==0){
             return response()->json([
