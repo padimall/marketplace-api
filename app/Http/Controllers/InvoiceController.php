@@ -658,11 +658,11 @@ class InvoiceController extends Controller
 
         for($in=0; $in<sizeof($data); $in++)
         {
-            if(!is_null($data[$i]->image))
+            if(!is_null($data[$in]->image))
             {
-                $data[$i]->image = url('/').'/'.$data[$i]->image;
+                $data[$in]->image = url('/').'/'.$data[$in]->image;
             }
-            
+
             $logistic = DB::table('invoices_logistics')
                         ->join('logistics','logistics.id','=','invoices_logistics.logistic_id')
                         ->where('invoices_logistics.invoice_id',$data[$in]->id)
