@@ -83,7 +83,7 @@ class InvoiceController extends Controller
 
                             $list_inv_id = array();
 
-                                    
+
 
                                     $list_product = DB::table('invoices_products')
                                             ->whereIn('invoice_id',$list_inv_id)
@@ -102,7 +102,7 @@ class InvoiceController extends Controller
                                         }
                                     }
 
-                                    $query_end = $query_end + ")";
+                                    $query_end = $query_end . ")";
 
                                     return response()->json([
                                                     'status' => 1,
