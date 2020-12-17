@@ -406,6 +406,7 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource created!',
+                    'group_id' => $group_response['id']
                 ],201);
             }
             else {
