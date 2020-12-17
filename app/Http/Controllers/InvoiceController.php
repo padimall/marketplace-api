@@ -83,16 +83,7 @@ class InvoiceController extends Controller
 
                             $list_inv_id = array();
 
-                                    for($i=0; $i<sizeof($list_inv); $i++){
-                                        $log_inv = array(
-                                            'invoice_id' => $list_inv[$i]->id,
-                                            'status' => $status
-                                        );
-
-                                        $save_log_inv = Invoices_log::create($log_inv);
-                                        array_push($list_inv_id,$list_inv[$i]->id);
-                                    }
-
+                                    
 
                                     $list_product = DB::table('invoices_products')
                                             ->whereIn('invoice_id',$list_inv_id)
