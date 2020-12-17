@@ -83,6 +83,12 @@ class InvoiceController extends Controller
 
                             $list_inv_id = array();
 
+                            for($i=0; $i<sizeof($list_inv); $i++){
+                                            
+                                            array_push($list_inv_id,$list_inv[$i]->id);
+                                        }
+
+
 
 
                                     $list_product = DB::table('invoices_products')
@@ -106,7 +112,8 @@ class InvoiceController extends Controller
 
                                     return response()->json([
                                                     'status' => 1,
-                                                    'message' => $query." ".$query_end
+                                                    'message' => $query." ".$query_end,
+                                                    'list'=>$list_product
                                                 ],200);
             // $status = 4;
             // $data->status = $status;
