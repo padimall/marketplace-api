@@ -76,114 +76,76 @@ class InvoiceController extends Controller
         }
         else if($request['status'] == 'EXPIRED')
         {
+            if($data->status == 3)
+            {
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Have been processed!'
+                ],200);
+            }
+            $status = 3;
+            $batal = 4;
+            $data->status = $status;
+            if($data->save())
+            {
+                $up_data = DB::table('invoices')
+                            ->where('invoices_group_id',$data->id)
+                            ->update(['status' => $batal]);
+
+                if($up_data)
+                {
                     $list_inv = DB::table('invoices')
                             ->where('invoices_group_id',$data->id)
                             ->select('id')
                             ->get();
 
-                            $list_inv_id = array();
+                    $list_inv_id = array();
 
-                            for($i=0; $i<sizeof($list_inv); $i++){
+                    for($i=0; $i<sizeof($list_inv); $i++){
+                        $log_inv = array(
+                            'invoice_id' => $list_inv[$i]->id,
+                            'status' => $batal
+                        );
 
-                                            array_push($list_inv_id,$list_inv[$i]->id);
-                                        }
+                        $save_log_inv = Invoices_log::create($log_inv);
+                        array_push($list_inv_id,$list_inv[$i]->id);
+                    }
 
+                    $list_product = DB::table('invoices_products')
+                                ->whereIn('invoice_id',$list_inv_id)
+                                ->get();
 
+                    $list_product_id = array();
+                    $query = "UPDATE products SET stock = CASE";
+                    $query_end = "END WHERE id IN (";
+                    for($i=0; $i<sizeof($list_product); $i++)
+                    {
+                        $query = $query . " WHEN id = '".$list_product[$i]->product_id."' THEN stock+".$list_product[$i]->quantity." ";
+                        $query_end = $query_end . "'".$list_product[$i]->product_id."'";
+                        if($i < (sizeof($list_product)-1)){
+                            $query_end = $query_end . ",";
+                        }
+                    }
 
+                    $query_end = $query_end . ")";
+                    $total = $query.$query_end;
 
-                                    $list_product = DB::table('invoices_products')
-                                            ->whereIn('invoice_id',$list_inv_id)
-                                            ->get();
+                    $res = DB::statement($total);
+                }
 
-                                    $list_product_id = array();
-                                    $query = "UPDATE products SET stock = CASE";
-                                    $query_end = "END WHERE id IN (";
-                                    for($i=0; $i<sizeof($list_product); $i++)
-                                    {
-                                        $query = $query . " WHEN id = '".$list_product[$i]->product_id."' THEN stock+".$list_product[$i]->quantity." ";
-                                        $query_end = $query_end . "'".$list_product[$i]->product_id."'";
-                                        if($i < (sizeof($list_product)-1)){
-                                            $query_end = $query_end . ",";
-                                        }
-                                    }
+                $log = array(
+                    'invoice_group_id' => $request['external_id'],
+                    'status' => $status
+                );
 
-                                    $query_end = $query_end . ")";
-                                    $total = $query.$query_end;
-
-                                    $res = DB::statement($total);
-
-                                    return response()->json([
-                                                    'status' => 1,
-                                                    'message' => $total,
-                                                    'list'=>$list_product,
-                                                    'res'=>$res
-                                                ],200);
-            // $status = 4;
-            // $data->status = $status;
-            // if($data->save())
-            // {
-            //     $up_data = DB::table('invoices')
-            //                 ->where('invoices_group_id',$data->id)
-            //                 ->update(['status' => $status]);
-
-            //     if($up_data)
-            //     {
-            //         $list_inv = DB::table('invoices')
-            //                 ->where('invoices_group_id',$data->id)
-            //                 ->select('id')
-            //                 ->get();
-
-            //         $list_inv_id = array();
-
-            //         for($i=0; $i<sizeof($list_inv); $i++){
-            //             $log_inv = array(
-            //                 'invoice_id' => $list_inv[$i]->id,
-            //                 'status' => $status
-            //             );
-
-            //             $save_log_inv = Invoices_log::create($log_inv);
-            //             array_push($list_inv_id,$list_inv[$i]->id);
-            //         }
-
-
-            //         $list_product = DB::table('invoices_products')
-            //                 ->whereIn('invoice_id',$list_inv_id)
-            //                 ->select('id')
-            //                 ->get();
-
-            //         $list_product_id = array();
-            //         $query = "UPDATE products SET stock = CASE";
-            //         $query_end = "END WHERE id IN (";
-            //         for($i=0; $i<sizeof($list_product); $i++)
-            //         {
-            //             $query = $query + " WHEN id = '".$list_product[$i]->product_id."' THEN stock+".$list_product[$i]->quantity." ";
-            //             $query_end = $query_end + "'".$list_product[$i]->product_id."'";
-            //             if($i < (sizeof($list_product)-1)){
-            //                 $query_end = $query_end + ",";
-            //             }
-            //         }
-
-            //         $query_end = $query_end + ")";
-
-
-
-
-
-            //     }
-
-            //     $log = array(
-            //         'invoice_group_id' => $request['external_id'],
-            //         'status' => $status
-            //     );
-
-            //     if($responseLog = Invoices_group_log::create($log))
-            //     {
-            //         return response()->json([
-            //             'status' => 1,
-            //             'message' => 'Payment expired'
-            //         ],200);
-            //     }
-            // }
+                if($responseLog = Invoices_group_log::create($log))
+                {
+                    return response()->json([
+                        'status' => 1,
+                        'message' => 'Payment expired'
+                    ],200);
+                }
+            }
         }
     }
 
