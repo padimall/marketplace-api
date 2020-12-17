@@ -286,6 +286,7 @@ class InvoiceController extends Controller
         );
 
         $group_response = Invoices_group::create($invoice_group);
+        $invoice_group_id = $group_response['id'];
 
         $flagAgent = '';
         $lastInvoice = '';
@@ -313,7 +314,7 @@ class InvoiceController extends Controller
                     'amount'=>0,
                     'status'=>0,
                     'agent_id'=>$data[$i]->agent_id,
-                    'invoices_group_id' =>$group_response['id'],
+                    'invoices_group_id' =>$invoice_group_id,
                 );
 
                 $response = Invoice::create($invoice);
@@ -391,7 +392,7 @@ class InvoiceController extends Controller
 
         if($payment->gate == 'XENDIT'){
             Xendit::setApiKey(env('SECRET_API_KEY'));
-            $params = ['external_id' => $group_response->id,
+            $params = ['external_id' => $invoice_group_id,
                 'payer_email' => request()->user()->email,
                 'description' => 'Pembayaran PadiMall - '.request()->user()->name,
                 'amount' => $totalAmount
