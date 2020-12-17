@@ -95,10 +95,10 @@ class InvoiceController extends Controller
                                     $query_end = "END WHERE id IN (";
                                     for($i=0; $i<sizeof($list_product); $i++)
                                     {
-                                        $query = $query + " WHEN id = '".$list_product[$i]->product_id."' THEN stock+".$list_product[$i]->quantity." ";
-                                        $query_end = $query_end + "'".$list_product[$i]->product_id."'";
+                                        $query = $query . " WHEN id = '".$list_product[$i]->product_id."' THEN stock+".$list_product[$i]->quantity." ";
+                                        $query_end = $query_end . "'".$list_product[$i]->product_id."'";
                                         if($i < (sizeof($list_product)-1)){
-                                            $query_end = $query_end + ",";
+                                            $query_end = $query_end . ",";
                                         }
                                     }
 
