@@ -32,7 +32,7 @@ class InvoiceController extends Controller
             ],200);
         }
 
-        
+
         if($request['status'] == 'PAID' || $request['status'] == 'SETTLED')
         {
             $status = 1;
@@ -534,6 +534,7 @@ class InvoiceController extends Controller
     {
         $group = DB::table('invoices_groups')
                 ->where('user_id',request()->user()->id)
+                ->orderBy('created_at','ASC')
                 ->get();
         // Invoices_group::where('user_id',)->get();
 
@@ -560,6 +561,7 @@ class InvoiceController extends Controller
                     ->whereIn('invoices.invoices_group_id',$listGroup)
                     ->where('invoices.status',$request['status'])
                     ->select('invoices.*','agents.name AS agent_name','agents.image')
+                    ->orderBy('invoices.created_at','ASC')
                     ->get();
         }
         else {
