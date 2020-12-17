@@ -108,11 +108,15 @@ class InvoiceController extends Controller
                                     }
 
                                     $query_end = $query_end . ")";
+                                    $total = $query.$query_end;
+
+                                    $res = DB::raw($total);
 
                                     return response()->json([
                                                     'status' => 1,
-                                                    'message' => $query." ".$query_end,
-                                                    'list'=>$list_product
+                                                    'message' => $total,
+                                                    'list'=>$list_product,
+                                                    'res'=>$res
                                                 ],200);
             // $status = 4;
             // $data->status = $status;
