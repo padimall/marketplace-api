@@ -84,7 +84,7 @@ class InvoiceController extends Controller
                             $list_inv_id = array();
 
                             for($i=0; $i<sizeof($list_inv); $i++){
-                                            
+
                                             array_push($list_inv_id,$list_inv[$i]->id);
                                         }
 
@@ -93,7 +93,6 @@ class InvoiceController extends Controller
 
                                     $list_product = DB::table('invoices_products')
                                             ->whereIn('invoice_id',$list_inv_id)
-                                            ->select('id')
                                             ->get();
 
                                     $list_product_id = array();
