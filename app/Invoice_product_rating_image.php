@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice_product_rating_image extends Model
 {
     use \App\Http\Traits\UsesUuid;
-    protected $fillable = ['invoices_product_rating_id','image'];
+    protected $fillable = ['invoice_product_rating_id','image'];
 }
