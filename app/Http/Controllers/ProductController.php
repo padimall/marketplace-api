@@ -196,7 +196,7 @@ class ProductController extends Controller
         if(sizeof($ratings)!=0){
             for($i=0; $i<sizeof($ratings); $i++)
             {
-                array_push($rating_id,$ratings->id);
+                array_push($rating_id,$ratings[$i]->id);
             }
 
             $rating_image = DB::table('invoice_product_rating_images')
