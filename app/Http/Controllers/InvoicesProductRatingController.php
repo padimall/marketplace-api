@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Invoices_product_rating;
 use App\Invoice_product_rating_image;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class InvoicesProductRatingController extends Controller
 {
