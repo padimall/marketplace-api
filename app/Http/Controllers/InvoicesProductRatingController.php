@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Invoices_product_rating;
+use App\Invoice_product_rating_image;
 
 class InvoicesProductRatingController extends Controller
 {
@@ -24,10 +25,37 @@ class InvoicesProductRatingController extends Controller
             ],200);
         }
 
+        $exist = Invoices_product_rating::where('invoice_product_id',$request['invoice_product_id'])->first();
+
+        if(!is_null($exist))
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Rating exist!'
+            ],201);
+        }
+
         $data = $request->all();
         $data['name'] = request()->user()->name;
 
         $response = Invoices_product_rating::create($data);
+
+        if(!is_null($request['image']))
+        {
+            $array_image = $data['image'];
+            for($i=0; $i<sizeOf($array_image); $i++)
+            {
+                $filename = 'rating-'.Str::uuid().'.jpg';
+                $data['image'][$i]->move(public_path("/rating"),$filename);
+                $imageURL = 'rating/'.$filename;
+                $data_image = array(
+                    'invoice_product_rating_id' => $response['id'],
+                    'image'=>$imageURL
+                );
+
+                $response_image = Invoice_product_rating_image::create($data_image);
+            }
+        }
 
         return response()->json([
             'status' => 1,
