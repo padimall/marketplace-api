@@ -132,6 +132,8 @@ class ProductController extends Controller
         ],200);
     }
 
+    
+
     public function show(Request $request)
     {
         $request->validate([
