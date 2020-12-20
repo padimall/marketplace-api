@@ -202,7 +202,7 @@ class ProductController extends Controller
             }
 
             $rating_image = DB::table('invoice_product_rating_images')
-                        ->whereIn('id',$rating_id)
+                        ->whereIn('invoice_product_rating_id',$rating_id)
                         ->select('*')
                         ->get();
 
