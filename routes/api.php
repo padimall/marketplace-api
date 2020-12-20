@@ -150,6 +150,11 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/update','InvoicesProductRatingController@update');
         });
 
+        Route::group(['prefix' => 'invoice-product-rating-image'], function () {
+            Route::post('/store','InvoiceProductRatingImageController@store');
+            Route::post('/delete','InvoiceProductRatingImageController@delete');
+        });
+
 
 
         Route::group(['prefix' => 'admin-price'], function () {
