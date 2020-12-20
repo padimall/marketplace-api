@@ -132,7 +132,7 @@ class ProductController extends Controller
         ],200);
     }
 
-    
+
 
     public function show(Request $request)
     {
@@ -211,7 +211,7 @@ class ProductController extends Controller
                 $temp = array();
                 for($j=0; $j<sizeOf($rating_image); $j++)
                 {
-                    if($rating_image[$j]->invoices_product_rating_id==$ratings[$i]->id){
+                    if($rating_image[$j]->invoice_product_rating_id==$ratings[$i]->id){
                         array_push($temp,array(
                             'id' => $rating_image[$j]->id,
                             'url' => url('/').'/'.$rating_image[$j]->image
