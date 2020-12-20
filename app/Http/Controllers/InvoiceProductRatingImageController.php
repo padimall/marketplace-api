@@ -35,7 +35,7 @@ class InvoiceProductRatingImageController extends Controller
                 $data['image'][$i]->move(public_path("/rating"),$filename);
                 $imageURL = 'rating/'.$filename;
                 $data_image = array(
-                    'invoice_product_rating_id' => $request['product_id'],
+                    'invoice_product_rating_id' => $request['invoice_product_rating_id'],
                     'image'=>$imageURL
                 );
                 $response_image = Invoice_product_rating_image::create($data_image);
