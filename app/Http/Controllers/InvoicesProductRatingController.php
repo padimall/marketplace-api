@@ -25,7 +25,7 @@ class InvoicesProductRatingController extends Controller
         }
 
         $data = $request->all();
-        $data->name = request()->user()->name;
+        $data['name'] = request()->user()->name;
 
         $response = Invoices_product_rating::create($data);
 
