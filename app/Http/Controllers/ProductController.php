@@ -192,6 +192,35 @@ class ProductController extends Controller
                     ->select('invoices_product_ratings.*')
                     ->get();
 
+        $rating_id = array();
+        if(sizeof($ratings)!=0){
+            for($i=0; $i<sizeof($ratings); $i++)
+            {
+                array_push($rating_id,$ratings->id);
+            }
+
+            $rating_image = DB::table('invoice_product_rating_images')
+                        ->whereIn('id',$rating_id)
+                        ->select('*')
+                        ->get();
+
+            for($i=0; $i<sizeof($ratings); $i++)
+            {
+                $temp = array();
+                for($j=0; $j<sizeOf($rating_image); $j++)
+                {
+                    if($rating_image[$j]->invoices_product_rating_id==$ratings[$i]->id){
+                        array_push($temp,array(
+                            'id' => $rating_image[$j]->id,
+                            'url' => url('/').'/'.$rating_image[$j]->image
+                        ));
+                    }
+                }
+                $ratings[$i]->image = $temp;
+            }
+        }
+
+
         $data->ratings = $ratings;
 
         return response()->json([
