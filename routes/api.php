@@ -145,6 +145,13 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/update','InvoicesProductController@update');
         });
 
+        Route::group(['prefix' => 'invoice-product-rating'], function () {
+            Route::post('/store','InvoicesProductRatingController@store');
+            Route::post('/update','InvoicesProductRatingController@update');
+        });
+
+
+
         Route::group(['prefix' => 'admin-price'], function () {
             Route::post('/all','AdminPriceController@showAll');
             Route::post('/detail','AdminPriceController@show');
