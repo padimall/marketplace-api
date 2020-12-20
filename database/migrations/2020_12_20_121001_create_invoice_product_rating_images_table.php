@@ -15,10 +15,10 @@ class CreateInvoiceProductRatingImagesTable extends Migration
     {
         Schema::create('invoice_product_rating_images', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('invoices_product_rating_id');
+            $table->uuid('invoice_product_rating_id');
             $table->string('image');
             $table->timestamps();
-            $table->foreign('invoices_product_rating_id')->references('id')->on('invoices_product_ratings');
+            $table->foreign('invoice_product_rating_id')->references('id')->on('invoices_product_ratings');
         });
     }
 
