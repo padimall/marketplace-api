@@ -186,6 +186,14 @@ class ProductController extends Controller
             $data->image = NULL;
         }
 
+        $ratings = DB::table('invoices_product_ratings')
+                    ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
+                    ->where('invoices_products.product_id',$request['target_id'])
+                    ->select('invoices_product_ratings.*')
+                    ->get();
+
+        $data->ratings = $ratings;
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
