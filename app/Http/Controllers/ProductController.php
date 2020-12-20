@@ -218,7 +218,7 @@ class ProductController extends Controller
                         ));
                     }
                 }
-                $ratings[$i]->image = $temp;
+                $ratings[$i]->images = $temp;
             }
         }
 
