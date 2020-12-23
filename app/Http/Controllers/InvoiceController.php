@@ -995,6 +995,9 @@ class InvoiceController extends Controller
                         );
                     }
                 }
+                else {
+                    $show = $getInvoice;
+                }
 
                 return response()->json([
                     'status' => 1,
