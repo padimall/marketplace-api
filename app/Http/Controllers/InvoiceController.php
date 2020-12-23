@@ -317,6 +317,8 @@ class InvoiceController extends Controller
             'user_id' => request()->user()->id
         );
 
+        $listAgent = array();
+
         $group_response = Invoices_group::create($invoice_group);
         $invoice_group_id = $group_response['id'];
 
@@ -348,6 +350,8 @@ class InvoiceController extends Controller
                     'agent_id'=>$data[$i]->agent_id,
                     'invoices_group_id' =>$invoice_group_id,
                 );
+
+                array_push($listAgent,$data[$i]->agent_id);
 
                 $response = Invoice::create($invoice);
                 $lastInvoice = $response['id'];
@@ -435,6 +439,33 @@ class InvoiceController extends Controller
                 $group_response->amount = $totalAmount;
                 $group_response->external_payment_id = $createInvoice['id'];
                 $group_response->save();
+
+                $to = request()->user()->device_id;
+                $data = [
+                    'title'=>'Pesanan dibuat',
+                    'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
+                    'android_channel_id'=>"001"
+                ];
+                $notif = new Helper();
+                $notif->sendMobileNotification($to,$data);
+
+                $listAgent = DB::table('agents')
+                            ->join('users','users.id','=','agents.user_id')
+                            ->whereIn('agents.id',$listAgent)
+                            ->select('users.device_id')
+                            ->get();
+
+                for($i=0; $i<sizeof($listAgent); $i++)
+                {
+                    $to = $listAgent[$i]->device_id;
+                    $data = [
+                        'title'=>'Pesanan baru',
+                        'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
+                        'android_channel_id'=>"001"
+                    ];
+                    $notif = new Helper();
+                    $notif->sendMobileNotification($to,$data);
+                }
 
                 return response()->json([
                     'status' => 1,

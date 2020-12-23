@@ -122,20 +122,12 @@ class CartController extends Controller
             $data['user_id'] = request()->user()->id;
             $response = Cart::create($data);
 
-            $to = request()->user()->device_id;
 
-            $data = [
-                'title'=>'Cart berhasil dimasukkan',
-                'body'=>'Produk yang anda pilih berhasil dimasukkan kedalam cart',
-                'android_channel_id'=>"001"
-            ];
             
-            $notif = new Helper();
-            $notif->sendMobileNotification($to,$data);
+
             return response()->json([
                 'status' => 1,
-                'message' => $message,
-                'notif'=>$notif
+                'message' => $message
             ],201);
         }
     }
