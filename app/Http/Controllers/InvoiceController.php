@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Xendit\Xendit;
 use GuzzleHttp\Client;
+use App\Helper\Helper;
 
 class InvoiceController extends Controller
 {
