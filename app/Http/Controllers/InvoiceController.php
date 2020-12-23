@@ -96,8 +96,8 @@ class InvoiceController extends Controller
                             'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
                             'android_channel_id'=>"001"
                         ];
-                        $notif = new Helper();
-                        $notif->sendMobileNotification($to,$data);
+                        $not = new Helper();
+                        $not->sendMobileNotification($to,$data);
                     }
 
                     return response()->json([
