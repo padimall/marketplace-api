@@ -999,7 +999,10 @@ class InvoiceController extends Controller
                     }
                 }
 
-
+                if(!isset($show))
+                {
+                    $show = $getInvoice;
+                }
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
