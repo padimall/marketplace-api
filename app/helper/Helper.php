@@ -7,14 +7,20 @@ class Helper
     public function sendMobileNotification($target,$data)
     {
         $token = env('NOTIF_API_KEY');
-        $to = $token.'-'.$token;
-        $client = new \GuzzleHttp\Client();
+        $client = new \GuzzleHttp\Client([
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization'=>'key='.$token
+            ]
+        ]);
+
+        $message = [
+            'to'=>$target,
+            'data'=>$data
+        ];
         $response = $client->request('POST','https://fcm.googleapis.com/fcm/send?',
         [
-            'form_params' => [
-                'to' => $to,
-                'data' => $data
-            ]
+            ['body' => json_encode($message)]
         ]);
         $response = json_decode($response->getBody(),TRUE);
         return $response;
