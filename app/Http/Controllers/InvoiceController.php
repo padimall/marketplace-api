@@ -979,30 +979,38 @@ class InvoiceController extends Controller
             if($data->method == "BANK")
             {
                 $bank = $getInvoice['available_banks'];
-                for($i=0; $i<sizeof($bank); $i++)
+                if(sizeof($bank) != 0)
                 {
-                    if($bank[$i]['bank_code'] == $data->method_code)
+                    for($i=0; $i<sizeof($bank); $i++)
                     {
-                        $show = array(
-                            'external_id' => $getInvoice['id'],
-                            'invoice_url' => $getInvoice['invoice_url'],
-                            'status' => $getInvoice['status'],
-                            'bank_code' => $bank[$i]['bank_code'],
-                            'expiry_date' => $getInvoice['expiry_date'],
-                            'bank_account_number' => $bank[$i]['bank_account_number'],
-                            'transfer_amount' => $bank[$i]['transfer_amount'],
-                            'bank_branch' => $bank[$i]['bank_branch'],
-                        );
+                        if($bank[$i]['bank_code'] == $data->method_code)
+                        {
+                            $show = array(
+                                'external_id' => $getInvoice['id'],
+                                'invoice_url' => $getInvoice['invoice_url'],
+                                'status' => $getInvoice['status'],
+                                'bank_code' => $bank[$i]['bank_code'],
+                                'expiry_date' => $getInvoice['expiry_date'],
+                                'bank_account_number' => $bank[$i]['bank_account_number'],
+                                'transfer_amount' => $getInvoice['amount'],
+                                'bank_branch' => $bank[$i]['bank_branch'],
+                            );
+                        }
                     }
-                    else {
-                        $show = $getInvoice;
-                    }
+                }
+                else {
+                    $show = array(
+                        'external_id' => $getInvoice['id'],
+                        'invoice_url' => $getInvoice['invoice_url'],
+                        'status' => $getInvoice['status'],
+                        'bank_code' => NULL,
+                        'expiry_date' => $getInvoice['expiry_date'],
+                        'bank_account_number' => NULL,
+                        'transfer_amount' => $getInvoice['amount'],
+                        'bank_branch' => NULL,
+                    );
                 }
 
-                if(!isset($show))
-                {
-                    $show = $getInvoice;
-                }
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
