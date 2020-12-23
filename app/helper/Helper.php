@@ -14,9 +14,13 @@ class Helper
             ]
         ]);
 
-        $input = 'to='.$target.'&data='.json_encode($data);
-
-        $response = $client->request('POST','https://fcm.googleapis.com/fcm/send?'.$input);
+        $response = $client->request('POST','https://fcm.googleapis.com/fcm/send?',
+        [
+            'form_params' => [
+                'to' => $target,
+                'data' => $data
+            ]
+        ]);
         $response = json_decode($response->getBody(),TRUE);
         return $response;
     }
