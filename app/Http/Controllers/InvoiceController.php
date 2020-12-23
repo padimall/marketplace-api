@@ -49,12 +49,14 @@ class InvoiceController extends Controller
                     $list_inv = DB::table('invoices')
                             ->join('users','users.id','=','invoices.user_id')
                             ->where('invoices.invoices_group_id',$data->id)
-                            ->select('invoices.id','users.device_id')
+                            ->select('invoices.id','users.device_id','invoices.agent_id')
                             ->get();
 
                     $device_id = $list_inv[0]->device_id;
+                    $list_agent = array();
 
                     for($i=0; $i<sizeof($list_inv); $i++){
+                        array_push($list_agent,$list_inv[$i]->agent_id);
                         $log_inv = array(
                             'invoice_id' => $list_inv[$i]->id,
                             'status' => $status
@@ -79,7 +81,25 @@ class InvoiceController extends Controller
                     ];
                     $notif = new Helper();
                     $notif->sendMobileNotification($to,$data);
-                    
+
+                    $listAgent = DB::table('agents')
+                            ->join('users','users.id','=','agents.user_id')
+                            ->whereIn('agents.id',$list_agent)
+                            ->select('users.device_id')
+                            ->get();
+
+                    for($i=0; $i<sizeof($listAgent); $i++)
+                    {
+                        $to = $listAgent[$i]->device_id;
+                        $data = [
+                            'title'=>'Pesanan baru',
+                            'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
+                            'android_channel_id'=>"001"
+                        ];
+                        $notif = new Helper();
+                        $notif->sendMobileNotification($to,$data);
+                    }
+
                     return response()->json([
                         'status' => 1,
                         'message' => 'Payment receive'
@@ -111,6 +131,8 @@ class InvoiceController extends Controller
                             ->where('invoices_group_id',$data->id)
                             ->select('id')
                             ->get();
+
+                    $device_id = $list_inv[0]->device_id;
 
                     $list_inv_id = array();
 
@@ -153,6 +175,15 @@ class InvoiceController extends Controller
 
                 if($responseLog = Invoices_group_log::create($log))
                 {
+                    $to = $device_id;
+                    $data = [
+                        'title'=>'Batas waktu pembayaran habis',
+                        'body'=>'Batas waktu pembayaran produk pesanan Anda habis',
+                        'android_channel_id'=>"001"
+                    ];
+                    $notif = new Helper();
+                    $notif->sendMobileNotification($to,$data);
+
                     return response()->json([
                         'status' => 1,
                         'message' => 'Payment expired'
@@ -461,24 +492,6 @@ class InvoiceController extends Controller
                 ];
                 $notif = new Helper();
                 $notif->sendMobileNotification($to,$data);
-
-                $listAgent = DB::table('agents')
-                            ->join('users','users.id','=','agents.user_id')
-                            ->whereIn('agents.id',$listAgent)
-                            ->select('users.device_id')
-                            ->get();
-
-                for($i=0; $i<sizeof($listAgent); $i++)
-                {
-                    $to = $listAgent[$i]->device_id;
-                    $data = [
-                        'title'=>'Pesanan baru',
-                        'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
-                        'android_channel_id'=>"001"
-                    ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
-                }
 
                 return response()->json([
                     'status' => 1,
