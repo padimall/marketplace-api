@@ -47,9 +47,12 @@ class InvoiceController extends Controller
                 if($up_data)
                 {
                     $list_inv = DB::table('invoices')
-                            ->where('invoices_group_id',$data->id)
-                            ->select('id')
+                            ->join('users','users.id','=','invoices.user_id')
+                            ->where('invoices.invoices_group_id',$data->id)
+                            ->select('invoices.id','users.device_id')
                             ->get();
+
+                    $device_id = $list_inv[0]->device_id;
 
                     for($i=0; $i<sizeof($list_inv); $i++){
                         $log_inv = array(
@@ -68,6 +71,15 @@ class InvoiceController extends Controller
 
                 if($responseLog = Invoices_group_log::create($log))
                 {
+                    $to = $device_id;
+                    $data = [
+                        'title'=>'Pembayaran diterima',
+                        'body'=>'Pembayaran Anda telah diterima',
+                        'android_channel_id'=>"001"
+                    ];
+                    $notif = new Helper();
+                    $notif->sendMobileNotification($to,$data);
+                    
                     return response()->json([
                         'status' => 1,
                         'message' => 'Payment receive'
