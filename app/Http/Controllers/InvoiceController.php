@@ -994,10 +994,11 @@ class InvoiceController extends Controller
                             'bank_branch' => $bank[$i]['bank_branch'],
                         );
                     }
+                    else {
+                        $show = $getInvoice;
+                    }
                 }
-                else {
-                    $show = $getInvoice;
-                }
+
 
                 return response()->json([
                     'status' => 1,
