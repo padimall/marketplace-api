@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Helper\Helper;
 class CartController extends Controller
 {
 
@@ -121,9 +121,18 @@ class CartController extends Controller
 
             $data['user_id'] = request()->user()->id;
             $response = Cart::create($data);
+
+            $to = request()->user()->device_id;
+            $data = array(
+                'title'=>'Cart berhasil dimasukkan',
+                'body'=>'Produk yang anda pilih berhasil dimasukkan kedalam cart',
+                'android_channel_id'=>"001"
+            );
+            $notif = Helper::sendMobileNotification($to,$data);
             return response()->json([
                 'status' => 1,
-                'message' => $message
+                'message' => $message,
+                'notif'=>$notif
             ],201);
         }
     }
