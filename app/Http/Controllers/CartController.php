@@ -128,7 +128,8 @@ class CartController extends Controller
                 'body'=>'Produk yang anda pilih berhasil dimasukkan kedalam cart',
                 'android_channel_id'=>"001"
             );
-            $notif = Helper::sendMobileNotification($to,$data);
+            $notif = new Helper();
+            $notif->sendMobileNotification($to,$data);
             return response()->json([
                 'status' => 1,
                 'message' => $message,
