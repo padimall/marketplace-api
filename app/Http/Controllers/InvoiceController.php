@@ -1166,7 +1166,7 @@ class InvoiceController extends Controller
                     'bank_code' => NULL,
                     'expiry_date' => NULL,
                     'bank_account_number' => NULL,
-                    'transfer_amount' => $getRetail['amount'],
+                    'transfer_amount' => NULL,
                     'bank_branch' => NULL,
                 );
 
