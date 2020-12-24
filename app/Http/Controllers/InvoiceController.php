@@ -1089,7 +1089,7 @@ class InvoiceController extends Controller
                     'external_id' => $data->external_payment_id,
                     'status' => $getEwallet['status'],
                     'bank_code' => $type[0],
-                    'expiry_date' => NULL,
+                    'expiry_date' => NOW(),
                     'bank_account_number' => $type[1],
                     'transfer_amount' => $getEwallet['amount'],
                     'bank_branch' => $type[0],
