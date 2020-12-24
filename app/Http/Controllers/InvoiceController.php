@@ -597,7 +597,7 @@ class InvoiceController extends Controller
 
                 if($createRetail = \Xendit\Retail::create($retail)){
                     $group_response->amount = $totalAmount;
-                    $group_response->external_payment_id = $payment->method_code.'-'.$phone;
+                    $group_response->external_payment_id = $createRetail['id'];
                     $group_response->save();
 
                     $to = request()->user()->device_id;
@@ -1156,6 +1156,25 @@ class InvoiceController extends Controller
                     'message' => 'Resource found',
                     'data' => $show,
                     'all' => $getEwallet
+                ],200);
+            }
+            else if($data->method == "RETAIL"){
+                $getRetail = \Xendit\Retail::retrieve($external);
+                $show = array(
+                    'external_id' => $data->external_payment_id,
+                    'status' => $getRetail['status'],
+                    'bank_code' => NULL,
+                    'expiry_date' => NULL,
+                    'bank_account_number' => NULL,
+                    'transfer_amount' => $getRetail['amount'],
+                    'bank_branch' => NULL,
+                );
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Resource found',
+                    'data' => $show,
+                    'all' => $getRetail
                 ],200);
             }
             else {
