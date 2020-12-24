@@ -994,6 +994,7 @@ class InvoiceController extends Controller
                 ->join('agents','agents.id','=','invoices.agent_id')
                 ->where('invoices.agent_id',$agent_data->id)
                 ->select('invoices.*','agents.name AS agents_name','agents.image')
+                ->orderBy('invoices.created_at','DESC')
                 ->get();
 
             if(sizeOf($data)==0){
