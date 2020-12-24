@@ -1166,6 +1166,7 @@ class InvoiceController extends Controller
                     'status' => 1,
                     'message' => 'Resource found',
                     'data' => $alldata,
+                    'all'=>$getEwallet
                 ],200);
             }
             else if($data->method == "RETAIL"){
