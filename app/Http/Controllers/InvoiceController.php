@@ -122,14 +122,14 @@ class InvoiceController extends Controller
         }
         else if($request['status'] == 'EXPIRED')
         {
-            if($data->status == 3)
+            if($data->status == 2)
             {
                 return response()->json([
                     'status' => 1,
                     'message' => 'Have been processed!'
                 ],200);
             }
-            $status = 3;
+            $status = 2;
             $batal = 4;
             $data->status = $status;
             if($data->save())
