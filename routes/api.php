@@ -183,6 +183,11 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/delete','BannerController@delete');
         });
 
+        Route::group(['prefix' => 'payment'], function () {
+            Route::post('/store','PaymentController@store');
+            Route::post('/update','PaymentController@update');
+        });
+
         Route::group(['prefix' => 'supplier'], function () {
             Route::post('/all','SupplierController@showAll');
             Route::post('/detail-id','SupplierController@detail_id');
