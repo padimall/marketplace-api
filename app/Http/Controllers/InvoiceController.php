@@ -1153,7 +1153,7 @@ class InvoiceController extends Controller
                 }
                 else if($type[0] == 'OVO')
                 {
-                    $show['expiry_date'] = $getEwallet['expiry_date'];
+                    
                 }
 
                 return response()->json([
