@@ -8,6 +8,21 @@ use Illuminate\Http\Request;
 class PaymentController extends Controller
 {
 
+    public function showAll(){
+        $data = Payment::all();
+        if(sizeOf($data)==0){
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found!',
+            'data' => $data
+        ],200);
+    }
+
     public function show($id)
     {
         $data = Payment::find($id);
