@@ -1139,7 +1139,7 @@ class InvoiceController extends Controller
                 $getEwallet = \Xendit\EWallets::getPaymentStatus($request['target_id'], $type[0]);
 
                 $alldata['status'] = $getEwallet['status'];
-                $alldata['transfer_amount'] = (int)$getInvoice['amount'];
+                $alldata['transfer_amount'] = (int)$getEwallet['amount'];
 
                 $show = array(
                     'ewallet_type' => $type[0],
