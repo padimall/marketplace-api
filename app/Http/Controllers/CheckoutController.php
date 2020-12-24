@@ -140,7 +140,7 @@ class CheckoutController extends Controller
                     'phone' => request()->user()->phone,
                     'address' => request()->user()->address
                 ),
-                'payments' => $payment_group,
+                'payments' => $payment,
                 'logistics' => $logistic,
                 'checkouts' => $tempData
             )
