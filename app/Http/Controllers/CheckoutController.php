@@ -52,6 +52,7 @@ class CheckoutController extends Controller
 
                 array_push($tempList,$payment[$i]->method_code);
             }
+            $flagMethod = $tempMethod;
         }
 
 
@@ -140,7 +141,7 @@ class CheckoutController extends Controller
                     'phone' => request()->user()->phone,
                     'address' => request()->user()->address
                 ),
-                'payments' => $payment,
+                'payments' => $payment_group,
                 'logistics' => $logistic,
                 'checkouts' => $tempData
             )
