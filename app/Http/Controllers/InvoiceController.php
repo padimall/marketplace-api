@@ -1038,10 +1038,9 @@ class InvoiceController extends Controller
             $external = $data->external_payment_id;
 
             Xendit::setApiKey(env('SECRET_API_KEY'));
-            $getInvoice = \Xendit\Invoice::retrieve($external);
-
             if($data->method == "BANK")
             {
+                $getInvoice = \Xendit\Invoice::retrieve($external);
                 $bank = $getInvoice['available_banks'];
                 if(sizeof($bank) != 0)
                 {
@@ -1080,6 +1079,28 @@ class InvoiceController extends Controller
                     'message' => 'Resource found',
                     'data' => $show,
                     'all' => $getInvoice
+                ],200);
+            }
+            else if($data->method == "EWALLET") {
+                $type = explode('-',$data->external_payment_id);
+                $getEwallet = \Xendit\EWallets::getPaymentStatus($request['target_id'], $type[0]);
+
+                $show = array(
+                    'external_id' => $data->external_payment_id,
+                    'invoice_url' => $getEwallet['checkout_url'],
+                    'status' => $getEwallet['status'],
+                    'bank_code' => $type[0],
+                    'expiry_date' => NULL,
+                    'bank_account_number' => $type[1],
+                    'transfer_amount' => $getEwallet['amount'],
+                    'bank_branch' => $type[0],
+                );
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Resource found',
+                    'data' => $show,
+                    'all' => $getEwallet
                 ],200);
             }
             else {
