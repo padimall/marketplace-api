@@ -977,6 +977,7 @@ class InvoiceController extends Controller
                 ->join('suppliers','suppliers.id','=','invoices.supplier_id')
                 ->where('invoices.supplier_id',$supplier_data->id)
                 ->select('invoices.*','suppliers.name AS supplier_name','suppliers.image')
+                ->orderBy('invoices.created_at','DESC')
                 ->get();
 
             if(sizeOf($data)==0){
