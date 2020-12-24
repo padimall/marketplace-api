@@ -1085,6 +1085,11 @@ class InvoiceController extends Controller
         {
             $external = $data->external_payment_id;
 
+            $alldata['debit_bank'] = [];
+            $alldata['ewallet'] = [];
+            $alldata['retail'] = [];
+            $alldata['external_id'] = $external;
+
             Xendit::setApiKey(env('SECRET_API_KEY'));
             if($data->method == "BANK")
             {
@@ -1096,28 +1101,29 @@ class InvoiceController extends Controller
                     {
                         if($bank[$i]['bank_code'] == $data->method_code)
                         {
+                            $alldata['status'] = $getInvoice['status'];
+                            $alldata['expiry_date'] = $getInvoice['expiry_date'];
+                            $alldata['transfer_amount'] = (int)$getInvoice['amount'];
+
                             $show = array(
-                                'external_id' => $getInvoice['id'],
                                 'invoice_url' => $getInvoice['invoice_url'],
-                                'status' => $getInvoice['status'],
                                 'bank_code' => $bank[$i]['bank_code'],
-                                'expiry_date' => $getInvoice['expiry_date'],
                                 'bank_account_number' => $bank[$i]['bank_account_number'],
-                                'transfer_amount' => (int)$getInvoice['amount'],
                                 'bank_branch' => $bank[$i]['bank_branch'],
                             );
+                            $alldata['debit_bank'] = $show;
                         }
                     }
                 }
                 else {
+                    $alldata['status'] = NULL;
+                    $alldata['expiry_date'] = $getInvoice['expiry_date'];
+                    $alldata['transfer_amount'] = (int)$getInvoice['amount'];
+
                     $show = array(
-                        'external_id' => $getInvoice['id'],
                         'invoice_url' => $getInvoice['invoice_url'],
-                        'status' => $getInvoice['status'],
                         'bank_code' => NULL,
-                        'expiry_date' => $getInvoice['expiry_date'],
                         'bank_account_number' => NULL,
-                        'transfer_amount' => (int)$getInvoice['amount'],
                         'bank_branch' => NULL,
                     );
                 }
@@ -1126,20 +1132,18 @@ class InvoiceController extends Controller
                     'status' => 1,
                     'message' => 'Resource found',
                     'data' => $show,
-                    'all' => $getInvoice
                 ],200);
             }
             else if($data->method == "EWALLET") {
                 $type = explode('-',$data->external_payment_id);
                 $getEwallet = \Xendit\EWallets::getPaymentStatus($request['target_id'], $type[0]);
 
+                $alldata['status'] = $getEwallet['status'];
+                $alldata['transfer_amount'] = (int)$getInvoice['amount'];
+
                 $show = array(
-                    'external_id' => $data->external_payment_id,
-                    'status' => $getEwallet['status'],
-                    'bank_code' => $type[0],
-                    'bank_account_number' => $type[1],
-                    'transfer_amount' => (int)$getEwallet['amount'],
-                    'bank_branch' => $type[0],
+                    'ewallet_type' => $type[0],
+                    'transaction_date' => $getEwallet['transaction_date'],
                 );
 
                 if($type[0] == 'DANA'){
@@ -1153,32 +1157,37 @@ class InvoiceController extends Controller
                 }
                 else if($type[0] == 'OVO')
                 {
-
+                    $show['invoice_url'] = NULL;
                 }
+
+                $alldata['ewallet'] = $show;
 
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
                     'data' => $show,
-                    'all' => $getEwallet
                 ],200);
             }
             else if($data->method == "RETAIL"){
                 $getRetail = \Xendit\Retail::retrieve($external);
+
+                $alldata['status'] = $getRetail['status'];
+                $alldata['transfer_amount'] = (int)$getRetail['expected_amount'];
+
                 $show = array(
-                    'external_id' => $data->external_payment_id,
-                    'status' => $getRetail['status'],
                     'retail_outlet_name' => $getRetail['retail_outlet_name'],
                     'expiry_date' => $getRetail['expiration_date'],
                     'payment_code' => $getRetail['payment_code'],
-                    'transfer_amount' => (int)$getRetail['expected_amount'],
                 );
+
+                $alldata['retail'] = $show;
+
+
 
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
                     'data' => $show,
-                    'all' => $getRetail
                 ],200);
             }
             else {
