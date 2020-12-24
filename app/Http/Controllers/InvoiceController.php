@@ -616,7 +616,7 @@ class InvoiceController extends Controller
                         'ewallet_response' => $createRetail
                     ],201);
                 }
-            }            
+            }
         }
     }
 
@@ -1103,7 +1103,7 @@ class InvoiceController extends Controller
                                 'bank_code' => $bank[$i]['bank_code'],
                                 'expiry_date' => $getInvoice['expiry_date'],
                                 'bank_account_number' => $bank[$i]['bank_account_number'],
-                                'transfer_amount' => $getInvoice['amount'],
+                                'transfer_amount' => (int)$getInvoice['amount'],
                                 'bank_branch' => $bank[$i]['bank_branch'],
                             );
                         }
@@ -1117,7 +1117,7 @@ class InvoiceController extends Controller
                         'bank_code' => NULL,
                         'expiry_date' => $getInvoice['expiry_date'],
                         'bank_account_number' => NULL,
-                        'transfer_amount' => $getInvoice['amount'],
+                        'transfer_amount' => (int)$getInvoice['amount'],
                         'bank_branch' => NULL,
                     );
                 }
@@ -1138,7 +1138,7 @@ class InvoiceController extends Controller
                     'status' => $getEwallet['status'],
                     'bank_code' => $type[0],
                     'bank_account_number' => $type[1],
-                    'transfer_amount' => $getEwallet['amount'],
+                    'transfer_amount' => (int)$getEwallet['amount'],
                     'bank_branch' => $type[0],
                 );
 
@@ -1153,7 +1153,7 @@ class InvoiceController extends Controller
                 }
                 else if($type[0] == 'OVO')
                 {
-                    
+
                 }
 
                 return response()->json([
@@ -1171,7 +1171,7 @@ class InvoiceController extends Controller
                     'retail_outlet_name' => $getRetail['retail_outlet_name'],
                     'expiry_date' => $getRetail['expiration_date'],
                     'payment_code' => $getRetail['payment_code'],
-                    'transfer_amount' => $getRetail['expected_amount'],
+                    'transfer_amount' => (int)$getRetail['expected_amount'],
                 );
 
                 return response()->json([
