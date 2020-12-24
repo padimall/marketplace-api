@@ -23,6 +23,11 @@ class InvoiceController extends Controller
 {
     public function callback(Request $request)
     {
+        $request->validate([
+            'external_id' => 'required|string',
+            'status'=>'required|string'
+        ]);
+        
         $data = Invoices_group::find($request['external_id']);
 
         if(is_null($data))
@@ -34,7 +39,7 @@ class InvoiceController extends Controller
         }
 
 
-        if($request['status'] == 'PAID' || $request['status'] == 'SETTLED')
+        if($request['status'] == 'PAID' || $request['status'] == 'SETTLED' || $request['status'] == 'COMPLETED')
         {
             $status = 1;
             $data->status = $status;
