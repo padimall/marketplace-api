@@ -1014,7 +1014,8 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
-                    'data' => $show
+                    'data' => $show,
+                    'all' => $getInvoice
                 ],200);
             }
             else {
