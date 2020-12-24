@@ -47,7 +47,7 @@ class InvoiceController extends Controller
         }
 
 
-        if($request['status'] == 'PAID' || $request['status'] == 'SETTLED' || $request['status'] == 'COMPLETED')
+        if($request['status'] == 'PAID' || $request['status'] == 'SETTLED' || $request['status'] == 'COMPLETED' || $request['status'] == 'SETTLING' || $request['status'] == 'SUCCEEDED')
         {
             $status = 1;
             $data->status = $status;
@@ -579,6 +579,41 @@ class InvoiceController extends Controller
                         'message' => 'Resource created!',
                         'group_id' => $group_response['id'],
                         'ewallet_response' => $createEwallet
+                    ],201);
+                }
+            }
+            else if($payment->method == 'RETAIL')
+            {
+                if($payment->method_code == 'ALFAMART'){
+                    $phone = request()->user()->phone;
+                    $name = request()->user()->name;
+                    $retail = [
+                        'external_id' => $invoice_group_id,
+                        'retail_outlet_name' => 'ALFAMART',
+                        'name' => $name,
+                        'expected_amount' => $totalAmount
+                    ];
+                }
+
+                if($createRetail = \Xendit\Retail::create($retail)){
+                    $group_response->amount = $totalAmount;
+                    $group_response->external_payment_id = $payment->method_code.'-'.$phone;
+                    $group_response->save();
+
+                    $to = request()->user()->device_id;
+                    $data = [
+                        'title'=>'Pesanan dibuat',
+                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
+                        'android_channel_id'=>"001"
+                    ];
+                    $notif = new Helper();
+                    $notif->sendMobileNotification($to,$data);
+
+                    return response()->json([
+                        'status' => 1,
+                        'message' => 'Resource created!',
+                        'group_id' => $group_response['id'],
+                        'ewallet_response' => $createRetail
                     ],201);
                 }
             }            
