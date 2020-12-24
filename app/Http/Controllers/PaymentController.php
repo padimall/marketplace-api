@@ -57,9 +57,9 @@ class PaymentController extends Controller
             return response()->json([
                 'status' => 1,
                 'message' => 'Resource found!',
-                'data' => $$createOvo
+                'data' => $createOvo
             ],200);
-            
+
         } catch (\Xendit\Exceptions\ApiException $exception) {
             var_dump($exception);
         }
