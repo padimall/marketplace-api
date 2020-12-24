@@ -36,6 +36,7 @@ class CheckoutController extends Controller
         $logistic = Logistic::all();
         $payment = DB::table('payments')
                     ->orderBy('method','ASC')
+                    ->where('status',1)
                     ->get();
         $payment_group = array();
         $flagMethod = '';
