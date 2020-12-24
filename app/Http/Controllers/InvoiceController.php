@@ -120,7 +120,7 @@ class InvoiceController extends Controller
                 }
             }
         }
-        else if($request['status'] == 'EXPIRED')
+        else if($request['status'] == 'EXPIRED' || $request['status'] == 'FAILED')
         {
             if($data->status == 2)
             {
