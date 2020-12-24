@@ -50,14 +50,20 @@ class CheckoutController extends Controller
                     $tempList = array();
                 }
 
-                array_push($tempList,$payment[$i]->method_code);
+                array_push($tempList,array(
+                    'id' => $payment[$i]->id,
+                    'method_code'=>$payment[$i]->method_code
+                ));
 
                 if($i == (sizeof($payment)-1)){
                     $payment_group[$tempMethod] = $tempList;
                 }
             }
             else {
-                array_push($tempList,$payment[$i]->method_code);
+                array_push($tempList,array(
+                    'id' => $payment[$i]->id,
+                    'method_code'=>$payment[$i]->method_code
+                ));
 
                 if($i == (sizeof($payment)-1)){
                     $payment_group[$tempMethod] = $tempList;
