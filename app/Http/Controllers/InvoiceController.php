@@ -535,7 +535,7 @@ class InvoiceController extends Controller
                         'amount' => $totalAmount,
                         'phone' => $phone,
                         'expiration_date' => '2020-02-20T00:00:00.000Z',
-                        'callback_url' => 'https://my-shop.com/callbacks',
+                        'callback_url' => 'https://dev-api.padimall.id/api/callback',
                         'redirect_url' => 'https://padimallindonesia.com',
                         'ewallet_type' => 'DANA'
                     ];
@@ -553,8 +553,8 @@ class InvoiceController extends Controller
                                 'quantity' => 1
                             ]
                         ],
-                        'callback_url' => 'https =>//yourwebsite.com/callback',
-                        'redirect_url' => 'https =>//padimallindonesia.com',
+                        'callback_url' => 'https://dev-api.padimall.id/api/callback',
+                        'redirect_url' => 'https://padimallindonesia.com',
                         'ewallet_type' => 'LINKAJA'
                     ];
                 }
