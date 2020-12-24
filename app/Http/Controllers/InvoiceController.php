@@ -207,20 +207,6 @@ class InvoiceController extends Controller
     }
 
 
-    public function testXendit(Request $request)
-    {
-        $send = $request->all();
-        $data = DB::table('invoices_groups')
-                ->where('status',0)
-                ->update(['status' => 1,'xendit_id' => $send['id'].'tes']);
-
-        return response()->json([
-            'status' => 1,
-            'message' => 'Testing boy!'
-        ],200);
-    }
-
-
     public function showAll()
     {
         $data = Invoice::all();

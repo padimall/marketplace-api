@@ -187,7 +187,6 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/store','PaymentController@store');
             Route::post('/update','PaymentController@update');
             Route::post('/all','PaymentController@showAll');
-            Route::post('/test','PaymentController@test');
         });
 
         Route::group(['prefix' => 'supplier'], function () {
