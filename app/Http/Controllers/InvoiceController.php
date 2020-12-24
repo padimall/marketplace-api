@@ -1131,7 +1131,7 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
-                    'data' => $show,
+                    'data' => $alldata,
                 ],200);
             }
             else if($data->method == "EWALLET") {
@@ -1165,7 +1165,7 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
-                    'data' => $show,
+                    'data' => $alldata,
                 ],200);
             }
             else if($data->method == "RETAIL"){
@@ -1187,7 +1187,7 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 1,
                     'message' => 'Resource found',
-                    'data' => $show,
+                    'data' => $alldata,
                 ],200);
             }
             else {
