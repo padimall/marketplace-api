@@ -1143,7 +1143,6 @@ class InvoiceController extends Controller
 
                 $show = array(
                     'ewallet_type' => $type[0],
-                    'transaction_date' => $getEwallet['transaction_date'],
                 );
 
                 if($type[0] == 'DANA'){
@@ -1158,6 +1157,7 @@ class InvoiceController extends Controller
                 else if($type[0] == 'OVO')
                 {
                     $show['checkout_url'] = NULL;
+                    $show['transaction_date'] = $getEwallet['transaction_date'];
                 }
 
                 $alldata['ewallet'] = $show;
