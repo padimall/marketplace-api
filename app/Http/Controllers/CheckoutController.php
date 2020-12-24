@@ -37,6 +37,22 @@ class CheckoutController extends Controller
         $payment = DB::table('payments')
                     ->orderBy('method','ASC')
                     ->get();
+        $payment_group = array();
+        $flagMethod = '';
+        $tempMethod = '';
+        $tempList = array();
+        for($i=0; $i<sizeof($payment); $i++){
+            $tempMethod = $payment[$i]->method;
+            if($flagMethod != $tempMethod)
+            {
+                if(sizeof($tempList) != 0){
+                    $payment_group[$flagMethod] = $tempList;
+                    $tempList = array();
+                }
+
+                array_push($tempList,$payment[$i]->method_code);
+            }
+        }
 
 
         $flagAgent = '';
@@ -124,7 +140,7 @@ class CheckoutController extends Controller
                     'phone' => request()->user()->phone,
                     'address' => request()->user()->address
                 ),
-                'payments' => $payment,
+                'payments' => $payment_group,
                 'logistics' => $logistic,
                 'checkouts' => $tempData
             )
