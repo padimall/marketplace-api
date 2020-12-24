@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Xendit\Xendit;
 use GuzzleHttp\Client;
 use App\Helper\Helper;
+use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
@@ -534,7 +535,7 @@ class InvoiceController extends Controller
                         'external_id' => $invoice_group_id,
                         'amount' => $totalAmount,
                         'phone' => $phone,
-                        'expiration_date' => '2020-02-20T00:00:00.000Z',
+                        'expiration_date' => Carbon::now()->addDays(1),
                         'callback_url' => 'https://dev-api.padimall.id/api/callback',
                         'redirect_url' => 'https://padimallindonesia.com',
                         'ewallet_type' => 'DANA'
