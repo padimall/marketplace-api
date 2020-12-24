@@ -549,7 +549,7 @@ class InvoiceController extends Controller
 
                 if($createEwallet = \Xendit\EWallets::create($ewallet)){
                     $group_response->amount = $totalAmount;
-                    $group_response->external_payment_id = $createEwallet['ewallet_type'].'-'.$createEwallet['phone'];
+                    $group_response->external_payment_id = $createEwallet['ewallet_type'].'-'.$phone;
                     $group_response->save();
 
                     $to = request()->user()->device_id;
@@ -564,7 +564,8 @@ class InvoiceController extends Controller
                     return response()->json([
                         'status' => 1,
                         'message' => 'Resource created!',
-                        'group_id' => $group_response['id']
+                        'group_id' => $group_response['id'],
+                        'ewallet_response' => $createEwallet
                     ],201);
                 }
             }            
