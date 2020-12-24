@@ -23,179 +23,185 @@ class InvoiceController extends Controller
 {
     public function callback(Request $request)
     {
-        $request->validate([
-            'external_id' => 'required|string',
-            'status'=>'required|string'
-        ]);
-        
-        $data = Invoices_group::find($request['external_id']);
-
-        if(is_null($data))
-        {
-            return response()->json([
-                'status' => 0,
-                'message' => 'External id not found'
-            ],200);
-        }
-
-
-        if($request['status'] == 'PAID' || $request['status'] == 'SETTLED' || $request['status'] == 'COMPLETED')
-        {
-            $status = 1;
-            $data->status = $status;
-            if($data->save())
-            {
-                $up_data = DB::table('invoices')
-                            ->where('invoices_group_id',$data->id)
-                            ->update(['status' => $status]);
-
-                if($up_data)
-                {
-                    $list_inv = DB::table('invoices')
-                            ->join('users','users.id','=','invoices.user_id')
-                            ->where('invoices.invoices_group_id',$data->id)
-                            ->select('invoices.id','users.device_id','invoices.agent_id')
-                            ->get();
-
-                    $device_id = $list_inv[0]->device_id;
-                    $list_agent = array();
-
-                    for($i=0; $i<sizeof($list_inv); $i++){
-                        array_push($list_agent,$list_inv[$i]->agent_id);
-                        $log_inv = array(
-                            'invoice_id' => $list_inv[$i]->id,
-                            'status' => $status
-                        );
-
-                        $save_log_inv = Invoices_log::create($log_inv);
-                    }
-                }
-
-                $log = array(
-                    'invoice_group_id' => $request['external_id'],
-                    'status' => $status
-                );
-
-                if($responseLog = Invoices_group_log::create($log))
-                {
-                    $to = $device_id;
-                    $data = [
-                        'title'=>'Pembayaran diterima',
-                        'body'=>'Pembayaran Anda telah diterima',
-                        'android_channel_id'=>"001"
-                    ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
-
-                    $listAgent = DB::table('agents')
-                            ->join('users','users.id','=','agents.user_id')
-                            ->whereIn('agents.id',$list_agent)
-                            ->select('users.device_id')
-                            ->get();
-
-                    for($i=0; $i<sizeof($listAgent); $i++)
-                    {
-                        $to = $listAgent[$i]->device_id;
-                        $data = [
-                            'title'=>'Pesanan baru',
-                            'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
-                            'android_channel_id'=>"001"
-                        ];
-                        $not = new Helper();
-                        $not->sendMobileNotification($to,$data);
-                    }
-
-                    return response()->json([
-                        'status' => 1,
-                        'message' => 'Payment receive'
-                    ],200);
-                }
-            }
-        }
-        else if($request['status'] == 'EXPIRED')
-        {
-            if($data->status == 3)
-            {
-                return response()->json([
+        $data = $request->all();
+        return response()->json([
                     'status' => 1,
-                    'message' => 'Have been processed!'
+                    'message' => 'External id not found',
+                    'data' => $data
                 ],200);
-            }
-            $status = 3;
-            $batal = 4;
-            $data->status = $status;
-            if($data->save())
-            {
-                $up_data = DB::table('invoices')
-                            ->where('invoices_group_id',$data->id)
-                            ->update(['status' => $batal]);
+        // $request->validate([
+        //     'external_id' => 'required|string',
+        //     'status'=>'required|string'
+        // ]);
 
-                if($up_data)
-                {
-                    $list_inv = DB::table('invoices')
-                            ->where('invoices_group_id',$data->id)
-                            ->select('id')
-                            ->get();
+        // $data = Invoices_group::find($request['external_id']);
 
-                    $device_id = $list_inv[0]->device_id;
+        // if(is_null($data))
+        // {
+        //     return response()->json([
+        //         'status' => 0,
+        //         'message' => 'External id not found'
+        //     ],200);
+        // }
 
-                    $list_inv_id = array();
 
-                    for($i=0; $i<sizeof($list_inv); $i++){
-                        $log_inv = array(
-                            'invoice_id' => $list_inv[$i]->id,
-                            'status' => $batal
-                        );
+        // if($request['status'] == 'PAID' || $request['status'] == 'SETTLED' || $request['status'] == 'COMPLETED')
+        // {
+        //     $status = 1;
+        //     $data->status = $status;
+        //     if($data->save())
+        //     {
+        //         $up_data = DB::table('invoices')
+        //                     ->where('invoices_group_id',$data->id)
+        //                     ->update(['status' => $status]);
 
-                        $save_log_inv = Invoices_log::create($log_inv);
-                        array_push($list_inv_id,$list_inv[$i]->id);
-                    }
+        //         if($up_data)
+        //         {
+        //             $list_inv = DB::table('invoices')
+        //                     ->join('users','users.id','=','invoices.user_id')
+        //                     ->where('invoices.invoices_group_id',$data->id)
+        //                     ->select('invoices.id','users.device_id','invoices.agent_id')
+        //                     ->get();
 
-                    $list_product = DB::table('invoices_products')
-                                ->whereIn('invoice_id',$list_inv_id)
-                                ->get();
+        //             $device_id = $list_inv[0]->device_id;
+        //             $list_agent = array();
 
-                    $list_product_id = array();
-                    $query = "UPDATE products SET stock = CASE";
-                    $query_end = "END WHERE id IN (";
-                    for($i=0; $i<sizeof($list_product); $i++)
-                    {
-                        $query = $query . " WHEN id = '".$list_product[$i]->product_id."' THEN stock+".$list_product[$i]->quantity." ";
-                        $query_end = $query_end . "'".$list_product[$i]->product_id."'";
-                        if($i < (sizeof($list_product)-1)){
-                            $query_end = $query_end . ",";
-                        }
-                    }
+        //             for($i=0; $i<sizeof($list_inv); $i++){
+        //                 array_push($list_agent,$list_inv[$i]->agent_id);
+        //                 $log_inv = array(
+        //                     'invoice_id' => $list_inv[$i]->id,
+        //                     'status' => $status
+        //                 );
 
-                    $query_end = $query_end . ")";
-                    $total = $query.$query_end;
+        //                 $save_log_inv = Invoices_log::create($log_inv);
+        //             }
+        //         }
 
-                    $res = DB::statement($total);
-                }
+        //         $log = array(
+        //             'invoice_group_id' => $request['external_id'],
+        //             'status' => $status
+        //         );
 
-                $log = array(
-                    'invoice_group_id' => $request['external_id'],
-                    'status' => $status
-                );
+        //         if($responseLog = Invoices_group_log::create($log))
+        //         {
+        //             $to = $device_id;
+        //             $data = [
+        //                 'title'=>'Pembayaran diterima',
+        //                 'body'=>'Pembayaran Anda telah diterima',
+        //                 'android_channel_id'=>"001"
+        //             ];
+        //             $notif = new Helper();
+        //             $notif->sendMobileNotification($to,$data);
 
-                if($responseLog = Invoices_group_log::create($log))
-                {
-                    $to = $device_id;
-                    $data = [
-                        'title'=>'Batas waktu pembayaran habis',
-                        'body'=>'Batas waktu pembayaran produk pesanan Anda habis',
-                        'android_channel_id'=>"001"
-                    ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
+        //             $listAgent = DB::table('agents')
+        //                     ->join('users','users.id','=','agents.user_id')
+        //                     ->whereIn('agents.id',$list_agent)
+        //                     ->select('users.device_id')
+        //                     ->get();
 
-                    return response()->json([
-                        'status' => 1,
-                        'message' => 'Payment expired'
-                    ],200);
-                }
-            }
-        }
+        //             for($i=0; $i<sizeof($listAgent); $i++)
+        //             {
+        //                 $to = $listAgent[$i]->device_id;
+        //                 $data = [
+        //                     'title'=>'Pesanan baru',
+        //                     'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
+        //                     'android_channel_id'=>"001"
+        //                 ];
+        //                 $not = new Helper();
+        //                 $not->sendMobileNotification($to,$data);
+        //             }
+
+        //             return response()->json([
+        //                 'status' => 1,
+        //                 'message' => 'Payment receive'
+        //             ],200);
+        //         }
+        //     }
+        // }
+        // else if($request['status'] == 'EXPIRED')
+        // {
+        //     if($data->status == 3)
+        //     {
+        //         return response()->json([
+        //             'status' => 1,
+        //             'message' => 'Have been processed!'
+        //         ],200);
+        //     }
+        //     $status = 3;
+        //     $batal = 4;
+        //     $data->status = $status;
+        //     if($data->save())
+        //     {
+        //         $up_data = DB::table('invoices')
+        //                     ->where('invoices_group_id',$data->id)
+        //                     ->update(['status' => $batal]);
+
+        //         if($up_data)
+        //         {
+        //             $list_inv = DB::table('invoices')
+        //                     ->where('invoices_group_id',$data->id)
+        //                     ->select('id')
+        //                     ->get();
+
+        //             $device_id = $list_inv[0]->device_id;
+
+        //             $list_inv_id = array();
+
+        //             for($i=0; $i<sizeof($list_inv); $i++){
+        //                 $log_inv = array(
+        //                     'invoice_id' => $list_inv[$i]->id,
+        //                     'status' => $batal
+        //                 );
+
+        //                 $save_log_inv = Invoices_log::create($log_inv);
+        //                 array_push($list_inv_id,$list_inv[$i]->id);
+        //             }
+
+        //             $list_product = DB::table('invoices_products')
+        //                         ->whereIn('invoice_id',$list_inv_id)
+        //                         ->get();
+
+        //             $list_product_id = array();
+        //             $query = "UPDATE products SET stock = CASE";
+        //             $query_end = "END WHERE id IN (";
+        //             for($i=0; $i<sizeof($list_product); $i++)
+        //             {
+        //                 $query = $query . " WHEN id = '".$list_product[$i]->product_id."' THEN stock+".$list_product[$i]->quantity." ";
+        //                 $query_end = $query_end . "'".$list_product[$i]->product_id."'";
+        //                 if($i < (sizeof($list_product)-1)){
+        //                     $query_end = $query_end . ",";
+        //                 }
+        //             }
+
+        //             $query_end = $query_end . ")";
+        //             $total = $query.$query_end;
+
+        //             $res = DB::statement($total);
+        //         }
+
+        //         $log = array(
+        //             'invoice_group_id' => $request['external_id'],
+        //             'status' => $status
+        //         );
+
+        //         if($responseLog = Invoices_group_log::create($log))
+        //         {
+        //             $to = $device_id;
+        //             $data = [
+        //                 'title'=>'Batas waktu pembayaran habis',
+        //                 'body'=>'Batas waktu pembayaran produk pesanan Anda habis',
+        //                 'android_channel_id'=>"001"
+        //             ];
+        //             $notif = new Helper();
+        //             $notif->sendMobileNotification($to,$data);
+
+        //             return response()->json([
+        //                 'status' => 1,
+        //                 'message' => 'Payment expired'
+        //             ],200);
+        //         }
+        //     }
+        // }
     }
 
 
