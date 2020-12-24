@@ -24,9 +24,9 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $data = $request->all();
+        $data['token'] = $request->header('X-CALLBACK-TOKEN');
         return response()->json([
                     'status' => 1,
-                    'message' => 'External id not found',
                     'data' => $data
                 ],200);
         // $request->validate([
