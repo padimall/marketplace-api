@@ -3,11 +3,67 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
+use Xendit\Xendit;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
 
+    public function test()
+    {
+        Xendit::setApiKey(env('SECRET_API_KEY'));
+        $ovoParams = [
+            'external_id' => 'demo-' . time(),
+            'amount' => 32000,
+            'phone' => '081298498259',
+            'ewallet_type' => 'OVO'
+        ];
+        
+        $danaParams = [
+            'external_id' => 'demo_' . time(),
+            'amount' => 32000,
+            'phone' => '081298498259',
+            'expiration_date' => '2020-02-20T00:00:00.000Z',
+            'callback_url' => 'https://my-shop.com/callbacks',
+            'redirect_url' => 'https://my-shop.com/home',
+            'ewallet_type' => 'DANA'
+        ];
+        
+        $linkajaParams = [
+            'external_id' => 'demo_' . time(),
+            'amount' => 32000,
+            'phone' => '081298498259',
+            'items' => [
+                [
+                    'id' => '123123',
+                    'name' => 'Phone Case',
+                    'price' => 100000,
+                    'quantity' => 1
+                ],
+                [
+                    'id' => '345678',
+                    'name' => 'Powerbank',
+                    'price' => 200000,
+                    'quantity' => 1
+                ]
+            ],
+            'callback_url' => 'https =>//yourwebsite.com/callback',
+            'redirect_url' => 'https =>//yourwebsite.com/order/123',
+            'ewallet_type' => 'LINKAJA'
+        ];
+
+        try {
+            $createOvo = \Xendit\EWallets::create($ovoParams);
+            return response()->json([
+                'status' => 1,
+                'message' => 'Resource found!',
+                'data' => $$createOvo
+            ],200);
+            
+        } catch (\Xendit\Exceptions\ApiException $exception) {
+            var_dump($exception);
+        }
+    }
     public function showAll(){
         $data = Payment::all();
         if(sizeOf($data)==0){
