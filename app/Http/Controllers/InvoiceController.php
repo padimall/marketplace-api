@@ -1147,17 +1147,17 @@ class InvoiceController extends Controller
                 );
 
                 if($type[0] == 'DANA'){
-                    $show['invoice_url'] = $getEwallet['checkout_url'];
+                    $show['checkout_url'] = $getEwallet['checkout_url'];
                     $show['expiry_date'] = $getEwallet['expiration_date'];
                 }
                 else if($type[0] == 'LINKAJA')
                 {
-                    $show['invoice_url'] = $getEwallet['checkout_url'];
+                    $show['checkout_url'] = $getEwallet['checkout_url'];
                     $show['expiry_date'] = $getEwallet['expired_at'];
                 }
                 else if($type[0] == 'OVO')
                 {
-                    $show['invoice_url'] = NULL;
+                    $show['checkout_url'] = NULL;
                 }
 
                 $alldata['ewallet'] = $show;
