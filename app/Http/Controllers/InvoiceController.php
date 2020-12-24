@@ -1087,7 +1087,6 @@ class InvoiceController extends Controller
 
                 $show = array(
                     'external_id' => $data->external_payment_id,
-                    'invoice_url' => $getEwallet['checkout_url'],
                     'status' => $getEwallet['status'],
                     'bank_code' => $type[0],
                     'expiry_date' => NULL,
@@ -1095,6 +1094,14 @@ class InvoiceController extends Controller
                     'transfer_amount' => $getEwallet['amount'],
                     'bank_branch' => $type[0],
                 );
+
+                if($type[0] == 'DANA'){
+                    $show['invoice_url'] = $getEwallet['checkout_url'];
+                }
+                else if($type[0] == 'LINKAJA')
+                {
+                    $show['invoice_url'] = $getEwallet['checkout_url'];
+                }
 
                 return response()->json([
                     'status' => 1,
