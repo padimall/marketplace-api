@@ -562,7 +562,7 @@ class InvoiceController extends Controller
 
                 if($createEwallet = \Xendit\EWallets::create($ewallet)){
                     $group_response->amount = $totalAmount;
-                    $group_response->external_payment_id = $createEwallet['ewallet_type'].'-'.$phone;
+                    $group_response->external_payment_id = $payment->method_code.'-'.$phone;
                     $group_response->save();
 
                     $to = request()->user()->device_id;
