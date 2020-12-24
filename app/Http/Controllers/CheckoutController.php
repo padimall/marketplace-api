@@ -34,7 +34,10 @@ class CheckoutController extends Controller
         }
 
         $logistic = Logistic::all();
-        $payment = Payment::all();
+        $payment = DB::table('payments')
+                    ->orderBy('method','ASC')
+                    ->get();
+
 
         $flagAgent = '';
         $index = 0;
