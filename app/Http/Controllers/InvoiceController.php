@@ -1137,7 +1137,6 @@ class InvoiceController extends Controller
                     'external_id' => $data->external_payment_id,
                     'status' => $getEwallet['status'],
                     'bank_code' => $type[0],
-                    'expiry_date' => NOW(),
                     'bank_account_number' => $type[1],
                     'transfer_amount' => $getEwallet['amount'],
                     'bank_branch' => $type[0],
@@ -1145,10 +1144,16 @@ class InvoiceController extends Controller
 
                 if($type[0] == 'DANA'){
                     $show['invoice_url'] = $getEwallet['checkout_url'];
+                    $show['expiry_date'] = $getEwallet['expiration_date'];
                 }
                 else if($type[0] == 'LINKAJA')
                 {
                     $show['invoice_url'] = $getEwallet['checkout_url'];
+                    $show['expiry_date'] = $getEwallet['expired_at'];
+                }
+                else if($type[0] == 'OVO')
+                {
+                    $show['expiry_date'] = $getEwallet['expiry_date'];
                 }
 
                 return response()->json([
@@ -1163,11 +1168,10 @@ class InvoiceController extends Controller
                 $show = array(
                     'external_id' => $data->external_payment_id,
                     'status' => $getRetail['status'],
-                    'bank_code' => NULL,
-                    'expiry_date' => NULL,
-                    'bank_account_number' => NULL,
-                    'transfer_amount' => NULL,
-                    'bank_branch' => NULL,
+                    'retail_outlet_name' => $getRetail['retail_outlet_name'],
+                    'expiry_date' => $getRetail['expiration_date'],
+                    'payment_code' => $getRetail['payment_code'],
+                    'transfer_amount' => $getRetail['expected_amount'],
                 );
 
                 return response()->json([
