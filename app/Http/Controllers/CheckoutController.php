@@ -40,7 +40,6 @@ class CheckoutController extends Controller
         $payment_group = array();
         $flagMethod = '';
         $tempMethod = '';
-        $idx = 0;
         $tempList = array();
         for($i=0; $i<sizeof($payment); $i++){
             $tempMethod = $payment[$i]->method;
@@ -52,9 +51,17 @@ class CheckoutController extends Controller
                 }
 
                 array_push($tempList,$payment[$i]->method_code);
+
+                if($i == (sizeof($payment)-1)){
+                    $payment_group[$tempMethod] = $tempList;
+                }
             }
             else {
                 array_push($tempList,$payment[$i]->method_code);
+
+                if($i == (sizeof($payment)-1)){
+                    $payment_group[$tempMethod] = $tempList;
+                }
             }
 
             $flagMethod = $tempMethod;
