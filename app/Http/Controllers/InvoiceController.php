@@ -472,39 +472,102 @@ class InvoiceController extends Controller
 
         if($payment->gate == 'XENDIT'){
             Xendit::setApiKey(env('SECRET_API_KEY'));
-            $params = ['external_id' => $invoice_group_id,
-                'payer_email' => request()->user()->email,
-                'description' => 'Pembayaran PadiMall - '.request()->user()->name,
-                'amount' => $totalAmount
-            ];
-
-            if($createInvoice = \Xendit\Invoice::create($params))
-            {
-                $group_response->amount = $totalAmount;
-                $group_response->external_payment_id = $createInvoice['id'];
-                $group_response->save();
-
-                $to = request()->user()->device_id;
-                $data = [
-                    'title'=>'Pesanan dibuat',
-                    'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
-                    'android_channel_id'=>"001"
+            if($payment->method == 'BANK'){
+                $params = ['external_id' => $invoice_group_id,
+                    'payer_email' => request()->user()->email,
+                    'description' => 'Pembayaran PadiMall - '.request()->user()->name,
+                    'amount' => $totalAmount
                 ];
-                $notif = new Helper();
-                $notif->sendMobileNotification($to,$data);
 
-                return response()->json([
-                    'status' => 1,
-                    'message' => 'Resource created!',
-                    'group_id' => $group_response['id']
-                ],201);
+                if($createInvoice = \Xendit\Invoice::create($params))
+                {
+                    $group_response->amount = $totalAmount;
+                    $group_response->external_payment_id = $createInvoice['id'];
+                    $group_response->save();
+
+                    $to = request()->user()->device_id;
+                    $data = [
+                        'title'=>'Pesanan dibuat',
+                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
+                        'android_channel_id'=>"001"
+                    ];
+                    $notif = new Helper();
+                    $notif->sendMobileNotification($to,$data);
+
+                    return response()->json([
+                        'status' => 1,
+                        'message' => 'Resource created!',
+                        'group_id' => $group_response['id']
+                    ],201);
+                }
+                else {
+                    return response()->json([
+                        'status' => 0,
+                        'message' => 'Error when create an invoice!'
+                    ],200);
+                }
             }
-            else {
-                return response()->json([
-                    'status' => 0,
-                    'message' => 'Error when create an invoice!'
-                ],200);
-            }
+            else if($payment->method == 'EWALLET'){
+                $phone = request()->user()->phone;
+                if($payment->method_code == 'OVO'){
+                    $ewallet = [
+                        'external_id' => $invoice_group_id,
+                        'amount' => $totalAmount,
+                        'phone' => $phone,
+                        'ewallet_type' => 'OVO'
+                    ];
+                }
+                else if($payment->method_code == 'DANA'){
+                    $ewallet = [
+                        'external_id' => $invoice_group_id,
+                        'amount' => $totalAmount,
+                        'phone' => $phone,
+                        'expiration_date' => '2020-02-20T00:00:00.000Z',
+                        'callback_url' => 'https://my-shop.com/callbacks',
+                        'redirect_url' => 'https://padimallindonesia.com',
+                        'ewallet_type' => 'DANA'
+                    ];
+                }
+                else if($payment->method_code == 'LINKAJA') {
+                    $ewallet = [
+                        'external_id' => $invoice_group_id,
+                        'amount' => $totalAmount,
+                        'phone' => $phone,
+                        'items' => [
+                            [
+                                'id' => '0000000',
+                                'name' => 'PadiMall Product',
+                                'price' => $totalAmount,
+                                'quantity' => 1
+                            ]
+                        ],
+                        'callback_url' => 'https =>//yourwebsite.com/callback',
+                        'redirect_url' => 'https =>//padimallindonesia.com',
+                        'ewallet_type' => 'LINKAJA'
+                    ];
+                }
+
+                if($createEwallet = \Xendit\EWallets::create($ewallet)){
+                    $group_response->amount = $totalAmount;
+                    $group_response->external_payment_id = $createEwallet['id'];
+                    $group_response->save();
+
+                    $to = request()->user()->device_id;
+                    $data = [
+                        'title'=>'Pesanan dibuat',
+                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
+                        'android_channel_id'=>"001"
+                    ];
+                    $notif = new Helper();
+                    $notif->sendMobileNotification($to,$data);
+
+                    return response()->json([
+                        'status' => 1,
+                        'message' => 'Resource created!',
+                        'group_id' => $group_response['id']
+                    ],201);
+                }
+            }            
         }
     }
 
