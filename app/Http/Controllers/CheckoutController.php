@@ -56,7 +56,7 @@ class CheckoutController extends Controller
 
                 array_push($tempList,array(
                     'id' => $payment[$i]->id,
-                    'method_code'=>$payment[$i]->method_code
+                    'name'=>$payment[$i]->method_code
                 ));
 
                 if($i == (sizeof($payment)-1)){
@@ -70,7 +70,7 @@ class CheckoutController extends Controller
             else {
                 array_push($tempList,array(
                     'id' => $payment[$i]->id,
-                    'method_code'=>$payment[$i]->method_code
+                    'name'=>$payment[$i]->method_code
                 ));
 
                 if($i == (sizeof($payment)-1)){
