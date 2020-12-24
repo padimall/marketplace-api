@@ -47,7 +47,11 @@ class CheckoutController extends Controller
             if($flagMethod != $tempMethod)
             {
                 if(sizeof($tempList) != 0){
-                    $payment_group[$flagMethod] = $tempList;
+                    array_push($payment_group,
+                    array(
+                        'method' => $flagMethod,
+                        'method_codes' => $tempList
+                    ));
                     $tempList = array();
                 }
 
