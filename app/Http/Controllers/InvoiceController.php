@@ -26,21 +26,21 @@ class InvoiceController extends Controller
     public function transaction_info()
     {
         $day = DB::table('invoices')
-                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS date"))
-                ->orderBy('date','DESC')
-                ->groupBy('date')
+                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS created_at"))
+                ->orderBy('created_at','DESC')
+                ->groupBy('created_at')
                 ->get();
 
         $month = DB::table('invoices')
-                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m) AS date"))
-                ->orderBy('date','DESC')
-                ->groupBy('date')
+                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m') AS created_at"))
+                ->orderBy('created_at','DESC')
+                ->groupBy('created_at')
                 ->get();
 
         $year = DB::table('invoices')
-                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y) AS date"))
-                ->orderBy('date','DESC')
-                ->groupBy('date')
+                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y') AS created_at"))
+                ->orderBy('created_at','DESC')
+                ->groupBy('created_at')
                 ->get();
 
         if(sizeof($day)==0){
