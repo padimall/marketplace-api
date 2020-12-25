@@ -25,41 +25,41 @@ class InvoiceController extends Controller
 
     public function transaction_info()
     {
-        $data = DB::table('invoices')
+        $day = DB::table('invoices')
+                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS created_at"))
                 ->orderBy('created_at','DESC')
+                ->groupBy('created_at')
                 ->get();
 
-        $data2 = DB::table('invoices')
-                ->select(DB::raw('COUNT(id)'),DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS inv_date"))
+        $month = DB::table('invoices')
+                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m) AS created_at"))
                 ->orderBy('created_at','DESC')
-                ->groupBy('inv_date')
+                ->groupBy('created_at')
                 ->get();
 
-        if(sizeof($data)==0){
+        $year = DB::table('invoices')
+                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y) AS created_at"))
+                ->orderBy('created_at','DESC')
+                ->groupBy('created_at')
+                ->get();
+
+        if(sizeof($day)==0){
             return response()->json([
                 'status' => 0,
                 'message' => 'Resource not found'
             ],200);
         }
 
-        $formatted = array();
-        $all = (int)sizeof($data);
 
-        for($i=0; $i<sizeof($data); $i++)
-        {
-            $tempDate = date('d-m-Y',strtotime($data[$i]->created_at));
-            $tempMonth = date('m-Y',strtotime($data[$i]->created_at));
-            array_push($formatted,array(
-                'date' => $tempDate,
-                'month' => $tempMonth
-            ));
-        }
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>$formatted,
-            'data2'=>$data2,
+            'data'=>array(
+                'day'=>$day,
+                'month'=>$month,
+                'year'=>$year
+            ),
         ],200);
     }
 
