@@ -1081,9 +1081,9 @@ class InvoiceController extends Controller
         {
             $external = $data->external_payment_id;
 
-            $alldata['debit_bank'] = [];
-            $alldata['ewallet'] = [];
-            $alldata['retail'] = [];
+            $alldata['debit_bank'] = NULL;
+            $alldata['ewallet'] = NULL;
+            $alldata['retail'] = NULL;
             $alldata['external_id'] = $external;
 
             Xendit::setApiKey(env('SECRET_API_KEY'));
