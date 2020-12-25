@@ -596,7 +596,7 @@ class InvoiceController extends Controller
                         'amount' => $totalAmount,
                         'phone' => $phone,
                         'expiration_date' => Carbon::now()->addDays(1),
-                        'callback_url' => 'https://dev-api.padimall.id/api/callback',
+                        'callback_url' => url('/').'/'.'api/callback',
                         'redirect_url' => 'https://padimallindonesia.com',
                         'ewallet_type' => 'DANA'
                     ];
@@ -614,7 +614,7 @@ class InvoiceController extends Controller
                                 'quantity' => 1
                             ]
                         ],
-                        'callback_url' => 'https://dev-api.padimall.id/api/callback',
+                        'callback_url' => url('/').'/'.'api/callback',
                         'redirect_url' => 'https://padimallindonesia.com',
                         'ewallet_type' => 'LINKAJA'
                     ];
