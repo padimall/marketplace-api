@@ -30,7 +30,7 @@ class InvoiceController extends Controller
                 ->get();
 
         $data2 = DB::table('invoices')
-                ->select(DB::raw('COUNT(id)'))
+                ->select(DB::raw('COUNT(id)'),'created_at')
                 ->orderBy('created_at','DESC')
                 ->groupBy('created_at')
                 ->get();
@@ -59,7 +59,7 @@ class InvoiceController extends Controller
             'status' => 1,
             'message' => 'Resource found',
             'data'=>$formatted,
-            'data'=>$data2,
+            'data2'=>$data2,
         ],200);
     }
 
