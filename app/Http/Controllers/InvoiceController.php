@@ -32,6 +32,7 @@ class InvoiceController extends Controller
         $data2 = DB::table('invoices')
                 ->orderBy('created_at','DESC')
                 ->groupBy('created_at')
+                ->select('COUNT(id)')
                 ->get();
 
         if(sizeof($data)==0){
