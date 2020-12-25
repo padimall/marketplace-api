@@ -869,9 +869,11 @@ class InvoiceController extends Controller
         }
 
         $group->payment = array(
-            'gate' => $group->gate,
-            'method' => $group->method,
-            'method_code' => $group->method_code,
+            'type' => $group->method,
+            'method'=> array(
+                'id'=>$group->payment_id,
+                'name'=>$group->method_code
+            )
         );
 
         unset($group->gate);
