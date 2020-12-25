@@ -59,23 +59,23 @@ class InvoiceController extends Controller
         $formatted = [
             [
                 'type' => 'day',
-                'list' => $day
+                'transaction' => $day
             ],
             [
                 'type' => 'week',
-                'list' => $week
+                'transaction' => $week
             ],
             [
                 'type' => 'month',
-                'list' => $month
+                'transaction' => $month
             ],
             [
                 'type' => 'year',
-                'list' => $year
+                'transaction' => $year
             ]
         ];
 
-        
+
 
         return response()->json([
             'status' => 1,
