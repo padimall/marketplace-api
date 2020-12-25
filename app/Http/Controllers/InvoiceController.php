@@ -26,19 +26,19 @@ class InvoiceController extends Controller
     public function transaction_info()
     {
         $day = DB::table('invoices')
-                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS date"))
+                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS date"),DB::raw('COUNT(id) AS total'))
                 ->orderBy('date','DESC')
                 ->groupBy('date')
                 ->get();
 
         $month = DB::table('invoices')
-                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y-%m') AS date"))
+                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m') AS date"),DB::raw('COUNT(id) AS total'))
                 ->orderBy('date','DESC')
                 ->groupBy('date')
                 ->get();
 
         $year = DB::table('invoices')
-                ->select(DB::raw('COUNT(id) AS count'),DB::raw("DATE_FORMAT(created_at,'%Y') AS date"))
+                ->select(DB::raw("DATE_FORMAT(created_at,'%Y') AS date"),DB::raw('COUNT(id) AS total'))
                 ->orderBy('date','DESC')
                 ->groupBy('date')
                 ->get();
