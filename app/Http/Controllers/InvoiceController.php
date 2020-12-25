@@ -279,8 +279,16 @@ class InvoiceController extends Controller
         $payment = DB::table('invoices_groups')
                     ->join('payments','payments.id','=','invoices_groups.payment_id')
                     ->where('invoices_groups.id',$data->invoices_group_id)
-                    ->select('gate','method','method_code')
+                    ->select('payments.id','gate','method','method_code')
                     ->first();
+
+        $paymentFormat = array(
+            'type' => $payment->method,
+            'method'=> array(
+                'id'=>$payment->id,
+                'name'=>$payment->method_code
+            )
+        );
 
         $product = DB::table('invoices_products')
                     ->where('invoice_id',$data->id)
@@ -315,7 +323,7 @@ class InvoiceController extends Controller
 
         $data->user = $user;
         $data->logistic = $logistic;
-        $data->payment = $payment;
+        $data->payment = $paymentFormat;
         $data->products = $product;
 
         return response()->json([

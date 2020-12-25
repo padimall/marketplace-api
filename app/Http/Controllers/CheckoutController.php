@@ -48,8 +48,8 @@ class CheckoutController extends Controller
             {
                 if(sizeof($tempList) != 0){
                     array_push($payment_group,[
-                        'method' => $flagMethod,
-                        'method_codes' => $tempList
+                        'type' => $flagMethod,
+                        'methods' => $tempList
                     ]);
                     $tempList = array();
                 }
@@ -61,8 +61,8 @@ class CheckoutController extends Controller
 
                 if($i == (sizeof($payment)-1)){
                     array_push($payment_group,[
-                        'method' => $tempMethod,
-                        'method_codes' => $tempList
+                        'type' => $tempMethod,
+                        'methods' => $tempList
                     ]);
                     $tempList = array();
                 }
@@ -75,8 +75,8 @@ class CheckoutController extends Controller
 
                 if($i == (sizeof($payment)-1)){
                     array_push($payment_group,[
-                        'method' => $tempMethod,
-                        'method_codes' => $tempList
+                        'type' => $tempMethod,
+                        'methods' => $tempList
                     ]);
                     $tempList = array();
                 }

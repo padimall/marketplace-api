@@ -155,6 +155,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/delete','InvoiceProductRatingImageController@delete');
         });
 
+        Route::group(['prefix' => 'payment'], function () {
+            Route::post('/all','PaymentController@showAll');
+        });
 
 
         Route::group(['prefix' => 'admin-price'], function () {
@@ -186,7 +189,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'payment'], function () {
             Route::post('/store','PaymentController@store');
             Route::post('/update','PaymentController@update');
-            Route::post('/all','PaymentController@showAll');
         });
 
         Route::group(['prefix' => 'supplier'], function () {
