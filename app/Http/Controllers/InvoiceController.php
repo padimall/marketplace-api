@@ -44,9 +44,9 @@ class InvoiceController extends Controller
                 ->get();
 
         $year = DB::table('invoices')
-                ->select(DB::raw("DATE_FORMAT(created_at,'%Y') AS date"),DB::raw('COUNT(id) AS total'))
-                ->orderBy('date','DESC')
-                ->groupBy('date')
+                ->select(DB::raw("DATE_FORMAT(created_at,'%Y') AS week_number"),DB::raw('COUNT(id) AS total'))
+                ->orderBy('week_number','DESC')
+                ->groupBy('week_number')
                 ->get();
 
         if(sizeof($day)==0){
