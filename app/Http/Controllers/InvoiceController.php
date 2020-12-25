@@ -50,16 +50,26 @@ class InvoiceController extends Controller
             ],200);
         }
 
+        $formatted = array();
+        array_push($formatted,array(
+            'type' => 'day',
+            'list' => $day
+        ));
 
+        array_push($formatted,array(
+            'type' => 'month',
+            'list' => $month
+        ));
+
+        array_push($formatted,array(
+            'type' => 'year',
+            'list' => $year
+        ));
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>array(
-                'day'=>$day,
-                'month'=>$month,
-                'year'=>$year
-            ),
+            'data'=>$formatted,
         ],200);
     }
 
