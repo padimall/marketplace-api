@@ -219,7 +219,8 @@ class InvoiceController extends Controller
     {
         $data = DB::table('invoices')
                 ->join('agents','agents.id','=','invoices.agent_id')
-                ->select('invoices.*','agents.name AS agent_name')
+                ->join('users','users.id','=','invoices.user_id')
+                ->select('invoices.*','agents.name AS agent_name','users.name AS buyer_name')
                 ->get();
         if(sizeOf($data)==0){
             return response()->json([
