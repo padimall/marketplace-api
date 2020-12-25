@@ -29,6 +29,11 @@ class InvoiceController extends Controller
                 ->orderBy('created_at','DESC')
                 ->get();
 
+        $data2 = DB::table('invoices')
+                ->orderBy('created_at','DESC')
+                ->groupBy('DATE_FORMAT(created_at,"%Y%m%d")')
+                ->get();
+
         if(sizeof($data)==0){
             return response()->json([
                 'status' => 0,
@@ -52,7 +57,8 @@ class InvoiceController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>$formatted
+            'data'=>$formatted,
+            'data'=>$data2,
         ],200);
     }
 
