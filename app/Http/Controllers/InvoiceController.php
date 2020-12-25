@@ -30,7 +30,7 @@ class InvoiceController extends Controller
                 ->get();
 
         $data2 = DB::table('invoices')
-                ->select(DB::raw('COUNT(id)'),'created_at')
+                ->select(DB::raw('COUNT(id)'),DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d')"))
                 ->orderBy('created_at','DESC')
                 ->groupBy('created_at')
                 ->get();
