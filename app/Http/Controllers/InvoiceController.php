@@ -25,9 +25,12 @@ class InvoiceController extends Controller
 
     public function transaction_info()
     {
-        $data = DB::table('invoices')
-                ->get();
-
+        $data = DB::table('invoices')->count();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found',
+            'data'=>$data
+        ],200);
     }
 
     public function callback(Request $request)
