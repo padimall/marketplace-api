@@ -37,6 +37,12 @@ class InvoiceController extends Controller
                 ->groupBy('date')
                 ->get();
 
+        $week = DB::table('invoices')
+                ->select(DB::raw("WEEK(created_at) AS date"),DB::raw('COUNT(id) AS total'))
+                ->orderBy('date','DESC')
+                ->groupBy('date')
+                ->get();
+
         $year = DB::table('invoices')
                 ->select(DB::raw("DATE_FORMAT(created_at,'%Y') AS date"),DB::raw('COUNT(id) AS total'))
                 ->orderBy('date','DESC')
@@ -50,21 +56,24 @@ class InvoiceController extends Controller
             ],200);
         }
 
-        $formatted = array();
-        array_push($formatted,array(
-            'type' => 'day',
-            'list' => $day
-        ));
-
-        array_push($formatted,array(
-            'type' => 'month',
-            'list' => $month
-        ));
-
-        array_push($formatted,array(
-            'type' => 'year',
-            'list' => $year
-        ));
+        $formatted = [
+            [
+                'type' => 'day',
+                'list' => $day
+            ],
+            [
+                'type' => 'week',
+                'list' => $week
+            ],
+            [
+                'type' => 'month',
+                'list' => $month
+            ],
+            [
+                'type' => 'year',
+                'list' => $year
+            ]
+        ];
 
         return response()->json([
             'status' => 1,
