@@ -26,49 +26,25 @@ class InvoiceController extends Controller
     public function transaction_info()
     {
         $day = DB::table('invoices')
-                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS date"),DB::raw('COUNT(id) AS total'))
+                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS date"),DB::raw('COUNT(id) AS total'),DB::raw('SUM(amount) AS amount'))
                 ->orderBy('date','DESC')
                 ->groupBy('date')
                 ->get();
 
         $month = DB::table('invoices')
-                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m') AS date"),DB::raw('COUNT(id) AS total'))
+                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m') AS date"),DB::raw('COUNT(id) AS total'),DB::raw('SUM(amount) AS amount'))
                 ->orderBy('date','DESC')
                 ->groupBy('date')
                 ->get();
 
         $week = DB::table('invoices')
-                ->select(DB::raw("WEEK(created_at) AS week_number"),DB::raw('COUNT(id) AS total'))
+                ->select(DB::raw("WEEK(created_at) AS week_number"),DB::raw('COUNT(id) AS total'),DB::raw('SUM(amount) AS amount'))
                 ->orderBy('week_number','DESC')
                 ->groupBy('week_number')
                 ->get();
 
         $year = DB::table('invoices')
-                ->select(DB::raw("DATE_FORMAT(created_at,'%Y') AS date"),DB::raw('COUNT(id) AS total'))
-                ->orderBy('date','DESC')
-                ->groupBy('date')
-                ->get();
-
-        $day1 = DB::table('invoices')
-                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m-%d') AS date"),DB::raw('SUM(amount) AS amount'))
-                ->orderBy('date','DESC')
-                ->groupBy('date')
-                ->get();
-
-        $month1 = DB::table('invoices')
-                ->select(DB::raw("DATE_FORMAT(created_at,'%Y-%m') AS date"),DB::raw('SUM(amount) AS amount'))
-                ->orderBy('date','DESC')
-                ->groupBy('date')
-                ->get();
-
-        $week1 = DB::table('invoices')
-                ->select(DB::raw("WEEK(created_at) AS week_number"),DB::raw('SUM(amount) AS amount'))
-                ->orderBy('week_number','DESC')
-                ->groupBy('week_number')
-                ->get();
-
-        $year1 = DB::table('invoices')
-                ->select(DB::raw("DATE_FORMAT(created_at,'%Y') AS date"),DB::raw('SUM(amount) AS amount'))
+                ->select(DB::raw("DATE_FORMAT(created_at,'%Y') AS date"),DB::raw('COUNT(id) AS total'),DB::raw('SUM(amount) AS amount'))
                 ->orderBy('date','DESC')
                 ->groupBy('date')
                 ->get();
@@ -99,33 +75,12 @@ class InvoiceController extends Controller
             ]
         ];
 
-        $formatted1 = [
-            [
-                'type' => 'day',
-                'list' => $day1
-            ],
-            [
-                'type' => 'week',
-                'list' => $week1
-            ],
-            [
-                'type' => 'month',
-                'list' => $month1
-            ],
-            [
-                'type' => 'year',
-                'list' => $year1
-            ]
-        ];
-
+        
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>array(
-                'transaction_count'=>$formatted,
-                'transaction_amount'=>$formatted1
-            ),
+            'data'=>$formatted,
         ],200);
     }
 
