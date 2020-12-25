@@ -25,7 +25,9 @@ class InvoiceController extends Controller
 
     public function transaction_info()
     {
-        $data = DB::table('invoices')->get();
+        $data = DB::table('invoices')
+                ->orderBy('created_at','DESC')
+                ->get();
 
         if(sizeof($data)==0){
             return response()->json([
@@ -34,10 +36,23 @@ class InvoiceController extends Controller
             ],200);
         }
 
+        $formatted = array();
+        $all = (int)sizeof($data);
+
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            $tempDate = date('d-m-Y',strtotime($data[$i]->created_at));
+            $tempMonth = date('m-Y',strtotime($data[$i]->created_at));
+            array_push($formatted,array(
+                'date' => $tempDate,
+                'month' => $tempMonth
+            ));
+        }
+
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>$data
+            'data'=>$formatted
         ],200);
     }
 
