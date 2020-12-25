@@ -22,6 +22,14 @@ use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
+
+    public function transaction_info()
+    {
+        $data = DB::table('invoices')
+                ->get();
+
+    }
+
     public function callback(Request $request)
     {
         $callbackToken = $request->header('X-CALLBACK-TOKEN');
@@ -209,7 +217,10 @@ class InvoiceController extends Controller
 
     public function showAll()
     {
-        $data = Invoice::all();
+        $data = DB::table('invoices')
+                ->join('agents','agents.id','=','invoices.agent_id')
+                ->select('invoices.*','agents.name AS agent_name')
+                ->get();
         if(sizeOf($data)==0){
             return response()->json([
                 'status' => 0,

@@ -232,6 +232,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'invoice'], function () {
             Route::post('/all','InvoiceController@showAll');
             Route::post('/limit','InvoiceController@showLimit');
+            Route::post('/transaction-info','InvoiceController@transaction_info');
         });
 
 
