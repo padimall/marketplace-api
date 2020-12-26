@@ -28,7 +28,7 @@ class InvoiceController extends Controller
         Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
         $params = ["external_id" => request()->user()->id,
             "bank_code" => "MANDIRI",
-            "name" => "PadiMall-".request()->user()->name,
+            "name" => "PADIMALL ".request()->user()->name,
             "virtual_account_number" =>"9999000001",
             "is_close" => true,
         ];
