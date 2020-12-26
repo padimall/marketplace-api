@@ -32,12 +32,13 @@ class InvoiceController extends Controller
             "virtual_account_number" =>request()->user()->phone,
             "is_close" => true,
         ];
-        $createVA = \Xendit\VirtualAccounts::create($params);
+
+        // $createVA = \Xendit\VirtualAccounts::create($params);
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>$createVA,
+            'data'=>$params,
         ],200);
     }
 
