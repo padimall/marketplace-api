@@ -23,6 +23,24 @@ use Carbon\Carbon;
 class InvoiceController extends Controller
 {
 
+    public function testing(Request $request)
+    {
+        Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
+        $params = ["external_id" => request()->user()->id,
+            "bank_code" => "MANDIRI",
+            "name" => "PadiMall-".request()->user()->name,
+            "virtual_account_number" =>request()->user()->phone,
+            "is_close" => true,
+        ];
+        $createVA = \Xendit\VirtualAccounts::create($params);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Resource found',
+            'data'=>$createVA,
+        ],200);
+    }
+
     public function transaction_info()
     {
         $day = DB::table('invoices')
