@@ -29,7 +29,7 @@ class InvoiceController extends Controller
         $params = ["external_id" => request()->user()->id,
             "bank_code" => "MANDIRI",
             "name" => "PadiMall-".request()->user()->name,
-            "virtual_account_number" =>request()->user()->phone,
+            "virtual_account_number" =>"9999000001",
             "is_close" => true,
         ];
 
