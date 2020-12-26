@@ -87,7 +87,7 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $callbackToken = $request->header('X-CALLBACK-TOKEN');
-        if($callbackToken != env('CALLBACK_TOKEN'))
+        if($callbackToken != env('CALLBACK_TOKEN_DEV'))
         {
             return response()->json([
                 'status' => 0,
@@ -544,7 +544,7 @@ class InvoiceController extends Controller
         $payment = Payment::find($request['payment_id']);
 
         if($payment->gate == 'XENDIT'){
-            Xendit::setApiKey(env('SECRET_API_KEY'));
+            Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
             if($payment->method == 'BANK'){
                 $params = ['external_id' => $invoice_group_id,
                     'payer_email' => request()->user()->email,
@@ -1154,7 +1154,7 @@ class InvoiceController extends Controller
             $alldata['retail'] = NULL;
             $alldata['external_id'] = $external;
 
-            Xendit::setApiKey(env('SECRET_API_KEY'));
+            Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
             if($data->method == "BANK")
             {
                 $getInvoice = \Xendit\Invoice::retrieve($external);
