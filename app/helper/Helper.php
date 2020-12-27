@@ -6,6 +6,7 @@ use Xendit\Xendit;
 class Helper
 {
     public function __constuct(){
+        parent::__construct();
         Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
     }
 

@@ -24,6 +24,7 @@ class InvoiceController extends Controller
 {
 
     public function __construct(){
+        parent::__construct();
         $helper = new Helper();
     }
 
