@@ -1,9 +1,14 @@
 <?php
 
 namespace App\Helper;
+use Xendit\Xendit;
 
 class Helper
 {
+    public function __constuct(){
+        Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
+    }
+
     public function sendMobileNotification($target,$data)
     {
         $token = env('NOTIF_API_KEY');
@@ -26,5 +31,9 @@ class Helper
 
         $response = json_decode($response->getBody(),TRUE);
         return $response;
+    }
+
+    public function createFVA($params){
+        return \Xendit\VirtualAccounts::create($params);
     }
 }

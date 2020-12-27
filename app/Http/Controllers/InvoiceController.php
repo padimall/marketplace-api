@@ -23,6 +23,10 @@ use Carbon\Carbon;
 class InvoiceController extends Controller
 {
 
+    public function __construct(){
+        $helper = new Helper();
+    }
+
     public function testing(Request $request)
     {
         Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
@@ -32,7 +36,7 @@ class InvoiceController extends Controller
             "is_close" => true,
         ];
 
-        $createVA = \Xendit\VirtualAccounts::create($params);
+        $createVA = $helper->createFVA($params);
 
         return response()->json([
             'status' => 1,
