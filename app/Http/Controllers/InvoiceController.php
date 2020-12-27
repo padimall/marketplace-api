@@ -593,14 +593,14 @@ class InvoiceController extends Controller
                     ];
 
                     if($myFVA = $this->helper->createFVA($newParam)){
-                        $callback_id = $myFVA->id;
+                        $callback_id = $myFVA['id'];
                         $saveFVA = array(
                             'user_id'=>request()->user()->id,
-                            'fva_id'=>$myFVA->id,
-                            'name'=>$myFVA->name,
-                            'bank_code'=>$myFVA->bank_code,
-                            'account_number'=>$myFVA->account_number,
-                            'expiration_date'=>$myFVA->expiration_date
+                            'fva_id'=>$myFVA['id'],
+                            'name'=>$myFVA['name'],
+                            'bank_code'=>$myFVA['bank_code'],
+                            'account_number'=>$myFVA['account_number'],
+                            'expiration_date'=>$myFVA['expiration_date']
                         );
 
                         $responseFVA = Fixed_virtual_account::create($saveFVA);
