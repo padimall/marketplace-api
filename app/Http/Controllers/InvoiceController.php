@@ -603,7 +603,7 @@ class InvoiceController extends Controller
                             'name'=>$myFVA['name'],
                             'bank_code'=>$myFVA['bank_code'],
                             'account_number'=>$myFVA['account_number'],
-                            'expiration_date'=>$myFVA['expiration_date']
+                            'expiration_date'=>Carbon::parse($myFVA['expiration_date'])->setTimezone('Asia/Jakarta')->format('Y-m-d h:i:s')
                         );
 
                         $responseFVA = Fixed_virtual_account::create($saveFVA);
