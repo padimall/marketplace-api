@@ -29,19 +29,15 @@ class InvoiceController extends Controller
         $params = ["external_id" => request()->user()->id,
             "bank_code" => "MANDIRI",
             "name" => "PADIMALL ".request()->user()->name,
-            "virtual_account_number" =>request()->user()->phone,
             "is_close" => true,
         ];
 
-        $getVABanks = \Xendit\VirtualAccounts::getVABanks();
-
-        // $createVA = \Xendit\VirtualAccounts::create($params);
+        $createVA = \Xendit\VirtualAccounts::create($params);
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            // 'data'=>$params,
-            'all_bank'=>$getVABanks
+            'data'=>$createVA
         ],200);
     }
 
