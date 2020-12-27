@@ -596,30 +596,30 @@ class InvoiceController extends Controller
         if($payment->gate == 'XENDIT'){
             if($payment->method == 'BANK'){
 
-                $newParam = ["external_id" => request()->user()->id,
-                    "bank_code" => $payment->method_code,
-                    "name" => "PADIMALL ".request()->user()->name,
-                    "is_closed" => true,
-                    "expected_amount" => $totalAmount,
-                    "suggested_amount" => $totalAmount,
-                    "is_single_use" => true,
-                ];
+                // $newParam = ["external_id" => request()->user()->id,
+                //     "bank_code" => $payment->method_code,
+                //     "name" => "PADIMALL ".request()->user()->name,
+                //     "is_closed" => true,
+                //     "expected_amount" => $totalAmount,
+                //     "suggested_amount" => $totalAmount,
+                //     "is_single_use" => true,
+                // ];
 
-                if($myFVA = $this->helper->createFVA($newParam)){
-                    $callback_id = $myFVA['id'];
-                }
-                else {
-                    return response()->json([
-                        'status' => 1,
-                        'message' => 'Failed to create a fixed virtual account!'
-                    ],200);
-                }
+                // if($myFVA = $this->helper->createFVA($newParam)){
+                //     $callback_id = $myFVA['id'];
+                // }
+                // else {
+                //     return response()->json([
+                //         'status' => 1,
+                //         'message' => 'Failed to create a fixed virtual account!'
+                //     ],200);
+                // }
 
                 $params = ['external_id' => $invoice_group_id,
                     'payer_email' => request()->user()->email,
                     'description' => 'Pembayaran PadiMall - '.request()->user()->name,
                     'amount' => $totalAmount,
-                    'callback_virtual_account_id'=>$callback_id,
+                    // 'callback_virtual_account_id'=>$callback_id,
                 ];
 
                 if($createInvoice = $this->helper->createInvoice($params))
