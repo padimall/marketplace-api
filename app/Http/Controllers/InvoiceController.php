@@ -650,7 +650,7 @@ class InvoiceController extends Controller
                     'description' => 'Pembayaran PadiMall - '.request()->user()->name,
                     'amount' => $totalAmount,
                     'fixed_va'=>true,
-                    'payment_methods'=>[$payment->method_code]
+                    'payment_methods'=>["BRI"]
                     // 'callback_virtual_account_id'=>$callback_id
                 ];
 
