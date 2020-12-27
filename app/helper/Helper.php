@@ -36,4 +36,8 @@ class Helper
     public function createFVA($params){
         return \Xendit\VirtualAccounts::create($params);
     }
+
+    public function createInvoice($params){
+        return \Xendit\Invoice::create($params);
+    }
 }
