@@ -649,7 +649,9 @@ class InvoiceController extends Controller
                     'payer_email' => request()->user()->email,
                     'description' => 'Pembayaran PadiMall - '.request()->user()->name,
                     'amount' => $totalAmount,
-                    'callback_virtual_account_id'=>$callback_id
+                    'fixed_va'=>true,
+                    'payment_method'=>[$payment->method]
+                    // 'callback_virtual_account_id'=>$callback_id
                 ];
 
                 if($createInvoice = $this->helper->createInvoice($params))
