@@ -221,7 +221,8 @@ class InvoiceController extends Controller
         }
         else if($request['status'] == 'EXPIRED' || $request['status'] == 'FAILED')
         {
-            if($data->status == 2)
+            $checking = $data->status;
+            if($checking == 2)
             {
                 return response()->json([
                     'status' => 1,
