@@ -25,10 +25,10 @@ use Carbon\Carbon;
 class InvoiceController extends Controller
 {
 
-    private $helper;
+    public $helper;
 
     public function __construct(){
-        $helper = new Helper();
+        $this->helper = new Helper();
     }
 
     public function testing(Request $request)
