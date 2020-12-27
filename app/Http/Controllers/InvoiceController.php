@@ -608,6 +608,7 @@ class InvoiceController extends Controller
                         "bank_code" => $payment->method_code,
                         "name" => "PADIMALL ".request()->user()->name,
                         "is_closed" => true,
+                        'expected_amount' => $totalAmount,
                     ];
 
                     if($myFVA = $this->helper->createFVA($newParam)){
@@ -633,10 +634,10 @@ class InvoiceController extends Controller
                 }
                 else {
                     $callback_id = $myFVA->fva_id;
+                    $updateParam = ["expected_amount" => $totalAmount];
+                    $this->helper->updateVA($callback_id,$updateParam);
                 }
 
-                $updateParam = ["expected_amount" => $totalAmount];
-                $this->helper->updateVA($callback_id,$updateParam);
 
                 $params = ['external_id' => $invoice_group_id,
                     'payer_email' => request()->user()->email,
