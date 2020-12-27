@@ -248,11 +248,6 @@ class InvoiceController extends Controller
                             ->select('invoices.id','users.device_id','invoices.agent_id')
                             ->get();
 
-                            return response()->json([
-                                'status' => 1,
-                                'message' => $list_inv
-                            ],200);
-
                     $device_id = $list_inv[0]->device_id;
 
                     $list_inv_id = array();
