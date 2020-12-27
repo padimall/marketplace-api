@@ -20,11 +20,14 @@ use GuzzleHttp\Client;
 use App\Helper\Helper;
 use Carbon\Carbon;
 
+
+
 class InvoiceController extends Controller
 {
 
+    private $helper;
+
     public function __construct(){
-        parent::__construct();
         $helper = new Helper();
     }
 
