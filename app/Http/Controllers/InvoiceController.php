@@ -585,7 +585,7 @@ class InvoiceController extends Controller
                         ->where('user_id',request()->user()->id)
                         ->first();
 
-                $callback_id = $myFVA->fva_id;
+                $callback_id = $myFVA['fva_id'];
 
                 if(is_null($myFVA)){
                     $newParam = ["external_id" => request()->user()->id,
