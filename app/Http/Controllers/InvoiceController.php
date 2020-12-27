@@ -40,8 +40,7 @@ class InvoiceController extends Controller
         ];
 
         $createVA = $this->helper->createFVA($params);
-        $newDate =  new DateTime($createVA['expiration_date'],new DateTimeZone('UTC'));
-        $newDate->setTimezone(new DateTimeZone('Asia/Jakarta'));
+        $newDate = Carbon::parse($createVA['expiration_date'])->setTimezone('Asia/Jakarta')->format('Y-m-d h:i:s');
 
 
         // $inv = ['external_id' => 'tes-2',
@@ -57,7 +56,7 @@ class InvoiceController extends Controller
             'status' => 1,
             'message' => 'Resource found',
             'data'=>$createVA,
-            'new'=>$newDate->format('Y-m-d H:i:s')
+            'new'=>$newDate
         ],200);
     }
 
