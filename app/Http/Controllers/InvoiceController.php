@@ -124,7 +124,7 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $callbackToken = $request->header('X-CALLBACK-TOKEN');
-        if($this->helper->checkRequestSource($callbackToken))
+        if(!$this->helper->checkRequestSource($callbackToken))
         {
             return response()->json([
                 'status' => 0,
