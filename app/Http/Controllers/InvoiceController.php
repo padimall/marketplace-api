@@ -136,7 +136,7 @@ class InvoiceController extends Controller
             'status'=>'required|string'
         ]);
         $data = Invoices_group::find($request['external_id']);
-        $stat = $data->status;
+        $data2 = Invoices_group::find($request['external_id']);
         if(is_null($data))
         {
             return response()->json([
@@ -228,7 +228,7 @@ class InvoiceController extends Controller
                     'status' => 0,
                     'message' => 'Have been processed!',
                     'check'=>$checking,
-                    'stat'=>$stat
+                    'stat'=>$data2
                 ],200);
             }
             $status = 2;
