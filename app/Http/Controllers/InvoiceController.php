@@ -33,27 +33,27 @@ class InvoiceController extends Controller
 
     public function testing(Request $request)
     {
-        // $params = ["external_id" => request()->user()->id,
-        //     "bank_code" => "MANDIRI",
-        //     "name" => "PADIMALL ".request()->user()->name,
-        //     "is_close" => true,
-        // ];
+        $params = ["external_id" => request()->user()->id,
+            "bank_code" => "MANDIRI",
+            "name" => "PADIMALL ".request()->user()->name,
+            "is_close" => true,
+        ];
 
-        // $createVA = $this->helper->createFVA($params);
+        $createVA = $this->helper->createFVA($params);
 
-        $inv = ['external_id' => 'tes-2',
-                    'payer_email' => request()->user()->email,
-                    'description' => 'Pembayaran PadiMall - '.request()->user()->name,
-                    'amount' => 1,
-                    // 'callback_virtual_account_id' => '5fe82b9ced81dd402014522f'
-                ];
+        // $inv = ['external_id' => 'tes-2',
+        //             'payer_email' => request()->user()->email,
+        //             'description' => 'Pembayaran PadiMall - '.request()->user()->name,
+        //             'amount' => 1,
+        //             'callback_virtual_account_id' => '5fe82b9ced81dd402014522f'
+        //         ];
 
         $createInv = $this->helper->createInvoice($inv);
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>$createInv
+            'data'=>$createVA
         ],200);
     }
 
