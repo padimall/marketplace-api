@@ -124,7 +124,7 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $callbackToken = $request->header('X-CALLBACK-TOKEN');
-        if($callbackToken != env('CALLBACK_TOKEN_DEV'))
+        if($callbackToken != env('CALLBACK_TOKEN'))
         {
             return response()->json([
                 'status' => 0,
@@ -608,7 +608,9 @@ class InvoiceController extends Controller
                         "bank_code" => $payment->method_code,
                         "name" => "PADIMALL ".request()->user()->name,
                         "is_closed" => true,
-                        'expected_amount' => $totalAmount,
+                        "expected_amount" => $totalAmount,
+                        "suggested_amount" => $totalAmount,
+
                     ];
 
                     if($myFVA = $this->helper->createFVA($newParam)){
@@ -634,7 +636,11 @@ class InvoiceController extends Controller
                 }
                 else {
                     $callback_id = $myFVA->fva_id;
-                    $updateParam = ["expected_amount" => $totalAmount];
+                    $updateParam = [
+                        "expected_amount" => $totalAmount,
+                        "suggested_amount" => $totalAmount,
+                        "is_closed" => true,
+                    ];
                     $this->helper->updateVA($callback_id,$updateParam);
                 }
 
