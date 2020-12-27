@@ -620,6 +620,9 @@ class InvoiceController extends Controller
                     $callback_id = $myFVA->fva_id;
                 }
 
+                $updateParam = ["expected_amount" => $totalAmount];
+                $this->helper->updateVA($callback_id,$updateParam);
+
                 $params = ['external_id' => $invoice_group_id,
                     'payer_email' => request()->user()->email,
                     'description' => 'Pembayaran PadiMall - '.request()->user()->name,

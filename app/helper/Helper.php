@@ -60,4 +60,8 @@ class Helper
     public function retrieveRetailPayment($id){
         return \Xendit\Retail::retrieve($id);
     }
+
+    public function updateVA($id,$updateParams){
+        return \Xendit\VirtualAccounts::update($id, $updateParams);
+    }
 }
