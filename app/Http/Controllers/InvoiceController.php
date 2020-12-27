@@ -40,6 +40,9 @@ class InvoiceController extends Controller
         ];
 
         $createVA = $this->helper->createFVA($params);
+        $newDate =  new DateTime($createVA['expiration_date'],new DateTimeZone('UTC'));
+        $newDate->setTimezone(new DateTimeZone('Asia/Jakarta'));
+
 
         // $inv = ['external_id' => 'tes-2',
         //             'payer_email' => request()->user()->email,
@@ -53,7 +56,8 @@ class InvoiceController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>$createVA
+            'data'=>$createVA,
+            'new'=>$newDate->format('Y-m-d H:i:s')
         ],200);
     }
 
