@@ -1221,7 +1221,6 @@ class InvoiceController extends Controller
             $alldata['retail'] = NULL;
             $alldata['external_id'] = $external;
 
-            Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
             if($data->method == "BANK")
             {
                 $getInvoice = $this->helper->retrieveInvoice($external);
