@@ -40,7 +40,7 @@ class InvoiceController extends Controller
             "is_close" => true,
         ];
 
-        $createVA = $helper->createFVA($params);
+        $createVA = $this->helper->createFVA($params);
 
         return response()->json([
             'status' => 1,
