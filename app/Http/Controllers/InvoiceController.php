@@ -52,7 +52,7 @@ class InvoiceController extends Controller
 
         // $createInv = $this->helper->createInvoice($inv);
 
-        $getVA = \Xendit\VirtualAccounts::retrieve($request['id']); 
+        $getVA = \Xendit\VirtualAccounts::retrieve($request['id']);
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
@@ -607,7 +607,7 @@ class InvoiceController extends Controller
                     $newParam = ["external_id" => request()->user()->id,
                         "bank_code" => $payment->method_code,
                         "name" => "PADIMALL ".request()->user()->name,
-                        "is_close" => true,
+                        "is_closed" => true,
                     ];
 
                     if($myFVA = $this->helper->createFVA($newParam)){
