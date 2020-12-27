@@ -13,13 +13,13 @@ use App\Invoices_group;
 use App\Invoices_product;
 use App\Invoices_logistic;
 use App\Invoices_log;
+use App\Fixed_virtual_account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Xendit\Xendit;
 use GuzzleHttp\Client;
 use App\Helper\Helper;
 use Carbon\Carbon;
-
 
 
 class InvoiceController extends Controller
@@ -573,34 +573,69 @@ class InvoiceController extends Controller
 
             $removeCart = Cart::find($data[$i]->id);
             $resDelete = $removeCart->delete();
+            $group_response->amount = $totalAmount;
         }
 
         $payment = Payment::find($request['payment_id']);
 
         if($payment->gate == 'XENDIT'){
-            Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
             if($payment->method == 'BANK'){
+                $myFVA = DB::table('fixed_virtual_accounts')
+                        ->where('bank_code',$payment->method_code)
+                        ->where('user_id',request()->user()->id)
+                        ->first();
+
+                $callback_id = $myFVA->fva_id;
+
+                if(is_null($myFVA)){
+                    $newParam = ["external_id" => request()->user()->id,
+                        "bank_code" => $payment->method_code,
+                        "name" => "PADIMALL ".request()->user()->name,
+                        "is_close" => true,
+                    ];
+
+                    if($myFVA = $this->helper->createFVA($newParam)){
+                        $callback_id = $myFVA->id;
+                        $saveFVA = array(
+                            'user_id'=>request()->user()->id,
+                            'fva_id'=>$myFVA->id,
+                            'name'=>$myFVA->name,
+                            'bank_code'=>$myFVA->bank_code,
+                            'account_number'=>$myFVA->account_number,
+                            'expiration_date'=>$myFVA->expiration_date
+                        );
+
+                        $responseFVA = Fixed_virtual_account::create($saveFVA);
+                    }
+                    else {
+                        return response()->json([
+                            'status' => 1,
+                            'message' => 'Failed to create a fixed virtual account!'
+                        ],200);
+                    }
+
+                }
+
                 $params = ['external_id' => $invoice_group_id,
                     'payer_email' => request()->user()->email,
                     'description' => 'Pembayaran PadiMall - '.request()->user()->name,
-                    'amount' => $totalAmount
+                    'amount' => $totalAmount,
+                    'callback_virtual_account_id'=>$callback_id
                 ];
 
-                if($createInvoice = \Xendit\Invoice::create($params))
+                if($createInvoice = $this->helper->createInvoice($params))
                 {
-                    $group_response->amount = $totalAmount;
                     $group_response->external_payment_id = $createInvoice['id'];
                     $group_response->save();
 
                     $to = request()->user()->device_id;
                     $data = [
                         'title'=>'Pesanan dibuat',
-                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
+                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimakasih telah berbelanja di PadiMall',
                         'android_channel_id'=>"001"
                     ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
 
+                    $this->helper->sendMobileNotification($to,$data);
                     return response()->json([
                         'status' => 1,
                         'message' => 'Resource created!',
@@ -654,25 +689,22 @@ class InvoiceController extends Controller
                     ];
                 }
 
-                if($createEwallet = \Xendit\EWallets::create($ewallet)){
-                    $group_response->amount = $totalAmount;
+                if($createEwallet = $this->helper->createEwalletPayment($ewallet)){
                     $group_response->external_payment_id = $payment->method_code.'-'.$phone;
                     $group_response->save();
 
                     $to = request()->user()->device_id;
                     $data = [
                         'title'=>'Pesanan dibuat',
-                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
+                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimakasih telah berbelanja di PadiMall',
                         'android_channel_id'=>"001"
                     ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
+                    $this->helper->sendMobileNotification($to,$data);
 
                     return response()->json([
                         'status' => 1,
                         'message' => 'Resource created!',
                         'group_id' => $group_response['id'],
-                        'ewallet_response' => $createEwallet
                     ],201);
                 }
             }
@@ -689,25 +721,22 @@ class InvoiceController extends Controller
                     ];
                 }
 
-                if($createRetail = \Xendit\Retail::create($retail)){
-                    $group_response->amount = $totalAmount;
+                if($createRetail = $this->helper->createRetailPayment($retail)){
                     $group_response->external_payment_id = $createRetail['id'];
                     $group_response->save();
 
                     $to = request()->user()->device_id;
                     $data = [
                         'title'=>'Pesanan dibuat',
-                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimaksih telah berbelanja di PadiMall',
+                        'body'=>'Pesanan Anda telah berhasil dibuat. Terimakasih telah berbelanja di PadiMall',
                         'android_channel_id'=>"001"
                     ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
+                    $this->helper->sendMobileNotification($to,$data);
 
                     return response()->json([
                         'status' => 1,
                         'message' => 'Resource created!',
-                        'group_id' => $group_response['id'],
-                        'ewallet_response' => $createRetail
+                        'group_id' => $group_response['id']
                     ],201);
                 }
             }
@@ -1191,7 +1220,7 @@ class InvoiceController extends Controller
             Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
             if($data->method == "BANK")
             {
-                $getInvoice = \Xendit\Invoice::retrieve($external);
+                $getInvoice = $this->helper->retrieveInvoice($external);
                 $bank = $getInvoice['available_banks'];
                 if(sizeof($bank) != 0)
                 {
@@ -1210,6 +1239,7 @@ class InvoiceController extends Controller
                                 'bank_branch' => $bank[$i]['bank_branch'],
                             );
                             $alldata['debit_bank'] = $show;
+                            break;
                         }
                     }
                 }
@@ -1234,7 +1264,7 @@ class InvoiceController extends Controller
             }
             else if($data->method == "EWALLET") {
                 $type = explode('-',$data->external_payment_id);
-                $getEwallet = \Xendit\EWallets::getPaymentStatus($request['target_id'], $type[0]);
+                $getEwallet = $this->helper->retrieveEwalletPayment($request['target_id'], $type[0]);
 
                 $alldata['status'] = $getEwallet['status'];
                 $alldata['transfer_amount'] = (int)$getEwallet['amount'];
@@ -1267,7 +1297,7 @@ class InvoiceController extends Controller
                 ],200);
             }
             else if($data->method == "RETAIL"){
-                $getRetail = \Xendit\Retail::retrieve($external);
+                $getRetail = $this->helper->retrieveRetailPayment($external);
 
                 $alldata['status'] = $getRetail['status'];
                 $alldata['transfer_amount'] = (int)$getRetail['expected_amount'];
@@ -1279,8 +1309,6 @@ class InvoiceController extends Controller
                 );
 
                 $alldata['retail'] = $show;
-
-
 
                 return response()->json([
                     'status' => 1,
@@ -1301,10 +1329,6 @@ class InvoiceController extends Controller
                 'message' => 'Payment method not found'
             ],200);
         }
-
-
-
-
     }
 
     public function delete($id){

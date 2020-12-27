@@ -40,4 +40,24 @@ class Helper
     public function createInvoice($params){
         return \Xendit\Invoice::create($params);
     }
+
+    public function createEwalletPayment($params){
+        return \Xendit\EWallets::create($params);
+    }
+
+    public function createRetailPayment($params){
+        return \Xendit\Retail::create($params);
+    }
+
+    public function retrieveInvoice($id){
+        return \Xendit\Invoice::retrieve($id);
+    }
+
+    public function retrieveEwalletPayment($target,$type){
+        return \Xendit\EWallets::getPaymentStatus($target, $type);
+    }
+
+    public function retrieveRetailPayment($id){
+        return \Xendit\Retail::retrieve($id);
+    }
 }
