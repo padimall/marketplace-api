@@ -189,8 +189,7 @@ class InvoiceController extends Controller
                             'body'=>'Pembayaran Anda telah diterima',
                             'android_channel_id'=>"001"
                         ];
-                        $notif = new Helper();
-                        $notif->sendMobileNotification($to,$data);
+                        $this->helper->sendMobileNotification($to,$data);
 
                         $listAgent = DB::table('agents')
                                 ->join('users','users.id','=','agents.user_id')
@@ -206,8 +205,7 @@ class InvoiceController extends Controller
                                 'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
                                 'android_channel_id'=>"001"
                             ];
-                            $not = new Helper();
-                            $not->sendMobileNotification($to,$data);
+                            $this->helper->sendMobileNotification($to,$data);
                         }
 
                         return response()->json([
@@ -301,8 +299,7 @@ class InvoiceController extends Controller
                             'body'=>'Batas waktu pembayaran produk pesanan Anda habis',
                             'android_channel_id'=>"001"
                         ];
-                        $notif = new Helper();
-                        $notif->sendMobileNotification($to,$data);
+                        $this->helper->sendMobileNotification($to,$data);
 
                         return response()->json([
                             'status' => 1,
@@ -598,65 +595,78 @@ class InvoiceController extends Controller
 
         if($payment->gate == 'XENDIT'){
             if($payment->method == 'BANK'){
-                $myFVA = DB::table('fixed_virtual_accounts')
-                        ->where('bank_code',$payment->method_code)
-                        ->where('user_id',request()->user()->id)
-                        ->first();
 
-                if(is_null($myFVA)){
-                    $newParam = ["external_id" => request()->user()->id,
+                $newParam = ["external_id" => $invoice_group_id,
                         "bank_code" => $payment->method_code,
                         "name" => "PADIMALL ".request()->user()->name,
                         "is_closed" => true,
                         "expected_amount" => $totalAmount,
                         "suggested_amount" => $totalAmount,
-
+                        "is_single_use" => true,
                     ];
 
-                    if($myFVA = $this->helper->createFVA($newParam)){
-                        $callback_id = $myFVA['id'];
-                        $saveFVA = array(
-                            'user_id'=>request()->user()->id,
-                            'fva_id'=>$myFVA['id'],
-                            'name'=>$myFVA['name'],
-                            'bank_code'=>$myFVA['bank_code'],
-                            'account_number'=>$myFVA['account_number'],
-                            'expiration_date'=>Carbon::parse($myFVA['expiration_date'])->setTimezone('Asia/Jakarta')->format('Y-m-d h:i:s')
-                        );
+                $myFVA = $this->helper->createFVA($newParam);
 
-                        $responseFVA = Fixed_virtual_account::create($saveFVA);
-                    }
-                    else {
-                        return response()->json([
-                            'status' => 1,
-                            'message' => 'Failed to create a fixed virtual account!'
-                        ],200);
-                    }
+                // $myFVA = DB::table('fixed_virtual_accounts')
+                //         ->where('bank_code',$payment->method_code)
+                //         ->where('user_id',request()->user()->id)
+                //         ->first();
 
-                }
-                else {
-                    $callback_id = $myFVA->fva_id;
-                    $updateParam = [
-                        "expected_amount" => $totalAmount,
-                        "suggested_amount" => $totalAmount,
-                        "is_closed" => true,
-                    ];
-                    $this->helper->updateVA($callback_id,$updateParam);
-                }
+                // if(is_null($myFVA)){
+                //     $newParam = ["external_id" => request()->user()->id,
+                //         "bank_code" => $payment->method_code,
+                //         "name" => "PADIMALL ".request()->user()->name,
+                //         "is_closed" => true,
+                //         "expected_amount" => $totalAmount,
+                //         "suggested_amount" => $totalAmount,
+
+                //     ];
+
+                //     if($myFVA = $this->helper->createFVA($newParam)){
+                //         $callback_id = $myFVA['id'];
+                //         $saveFVA = array(
+                //             'user_id'=>request()->user()->id,
+                //             'fva_id'=>$myFVA['id'],
+                //             'name'=>$myFVA['name'],
+                //             'bank_code'=>$myFVA['bank_code'],
+                //             'account_number'=>$myFVA['account_number'],
+                //             'expiration_date'=>Carbon::parse($myFVA['expiration_date'])->setTimezone('Asia/Jakarta')->format('Y-m-d h:i:s')
+                //         );
+
+                //         $responseFVA = Fixed_virtual_account::create($saveFVA);
+                //     }
+                //     else {
+                //         return response()->json([
+                //             'status' => 1,
+                //             'message' => 'Failed to create a fixed virtual account!'
+                //         ],200);
+                //     }
+
+                // }
+                // else {
+                //     $callback_id = $myFVA->fva_id;
+                //     $updateParam = [
+                //         "expected_amount" => $totalAmount,
+                //         "suggested_amount" => $totalAmount,
+                //         "is_closed" => true,
+                //     ];
+                //     $this->helper->updateVA($callback_id,$updateParam);
+                // }
 
 
-                $params = ['external_id' => $invoice_group_id,
-                    'payer_email' => request()->user()->email,
-                    'description' => 'Pembayaran PadiMall - '.request()->user()->name,
-                    'amount' => $totalAmount,
-                    // 'fixed_va'=>true,
-                    // 'payment_methods'=>["$payment->method_code"]
-                    'callback_virtual_account_id'=>$callback_id,
-                ];
+                // $params = ['external_id' => $invoice_group_id,
+                //     'payer_email' => request()->user()->email,
+                //     'description' => 'Pembayaran PadiMall - '.request()->user()->name,
+                //     'amount' => $totalAmount,
+                //     // 'fixed_va'=>true,
+                //     // 'payment_methods'=>["$payment->method_code"]
+                //     'callback_virtual_account_id'=>$callback_id,
+                // ];
 
                 if($createInvoice = $this->helper->createInvoice($params))
                 {
-                    $group_response->external_payment_id = $createInvoice['id'];
+                    // $group_response->external_payment_id = $createInvoice['id'];
+                    $group_response->external_payment_id = $myFVA['id'];
                     $group_response->save();
 
                     $to = request()->user()->device_id;
