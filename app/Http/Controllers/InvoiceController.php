@@ -225,8 +225,9 @@ class InvoiceController extends Controller
             if($checking == 2)
             {
                 return response()->json([
-                    'status' => 1,
-                    'message' => 'Have been processed!'
+                    'status' => 0,
+                    'message' => 'Have been processed!',
+                    'check'=>$checking
                 ],200);
             }
             $status = 2;
