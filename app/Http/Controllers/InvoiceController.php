@@ -124,7 +124,7 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $callbackToken = $request->header('X-CALLBACK-TOKEN');
-        if($callbackToken != env('CALLBACK_TOKEN'))
+        if($callbackToken != env('CALLBACK_TOKEN_DEV'))
         {
             return response()->json([
                 'status' => 0,
@@ -649,9 +649,9 @@ class InvoiceController extends Controller
                     'payer_email' => request()->user()->email,
                     'description' => 'Pembayaran PadiMall - '.request()->user()->name,
                     'amount' => $totalAmount,
-                    'fixed_va'=>true,
-                    'payment_methods'=>["BRI"]
-                    // 'callback_virtual_account_id'=>$callback_id
+                    // 'fixed_va'=>true,
+                    // 'payment_methods'=>["$payment->method_code"]
+                    'callback_virtual_account_id'=>$callback_id,
                 ];
 
                 if($createInvoice = $this->helper->createInvoice($params))
