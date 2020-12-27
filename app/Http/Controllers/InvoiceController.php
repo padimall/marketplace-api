@@ -124,19 +124,18 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $callbackToken = $request->header('X-CALLBACK-TOKEN');
-        // if($callbackToken != env('CALLBACK_TOKEN'))
-        // {
-        //     return response()->json([
-        //         'status' => 0,
-        //         'message' => 'Request rejected'
-        //     ],200);
-        // }
+        if($callbackToken != env('CALLBACK_TOKEN'))
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Request rejected'
+            ],200);
+        }
         $request->validate([
             'external_id' => 'required|string',
             'status'=>'required|string'
         ]);
         $data = Invoices_group::find($request['external_id']);
-        $data2 = Invoices_group::find($request['external_id']);
         if(is_null($data))
         {
             return response()->json([
@@ -176,47 +175,55 @@ class InvoiceController extends Controller
 
                         $save_log_inv = Invoices_log::create($log_inv);
                     }
-                }
 
-                $log = array(
-                    'invoice_group_id' => $request['external_id'],
-                    'status' => $status
-                );
+                    $log = array(
+                        'invoice_group_id' => $request['external_id'],
+                        'status' => $status
+                    );
 
-                if($responseLog = Invoices_group_log::create($log))
-                {
-                    $to = $device_id;
-                    $data = [
-                        'title'=>'Pembayaran diterima',
-                        'body'=>'Pembayaran Anda telah diterima',
-                        'android_channel_id'=>"001"
-                    ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
-
-                    $listAgent = DB::table('agents')
-                            ->join('users','users.id','=','agents.user_id')
-                            ->whereIn('agents.id',$list_agent)
-                            ->select('users.device_id')
-                            ->get();
-
-                    for($i=0; $i<sizeof($listAgent); $i++)
+                    if($responseLog = Invoices_group_log::create($log))
                     {
-                        $to = $listAgent[$i]->device_id;
+                        $to = $device_id;
                         $data = [
-                            'title'=>'Pesanan baru',
-                            'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
+                            'title'=>'Pembayaran diterima',
+                            'body'=>'Pembayaran Anda telah diterima',
                             'android_channel_id'=>"001"
                         ];
-                        $not = new Helper();
-                        $not->sendMobileNotification($to,$data);
-                    }
+                        $notif = new Helper();
+                        $notif->sendMobileNotification($to,$data);
 
+                        $listAgent = DB::table('agents')
+                                ->join('users','users.id','=','agents.user_id')
+                                ->whereIn('agents.id',$list_agent)
+                                ->select('users.device_id')
+                                ->get();
+
+                        for($i=0; $i<sizeof($listAgent); $i++)
+                        {
+                            $to = $listAgent[$i]->device_id;
+                            $data = [
+                                'title'=>'Pesanan baru',
+                                'body'=>'Tokomu dapat pesanan baru nih, ayo cek sekarang.',
+                                'android_channel_id'=>"001"
+                            ];
+                            $not = new Helper();
+                            $not->sendMobileNotification($to,$data);
+                        }
+
+                        return response()->json([
+                            'status' => 1,
+                            'message' => 'Payment receive'
+                        ],200);
+                    }
+                }
+                else {
                     return response()->json([
-                        'status' => 1,
-                        'message' => 'Payment receive'
+                        'status' => 0,
+                        'message' => 'Nothing change'
                     ],200);
                 }
+
+
             }
         }
         else if($request['status'] == 'EXPIRED' || $request['status'] == 'FAILED')
@@ -227,8 +234,6 @@ class InvoiceController extends Controller
                 return response()->json([
                     'status' => 0,
                     'message' => 'Have been processed!',
-                    'check'=>$checking,
-                    'stat'=>$data2
                 ],200);
             }
             $status = 2;
@@ -282,27 +287,33 @@ class InvoiceController extends Controller
                     $total = $query.$query_end;
 
                     $res = DB::statement($total);
+
+                    $log = array(
+                        'invoice_group_id' => $request['external_id'],
+                        'status' => $status
+                    );
+
+                    if($responseLog = Invoices_group_log::create($log))
+                    {
+                        $to = $device_id;
+                        $data = [
+                            'title'=>'Batas waktu pembayaran habis',
+                            'body'=>'Batas waktu pembayaran produk pesanan Anda habis',
+                            'android_channel_id'=>"001"
+                        ];
+                        $notif = new Helper();
+                        $notif->sendMobileNotification($to,$data);
+
+                        return response()->json([
+                            'status' => 1,
+                            'message' => 'Payment expired'
+                        ],200);
+                    }
                 }
-
-                $log = array(
-                    'invoice_group_id' => $request['external_id'],
-                    'status' => $status
-                );
-
-                if($responseLog = Invoices_group_log::create($log))
-                {
-                    $to = $device_id;
-                    $data = [
-                        'title'=>'Batas waktu pembayaran habis',
-                        'body'=>'Batas waktu pembayaran produk pesanan Anda habis',
-                        'android_channel_id'=>"001"
-                    ];
-                    $notif = new Helper();
-                    $notif->sendMobileNotification($to,$data);
-
+                else {
                     return response()->json([
-                        'status' => 1,
-                        'message' => 'Payment expired'
+                        'status' => 0,
+                        'message' => 'Nothing change'
                     ],200);
                 }
             }
