@@ -243,8 +243,9 @@ class InvoiceController extends Controller
                 if($up_data)
                 {
                     $list_inv = DB::table('invoices')
-                            ->where('invoices_group_id',$data->id)
-                            ->select('id')
+                            ->join('users','users.id','=','invoices.user_id')
+                            ->where('invoices.invoices_group_id',$data->id)
+                            ->select('invoices.id','users.device_id','invoices.agent_id')
                             ->get();
 
                     $device_id = $list_inv[0]->device_id;
