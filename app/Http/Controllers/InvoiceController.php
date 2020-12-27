@@ -585,8 +585,6 @@ class InvoiceController extends Controller
                         ->where('user_id',request()->user()->id)
                         ->first();
 
-                $callback_id = $myFVA->fva_id;
-
                 if(is_null($myFVA)){
                     $newParam = ["external_id" => request()->user()->id,
                         "bank_code" => $payment->method_code,
@@ -614,6 +612,9 @@ class InvoiceController extends Controller
                         ],200);
                     }
 
+                }
+                else {
+                    $callback_id = $myFVA->fva_id;
                 }
 
                 $params = ['external_id' => $invoice_group_id,
