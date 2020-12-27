@@ -33,14 +33,14 @@ class InvoiceController extends Controller
 
     public function testing(Request $request)
     {
-        $params = ["external_id" => request()->user()->id,
-            "bank_code" => "MANDIRI",
-            "name" => "PADIMALL ".request()->user()->name,
-            "is_close" => true,
-        ];
+        // $params = ["external_id" => request()->user()->id,
+        //     "bank_code" => "MANDIRI",
+        //     "name" => "PADIMALL ".request()->user()->name,
+        //     "is_close" => true,
+        // ];
 
-        $createVA = $this->helper->createFVA($params);
-        $newDate = Carbon::parse($createVA['expiration_date'])->setTimezone('Asia/Jakarta')->format('Y-m-d h:i:s');
+        // $createVA = $this->helper->createFVA($params);
+        // $newDate = Carbon::parse($createVA['expiration_date'])->setTimezone('Asia/Jakarta')->format('Y-m-d h:i:s');
 
 
         // $inv = ['external_id' => 'tes-2',
@@ -52,11 +52,11 @@ class InvoiceController extends Controller
 
         // $createInv = $this->helper->createInvoice($inv);
 
+        $getVA = \Xendit\VirtualAccounts::retrieve($request['id']); 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found',
-            'data'=>$createVA,
-            'new'=>$newDate
+            'data'=>$getVA,
         ],200);
     }
 
