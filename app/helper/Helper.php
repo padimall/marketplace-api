@@ -6,7 +6,7 @@ use Xendit\Xendit;
 class Helper
 {
     public function __construct(){
-        Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
+        Xendit::setApiKey(env('SECRET_API_KEY'));
     }
 
     public function sendMobileNotification($target,$data)
