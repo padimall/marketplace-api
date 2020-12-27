@@ -124,13 +124,13 @@ class InvoiceController extends Controller
     public function callback(Request $request)
     {
         $callbackToken = $request->header('X-CALLBACK-TOKEN');
-        if($callbackToken != env('CALLBACK_TOKEN'))
-        {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Request rejected'
-            ],200);
-        }
+        // if($callbackToken != env('CALLBACK_TOKEN'))
+        // {
+        //     return response()->json([
+        //         'status' => 0,
+        //         'message' => 'Request rejected'
+        //     ],200);
+        // }
         $request->validate([
             'external_id' => 'required|string',
             'status'=>'required|string'
