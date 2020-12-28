@@ -153,7 +153,7 @@ class InvoiceController extends Controller
             {
                 $up_data = DB::table('invoices')
                             ->where('invoices_group_id',$data->id)
-                            ->update(['status' => $status]);
+                            ->update(['status' => $status,'updated_at' => Carbon::now()]);
 
                 if($up_data)
                 {
@@ -241,7 +241,7 @@ class InvoiceController extends Controller
             {
                 $up_data = DB::table('invoices')
                             ->where('invoices_group_id',$data->id)
-                            ->update(['status' => $batal]);
+                            ->update(['status' => $batal,'updated_at' => Carbon::now()]);
 
                 if($up_data)
                 {
@@ -752,12 +752,12 @@ class InvoiceController extends Controller
         $data = DB::table('invoices_logistics')
                 ->where('invoice_id',$request['target_id'])
                 ->where('resi',NULL)
-                ->update(['resi' => $request['resi']]);
+                ->update(['resi' => $request['resi'],'updated_at' => Carbon::now()]);
 
         $up_invoice = DB::table('invoices')
                      ->where('id',$request['target_id'])
                      ->where('status',1)
-                     ->update(['status' => 2]);
+                     ->update(['status' => 2,'updated_at' => Carbon::now()]);
 
         if($up_invoice){
             $log_inv = array(

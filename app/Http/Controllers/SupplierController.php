@@ -54,7 +54,7 @@ class SupplierController extends Controller
 
                 $product = DB::table('products')
                             ->where('supplier_id',$data->id)
-                            ->update(['status' => 1]);
+                            ->update(['status' => 1,'updated_at' => Carbon::now()]);
 
                 return response()->json([
                     'status' => 1,
@@ -68,7 +68,7 @@ class SupplierController extends Controller
 
                 $product = DB::table('products')
                             ->where('supplier_id',$data->id)
-                            ->update(['status' => 0]);
+                            ->update(['status' => 0,'updated_at' => Carbon::now()]);
 
                 return response()->json([
                     'status' => 1,
