@@ -785,7 +785,7 @@ class InvoiceController extends Controller
                 ],200);
             }
         }
-        else if($up_invoice->status >= 2)
+        else if($up_invoice->status == 2)
         {
             $data = Invoices_logistic::where('invoice_id',$request['target_id'])
                 ->update(['resi' => $request['resi']]);
@@ -802,6 +802,12 @@ class InvoiceController extends Controller
                     'message' => 'Request failed!'
                 ],200);
             }
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Request failed, status not supported!'
+            ],200);
         }
 
     }
