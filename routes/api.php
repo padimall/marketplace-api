@@ -46,6 +46,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/category','ProductController@product_category');
         Route::post('/shop','ProductController@product_shop');
         Route::post('/main-category','ProductController@product_main_category');
+        Route::post('/agent-id','ProductController@product_agent_id');
+        Route::post('/supplier-id','ProductController@product_supplier_id');
     });
 
     Route::group(['prefix' => 'main-category'], function () {
@@ -210,8 +212,6 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['prefix' => 'product'], function () {
             Route::post('/admin-delete','ProductController@delete_admin');
-            Route::post('/agent-id','ProductController@product_agent_id');
-            Route::post('/supplier-id','ProductController@product_supplier_id');
         });
 
         Route::group(['prefix' => 'product-category'], function () {
