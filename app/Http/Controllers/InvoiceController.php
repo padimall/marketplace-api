@@ -775,7 +775,7 @@ class InvoiceController extends Controller
 
                 return response()->json([
                     'status' => 1,
-                    'message' => 'Resi added, invoice status change!'
+                    'message' => 'Resi added, invoice status changed!'
                 ],200);
             }
             else {
