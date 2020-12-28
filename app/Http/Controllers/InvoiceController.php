@@ -749,36 +749,60 @@ class InvoiceController extends Controller
             'resi'=>'required|string'
         ]);
 
-        $data = DB::table('invoices_logistics')
-                ->where('invoice_id',$request['target_id'])
-                ->where('resi',NULL)
-                ->update(['resi' => $request['resi'],'updated_at' => Carbon::now()]);
+        $up_invoice = Invoice::find($request['target_id']);
 
-        $up_invoice = DB::table('invoices')
-                     ->where('id',$request['target_id'])
-                     ->where('status',1)
-                     ->update(['status' => 2,'updated_at' => Carbon::now()]);
-
-        if($up_invoice){
-            $log_inv = array(
-                'invoice_id' => $request['target_id'],
-                'status' => 2
-            );
-            $save_log = Invoices_log::create($log_inv);
-
-            return response()->json([
-                'status' => 1,
-                'message' => 'Resource updated!'
-            ],200);
-        }
-        else {
+        if($up_invoice->status == 0)
+        {
             return response()->json([
                 'status' => 0,
-                'message' => 'Resource update failed!'
+                'message' => 'Please pay the invoice first!'
             ],200);
         }
+        else if($up_invoice->status == 1)
+        {
+            $up_invoice->status = 2;
+            if($up_invoice->save())
+            {
+                $data = Invoices_logistic::where('invoice_id',$request['target_id'])
+                ->update(['resi' => $request['resi']]);
 
+                $log_inv = array(
+                    'invoice_id' => $request['target_id'],
+                    'status' => 2
+                );
 
+                $save_log = Invoices_log::create($log_inv);
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Resi added, invoice status change!'
+                ],200);
+            }
+            else {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Request failed!'
+                ],200);
+            }
+        }
+        else if($up_invoice->status >= 2)
+        {
+            $data = Invoices_logistic::where('invoice_id',$request['target_id'])
+                ->update(['resi' => $request['resi']]);
+
+            if($data){
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Resi changed!'
+                ],200);
+            }
+            else {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Request failed!'
+                ],200);
+            }
+        }
 
     }
 
