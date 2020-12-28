@@ -765,13 +765,21 @@ class InvoiceController extends Controller
                 'status' => 2
             );
             $save_log = Invoices_log::create($log_inv);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Resource updated!'
+            ],200);
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource update failed!'
+            ],200);
         }
 
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'Resource updated!'
-        ],200);
+
     }
 
     public function track(Request $request)
