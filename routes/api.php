@@ -22,6 +22,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('total','ProductController@total');
 Route::post('register-logs','AuthController@getLog');
 Route::post('callback','InvoiceController@callback');
+Route::post('callback-ewallet','InvoiceController@callback_ewallet');
 Route::get('email/verify/', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
 
 Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
