@@ -11,7 +11,7 @@ class Helper
 
     public function checkRequestSource($token)
     {
-        if($token == env('CALLBACK_TOKEN')){
+        if($token == env('CALLBACK_TOKEN_DEV')){
             return true;
         }
         return false;
@@ -19,7 +19,7 @@ class Helper
 
     public function sendMobileNotification($target,$data)
     {
-        $token = env('NOTIF_API_KEY');
+        $token = env('NOTIF_API_KEY_DEV');
         $client = new \GuzzleHttp\Client([
             'headers' => [
                 'Content-Type' => 'application/json',
