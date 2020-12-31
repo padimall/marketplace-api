@@ -31,6 +31,18 @@ class InvoiceController extends Controller
         $this->helper = new Helper();
     }
 
+    public function sendNotif()
+    {
+        $to = request()->user()->device_id;
+        $data = [
+            'title'=>'Pembayaran diterima',
+            'body'=>'Pembayaran Anda telah diterima',
+            'android_channel_id'=>"001"
+        ];
+        $this->helper->sendMobileNotification($to,$data);
+
+    }
+
     public function testing(Request $request)
     {
         // $params = ["external_id" => request()->user()->id,
