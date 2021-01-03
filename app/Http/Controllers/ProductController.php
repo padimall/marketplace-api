@@ -204,7 +204,38 @@ class ProductController extends Controller
                         ->where('invoice_product_rating_id',$rating_id)
                         ->select('*')
                         ->get();
+            $average_star = (float)0;
+            if($ratings->total_ratings != 0){
+                $average_star = (float)$ratings->total_star / $ratings->total_ratings;
+            }
+
+            $rating_summary = [
+                'average_star' => $average_star,
+                'total_ratings' => $ratings->total_ratings,
+                'sample' => [
+                    'id' => $ratings->id,
+                    'name' => $ratings->name,
+                    'star' => $ratings->star,
+                    'description' => $ratings->description,
+                    'show_name' => $ratings->show_name,
+                    'created_at' => $ratings->created_at,
+                    'updated_at' => $ratings->updated_at,
+                    'images' => $rating_image,
+                ]
+            ];
+
         }
+        else {
+            $rating_summary = [
+                'average_star' => 0,
+                'total_ratings' => 0,
+                'sample' => [
+                    
+                ]
+            ];
+        }
+
+        $data->rating_summary = $rating_summary;
 
 
         // $rating_id = array();
@@ -234,34 +265,12 @@ class ProductController extends Controller
         //         $ratings[$i]->images = $temp;
         //     }
         // }
-        // $average_star = (float)0;
-        // if(is_null($ratings->total_ratings))
-        // {
-        //     if($ratings->total_ratings != 0){
-        //         $average_star = (float)$ratings->total_star / $ratings->total_ratings;
-        //     }
-        // }
 
-        // $rating_summary = [
-        //     'average_star' => $average_star,
-        //     'total_ratings' => $ratings->total_ratings,
-        //     'sample' => [
-        //         'id' => $ratings->id,
-        //         'name' => $ratings->name,
-        //         'star' => $ratings->star,
-        //         'description' => $ratings->description,
-        //         'show_name' => $ratings->show_name,
-        //         'created_at' => $ratings->created_at,
-        //         'updated_at' => $ratings->updated_at,
-        //         'images' => $rating_image,
-        //     ]
-        // ];
-        // $data->rating_summary = $rating_summary;
 
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $ratings,
+            'data' => $data,
         ],200);
     }
 
