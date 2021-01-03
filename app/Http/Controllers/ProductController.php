@@ -249,8 +249,8 @@ class ProductController extends Controller
                 'description' => $ratings->description,
                 'show_name' => $ratings->show_name,
                 'created_at' => $ratings->created_at,
-                'images' => $rating_image,
                 'updated_at' => $ratings->updated_at,
+                'images' => $rating_image,
             ]
         ];
         $data->rating_summary = $rating_summary;

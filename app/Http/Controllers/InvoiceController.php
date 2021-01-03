@@ -647,8 +647,23 @@ class InvoiceController extends Controller
                     ->whereIn('product_id',$listProduct)
                     ->get();
 
+        $reviewed = DB::table('invoices_product_ratings')
+                    ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
+                    ->whereIn('invoices_products.product_id',$listProduct)
+                    ->get();
+
+
         for($i=0; $i<sizeOf($product); $i++)
         {
+            $product[$i]->reviewed = false;
+            for($j=0; $j<sizeOf($reviewed); $j++)
+            {
+                if($reviewed[$j]->product_id==$product[$i]->product_id){
+                    $product[$i]->reviewed = true;
+                    break;
+                }
+            }
+
             for($j=0; $j<sizeOf($image); $j++)
             {
                 if($image[$j]->product_id==$product[$i]->product_id){
