@@ -33,6 +33,7 @@ class MainCategoryController extends Controller
         $temp_sub = array();
         for($i=0; $i<sizeof($sub); $i++)
         {
+            $temp_sub[$sub[$i]->main_category_id] = array();
             array_push($temp_sub[$sub[$i]->main_category_id],array(
                 'id'=> $sub[$i]->id,
                 'name'=> $sub[$i]->name,
@@ -41,7 +42,7 @@ class MainCategoryController extends Controller
 
         for($i=0; $i<sizeof($data); $i++)
         {
-            if(!is_null($temp_sub[$data[$i]->id])){
+            if(sizeof($temp_sub[$data[$i]->id]) != 0){
                 $data->product_categories = $temp_sub[$data[$i]->id];
             }
             else {
