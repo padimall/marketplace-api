@@ -70,8 +70,6 @@ class MainCategoryController extends Controller
             'status' => 1,
             'message' => 'Resource found!',
             'data' => $data,
-            'sub' => $sub,
-            'temp' => $temp_sub,
         ],200);
     }
 
