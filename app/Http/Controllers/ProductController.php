@@ -208,7 +208,7 @@ class ProductController extends Controller
             $temp = array();
             for($j=0; $j<sizeOf($rating_image); $j++)
             {
-                if($rating_image[$j]->invoice_product_rating_id==$ratings[$i]->id){
+                if($rating_image[$j]->invoice_product_rating_id==$ratings->id){
                     array_push($temp,url('/').'/'.$rating_image[$j]->image);
                 }
             }
