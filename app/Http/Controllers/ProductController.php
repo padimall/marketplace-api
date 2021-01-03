@@ -234,15 +234,15 @@ class ProductController extends Controller
         //         $ratings[$i]->images = $temp;
         //     }
         // }
-        $average_star = 0;
+        $average_star = (float)0;
         if($ratings->total_ratings != 0){
-            $average_star = $ratings->total_star / $ratings->total_ratings;
+            $average_star = (float)$ratings->total_star / $ratings->total_ratings;
         }
 
         $rating_summary = [
             'average_star' => $average_star,
             'total_ratings' => $ratings->total_ratings,
-            'rating_sample' => [
+            'sample' => [
                 'id' => $ratings->id,
                 'name' => $ratings->name,
                 'star' => $ratings->star,
