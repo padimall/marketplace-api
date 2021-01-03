@@ -191,7 +191,7 @@ class ProductController extends Controller
         $ratings = DB::table('invoices_product_ratings')
                     ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
                     ->where('invoices_products.product_id',$request['target_id'])
-                    ->select(DB::raw('COUNT(invoices_product_ratings.id) AS total_ratings'),DB::raw('SUM(star) AS total_star'))
+                    ->select(DB::raw('COUNT(invoices_product_ratings.id) AS total_ratings'),DB::raw('SUM(star) AS total_star'),'invoices_product_ratings.name','invoices_product_ratings.star','invoices_product_ratings.description','invoices_product_ratings.show_name')
                     ->first();
 
         // $rating_id = array();
@@ -224,6 +224,13 @@ class ProductController extends Controller
         $average_star = 0;
         if($ratings->total_ratings != 0){
             $average_star = $ratings->total_star / $ratings->total_ratings;
+            $list_check =
+            $rating_sample = DB::table('invoices_product_ratings')
+                            ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
+                            ->where('invoices_products.product_id',$request['target_id'])
+                            ->whereIn('')
+                            ->select(DB::raw('COUNT(invoices_product_ratings.id) AS total_ratings'),DB::raw('SUM(star) AS total_star'))
+                            ->first();
         }
 
         $rating_summary = [
@@ -235,7 +242,8 @@ class ProductController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $data
+            'data' => $data,
+            'ratings' => $ratings
         ],200);
     }
 

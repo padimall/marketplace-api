@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->integer('price');
             $table->integer('weight');
-            $table->string('description');
+            $table->text('description');
             $table->uuid('category');
             $table->integer('stock');
             $table->string('status');
