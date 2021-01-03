@@ -193,8 +193,23 @@ class ProductController extends Controller
                     ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
                     ->join(DB::raw("(SELECT COUNT(IPR.id) AS total_ratings,SUM(IPR.star) AS total_star FROM invoices_product_ratings AS IPR INNER JOIN invoices_products AS IP ON IPR.invoice_product_id = IP.id WHERE IP.product_id = '$product_id') AS rating_sumarry",[$request['target_id']]),DB::raw('1'),'=',DB::raw('1'))
                     ->where('invoices_products.product_id',$request['target_id'])
+                    ->orderBy('star','DESC')
                     ->select('invoices_product_ratings.*','rating_sumarry.*')
                     ->first();
+
+
+        if(!is_null($ratings)){
+            $rating_id = $ratings->id;
+            $rating_image = DB::table('invoice_product_rating_images')
+                        ->where('invoice_product_rating_id',$rating_id)
+                        ->select('*')
+                        ->get();
+
+
+
+            $ratings->images = $rating_image;
+        }
+
 
         // $rating_id = array();
         // if(sizeof($ratings)!=0){
