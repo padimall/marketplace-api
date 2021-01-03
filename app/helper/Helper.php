@@ -6,12 +6,14 @@ use Xendit\Xendit;
 class Helper
 {
     public function __construct(){
-        Xendit::setApiKey(env('SECRET_API_KEY_DEV'));
+		//CHANGE THIS TO EDIT XENDIT MODE
+        Xendit::setApiKey(env('SECRET_API_KEY'));
     }
 
     public function checkRequestSource($token)
     {
-        if($token == env('CALLBACK_TOKEN_DEV')){
+		//CHANGE THIS TO EDIT XENDIT MODE
+        if($token == env('CALLBACK_TOKEN')){
             return true;
         }
         return false;
