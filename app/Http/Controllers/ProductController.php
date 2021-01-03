@@ -204,6 +204,15 @@ class ProductController extends Controller
                         ->where('invoice_product_rating_id',$rating_id)
                         ->select('*')
                         ->get();
+
+            $temp = array();
+            for($j=0; $j<sizeOf($rating_image); $j++)
+            {
+                if($rating_image[$j]->invoice_product_rating_id==$ratings[$i]->id){
+                    array_push($temp,url('/').'/'.$rating_image[$j]->image);
+                }
+            }
+
             $average_star = (float)0;
             if($ratings->total_ratings != 0){
                 $average_star = (float)$ratings->total_star / $ratings->total_ratings;
@@ -220,7 +229,7 @@ class ProductController extends Controller
                     'show_name' => $ratings->show_name,
                     'created_at' => $ratings->created_at,
                     'updated_at' => $ratings->updated_at,
-                    'images' => $rating_image,
+                    'images' => $temp,
                 ]
             ];
 
@@ -230,7 +239,7 @@ class ProductController extends Controller
                 'average_star' => 0,
                 'total_ratings' => 0,
                 'sample' => [
-                    
+
                 ]
             ];
         }
