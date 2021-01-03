@@ -42,8 +42,15 @@ class MainCategoryController extends Controller
 
         for($i=0; $i<sizeof($data); $i++)
         {
-            if(sizeof($temp_sub[$data[$i]->id]) != 0){
-                $data->product_categories = $temp_sub[$data[$i]->id];
+            if(!is_null($temp_sub[$data[$i]->id])){
+                if(sizeof($temp_sub[$data[$i]->id]) != 0)
+                {
+                    $data->product_categories = $temp_sub[$data[$i]->id];
+                }
+                else {
+                    $data->product_categories = null;
+                }
+
             }
             else {
                 $data->product_categories = null;
