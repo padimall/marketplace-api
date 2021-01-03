@@ -25,6 +25,32 @@ class MainCategoryController extends Controller
             ],200);
         }
 
+        $sub = DB::table('products_categories')
+                ->where('products_categories.status',1)
+                ->get();
+
+
+        $temp_sub = array();
+        for($i=0; $i<sizeof($sub); $i++)
+        {
+            array_push($temp_sub[$sub[$i]->main_category_id],array(
+                'id'=> $sub[$i]->id,
+                'name'=> $sub[$i]->name,
+            ));
+        }
+
+        for($i=0; $i<sizeof($data); $i++)
+        {
+            if(!is_null($temp_sub[$data[$i]->id])){
+                $data->product_categories = $temp_sub[$data[$i]->id];
+            }
+            else {
+                $data->product_categories = null;
+            }
+        }
+
+
+
         for($i=0; $i<sizeof($data); $i++){
             if(!is_null($data[$i]->image))
             {
