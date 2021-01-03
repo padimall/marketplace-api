@@ -235,8 +235,11 @@ class ProductController extends Controller
         //     }
         // }
         $average_star = (float)0;
-        if($ratings->total_ratings != 0){
-            $average_star = (float)$ratings->total_star / $ratings->total_ratings;
+        if(is_null($ratings->total_ratings))
+        {
+            if($ratings->total_ratings != 0){
+                $average_star = (float)$ratings->total_star / $ratings->total_ratings;
+            }
         }
 
         $rating_summary = [
