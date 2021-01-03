@@ -204,10 +204,6 @@ class ProductController extends Controller
                         ->where('invoice_product_rating_id',$rating_id)
                         ->select('*')
                         ->get();
-
-
-
-            $ratings->images = $rating_image;
         }
 
 
@@ -245,7 +241,17 @@ class ProductController extends Controller
 
         $rating_summary = [
             'average_star' => $average_star,
-            'total_ratings' => $ratings->total_ratings
+            'total_ratings' => $ratings->total_ratings,
+            'rating_sample' => [
+                'id' => $ratings->id,
+                'name' => $ratings->name,
+                'star' => $ratings->star,
+                'description' => $ratings->description,
+                'show_name' => $ratings->show_name,
+                'created_at' => $ratings->created_at,
+                'images' => $rating_image,
+                'updated_at' => $ratings->updated_at,
+            ]
         ];
         $data->rating_summary = $rating_summary;
 
@@ -253,7 +259,6 @@ class ProductController extends Controller
             'status' => 1,
             'message' => 'Resource found!',
             'data' => $data,
-            'ratings' => $ratings
         ],200);
     }
 
