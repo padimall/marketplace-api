@@ -246,41 +246,71 @@ class ProductController extends Controller
 
         $data->rating_summary = $rating_summary;
 
-
-        // $rating_id = array();
-        // if(sizeof($ratings)!=0){
-        //     for($i=0; $i<sizeof($ratings); $i++)
-        //     {
-        //         array_push($rating_id,$ratings[$i]->id);
-        //     }
-
-        //     $rating_image = DB::table('invoice_product_rating_images')
-        //                 ->whereIn('invoice_product_rating_id',$rating_id)
-        //                 ->select('*')
-        //                 ->get();
-
-        //     for($i=0; $i<sizeof($ratings); $i++)
-        //     {
-        //         $temp = array();
-        //         for($j=0; $j<sizeOf($rating_image); $j++)
-        //         {
-        //             if($rating_image[$j]->invoice_product_rating_id==$ratings[$i]->id){
-        //                 array_push($temp,array(
-        //                     'id' => $rating_image[$j]->id,
-        //                     'url' => url('/').'/'.$rating_image[$j]->image
-        //                 ));
-        //             }
-        //         }
-        //         $ratings[$i]->images = $temp;
-        //     }
-        // }
-
-
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
             'data' => $data,
         ],200);
+    }
+
+    public function ratings(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:products,id'
+        ]);
+
+        $ratings = DB::table('invoices_product_ratings')
+                    ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
+                    ->where('invoices_products.product_id',$request['target_id'])
+                    ->orderBy('invoices_product_ratings.created_at','DESC')
+                    ->select('invoices_product_ratings.*')
+                    ->get();
+
+        if(sizeof($ratings) != 0){
+            $rating_id = array();
+            if(sizeof($ratings)!=0){
+                for($i=0; $i<sizeof($ratings); $i++)
+                {
+                    array_push($rating_id,$ratings[$i]->id);
+                }
+
+                $rating_image = DB::table('invoice_product_rating_images')
+                            ->whereIn('invoice_product_rating_id',$rating_id)
+                            ->select('*')
+                            ->get();
+
+                for($i=0; $i<sizeof($ratings); $i++)
+                {
+                    $temp = array();
+                    for($j=0; $j<sizeOf($rating_image); $j++)
+                    {
+                        if($rating_image[$j]->invoice_product_rating_id==$ratings[$i]->id){
+                            array_push($temp,array(
+                                'id' => $rating_image[$j]->id,
+                                'url' => url('/').'/'.$rating_image[$j]->image
+                            ));
+                        }
+                    }
+                    $ratings[$i]->images = $temp;
+                }
+            }
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Resource found!',
+                'data' => $ratings
+            ],200);
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Resource not found!'
+            ],200);
+        }
+
+        $data->rating_summary = $rating_summary;
+
+
     }
 
     public function store(Request $request)

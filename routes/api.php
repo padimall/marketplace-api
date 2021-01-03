@@ -50,6 +50,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/main-category','ProductController@product_main_category');
         Route::post('/agent-id','ProductController@product_agent_id');
         Route::post('/supplier-id','ProductController@product_supplier_id');
+        Route::post('/rating','ProductController@ratings');
     });
 
     Route::group(['prefix' => 'main-category'], function () {
