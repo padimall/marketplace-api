@@ -187,9 +187,11 @@ class ProductController extends Controller
         else {
             $data->image = NULL;
         }
+
+        $product_id = $request['target_id'];
         $ratings = DB::table('invoices_product_ratings')
                     ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
-                    ->join(DB::raw('(SELECT COUNT(IPR.id) AS total_ratings,SUM(IPR.star) AS total_star FROM invoices_product_ratings AS IPR INNER JOIN invoices_products AS IP ON IPR.invoice_product_id = IP.id WHERE IP.id = ?) AS rating_sumarry',[$request['target_id']]),DB::raw('1'),'=',DB::raw('1'))
+                    ->join(DB::raw("(SELECT COUNT(IPR.id) AS total_ratings,SUM(IPR.star) AS total_star FROM invoices_product_ratings AS IPR INNER JOIN invoices_products AS IP ON IPR.invoice_product_id = IP.id WHERE IP.id = '$product_id') AS rating_sumarry",[$request['target_id']]),DB::raw('1'),'=',DB::raw('1'))
                     ->where('invoices_products.product_id',$request['target_id'])
                     ->select('invoices_product_ratings.*','rating_sumarry.*')
                     ->first();
