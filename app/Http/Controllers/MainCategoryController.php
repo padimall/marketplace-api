@@ -12,7 +12,6 @@ class MainCategoryController extends Controller
 {
     public function showAll()
     {
-        $data = Main_category::all();
         $data = DB::table('main_categories')
                 ->leftJoin(DB::raw('(select COUNT(id) AS count_category,main_category_id from products_categories group by main_category_id) AS category_count'),'category_count.main_category_id','=','main_categories.id')
                 ->select('category_count.count_category','main_categories.*')
@@ -68,7 +67,9 @@ class MainCategoryController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'data' => $data
+            'data' => $data,
+            'sub' => $sub,
+            'temp' => $temp_sub,
         ],200);
     }
 
