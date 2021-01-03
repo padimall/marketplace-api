@@ -191,7 +191,7 @@ class ProductController extends Controller
         $ratings = DB::table('invoices_product_ratings')
                     ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
                     ->where('invoices_products.product_id',$request['target_id'])
-                    ->select(DB::raw('COUNT(id) AS total_ratings'),DB::raw('SUM(star) AS total_star'))
+                    ->select(DB::raw('COUNT(invoices_product_ratings.id) AS total_ratings'),DB::raw('SUM(star) AS total_star'))
                     ->first();
 
         // $rating_id = array();
