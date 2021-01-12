@@ -249,6 +249,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/limit','InvoicesProductController@showLimit');
         });
 
+        Route::group(['prefix' => 'invoice-product-rating'], function () {
+            Route::post('/censored','InvoicesProductRatingController@censored');
+        });
+
         Route::group(['prefix' => 'admin-price'], function () {
             Route::post('/store','AdminPriceController@store');
             Route::post('/update','AdminPriceController@update');

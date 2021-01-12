@@ -279,6 +279,11 @@ class ProductController extends Controller
 
                 for($i=0; $i<sizeof($ratings); $i++)
                 {
+                    if($ratings[$i]->censored_at != NULL)
+                    {
+                        $ratings[$i]->description = "Review ini telah dihapus karena mengandung kata-kata tidak pantas";
+                    }
+
                     $temp = array();
                     for($j=0; $j<sizeOf($rating_image); $j++)
                     {

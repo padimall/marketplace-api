@@ -7,9 +7,35 @@ use App\Invoices_product_rating;
 use App\Invoice_product_rating_image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class InvoicesProductRatingController extends Controller
 {
+    public function censored(Request $request)
+    {
+        $request->validate([
+            'target_id' => 'required|exists:invoices_product_ratings,id',
+            'reason' => 'required|string'
+        ]);
+
+        $data = Invoices_product_rating::find($request['target_id']);
+        $data->censored_at = Carbon::now();
+        $data->censored_reason = $request['reason'];
+        if($data->save())
+        {
+            return response()->json([
+                'status' => 1,
+                'message' => 'Rating censored!'
+            ],200);
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Request failed!'
+            ],200);
+        }
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -72,6 +98,14 @@ class InvoicesProductRatingController extends Controller
         ]);
 
         $data = Invoices_product_rating::find($request['target_id']);
+
+        if($data->censored_at != NULL)
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Your rating was censored!'
+            ],200);
+        }
 
         if(!is_null($request['star'])){
             $request->validate([

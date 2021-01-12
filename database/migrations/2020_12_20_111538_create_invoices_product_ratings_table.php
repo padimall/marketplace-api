@@ -18,8 +18,10 @@ class CreateInvoicesProductRatingsTable extends Migration
             $table->uuid('invoice_product_id');
             $table->string('name');
             $table->integer('star');
-            $table->string('description');
+            $table->text('description');
             $table->integer('show_name');
+            $table->dateTime('censored_at')->nullable();
+            $table->text('censored_reason');
             $table->timestamps();
             $table->foreign('invoice_product_id')->references('id')->on('invoices_products');
         });

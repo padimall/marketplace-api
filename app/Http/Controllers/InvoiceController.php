@@ -1324,7 +1324,6 @@ class InvoiceController extends Controller
             'status' => 1,
             'message' => 'Resource found!',
             'invoice_groups' => $group,
-            'review'=>$reviewed
         ],200);
     }
 
