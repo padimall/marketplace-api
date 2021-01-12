@@ -1279,7 +1279,7 @@ class InvoiceController extends Controller
             for($j=0; $j<sizeOf($reviewed); $j++)
             {
 
-                if($reviewed[$j]->product_id==$product[$i]->product_id){
+                if($reviewed[$j]->invoice_product_id==$product[$i]->id){
                     $product[$i]->reviewed = true;
                     break;
                 }
