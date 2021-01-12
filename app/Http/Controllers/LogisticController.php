@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Logistic;
 use Illuminate\Http\Request;
+use App\Helper\Helper;
 
 class LogisticController extends Controller
 {

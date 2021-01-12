@@ -7,6 +7,7 @@ use App\Payment;
 use App\Logistic;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Helper\Helper;
 
 class CheckoutController extends Controller
 {

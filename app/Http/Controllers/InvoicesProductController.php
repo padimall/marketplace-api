@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Invoices_product;
+use App\Helper\Helper;
 
 class InvoicesProductController extends Controller
 {

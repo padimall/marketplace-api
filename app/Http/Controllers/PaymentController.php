@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Payment;
 use Xendit\Xendit;
 use Illuminate\Http\Request;
+use App\Helper\Helper;
 
 class PaymentController extends Controller
 {

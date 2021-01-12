@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Stevebauman\Location\Facades\Location;
 use Illuminate\Support\Facades\DB;
+use App\Helper\Helper;
 
 class AuthController extends Controller
 {
@@ -29,7 +30,7 @@ class AuthController extends Controller
     public function __construct(){
         $this->helper = new Helper();
     }
-    
+
     public function getLog()
     {
         $data = User_register_log::all();

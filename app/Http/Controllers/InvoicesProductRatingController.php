@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Helper\Helper;
 
+
 class InvoicesProductRatingController extends Controller
 {
 

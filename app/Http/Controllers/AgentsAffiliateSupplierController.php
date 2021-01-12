@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Agents_affiliate_supplier;
 use Illuminate\Http\Request;
+use App\Helper\Helper;
 
 class AgentsAffiliateSupplierController extends Controller
 {

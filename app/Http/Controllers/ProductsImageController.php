@@ -6,6 +6,7 @@ use App\Products_image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use App\Helper\Helper;
 
 class ProductsImageController extends Controller
 {

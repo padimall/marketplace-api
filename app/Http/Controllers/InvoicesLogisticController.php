@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Invoices_logistic;
 use Illuminate\Http\Request;
+use App\Helper\Helper;
 
 class InvoicesLogisticController extends Controller
 {

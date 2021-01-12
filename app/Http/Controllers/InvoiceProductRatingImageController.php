@@ -7,6 +7,7 @@ use App\Invoice_product_rating_image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use App\Helper\Helper;
 
 class InvoiceProductRatingImageController extends Controller
 {

@@ -7,6 +7,7 @@ use App\Main_category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use App\Helper\Helper;
 
 class MainCategoryController extends Controller
 {

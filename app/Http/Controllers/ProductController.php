@@ -11,6 +11,7 @@ use App\Agents_affiliate_supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Helper\Helper;
 
 class ProductController extends Controller
 {

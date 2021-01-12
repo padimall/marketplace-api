@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Invoices_agent;
 use Illuminate\Http\Request;
+use App\Helper\Helper;
 
 class InvoicesAgentController extends Controller
 {

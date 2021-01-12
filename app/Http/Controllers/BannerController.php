@@ -7,6 +7,7 @@ use App\Banner;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use App\Helper\Helper;
 
 class BannerController extends Controller
 {
