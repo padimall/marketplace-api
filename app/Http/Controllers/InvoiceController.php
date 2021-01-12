@@ -661,6 +661,7 @@ class InvoiceController extends Controller
             {
                 if($reviewed[$j]->invoice_product_id==$product[$i]->id){
                     $product[$i]->reviewed = true;
+                    $product[$i]->review = $reviewed[$j];
                     break;
                 }
             }
