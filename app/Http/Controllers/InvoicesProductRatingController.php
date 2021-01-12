@@ -8,9 +8,18 @@ use App\Invoice_product_rating_image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Helper\Helper;
 
 class InvoicesProductRatingController extends Controller
 {
+
+
+    public $helper;
+
+    public function __construct(){
+        $this->helper = new Helper();
+    }
+
     public function censored(Request $request)
     {
         $request->validate([
@@ -24,13 +33,13 @@ class InvoicesProductRatingController extends Controller
         if($data->save())
         {
             return response()->json([
-                'status' => 1,
+                'status' => $this->helper->REQUEST_SUCCESS,
                 'message' => 'Rating censored!'
             ],200);
         }
         else {
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Request failed!'
             ],200);
         }
@@ -46,9 +55,23 @@ class InvoicesProductRatingController extends Controller
             'image.*'=> 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
+        $checkStatus = DB::table('invoices_products')
+                        ->join('invoices','invoices.id','=','invoices_products.invoice_id')
+                        ->where('invoices_products.id',$request['invoice_product_id'])
+                        ->select('invoices.*')
+                        ->first();
+
+        if($checkStatus->status != 3)
+        {
+            return response()->json([
+                'status' => $this->helper->REQUEST_FAILED,
+                'message' => 'Request failed, status not supported!'
+            ],200);
+        }
+
         if(isset($request['image']) && !is_array($request['image'])){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Use image[] instead of image!'
             ],200);
         }
@@ -58,7 +81,7 @@ class InvoicesProductRatingController extends Controller
         if(!is_null($exist))
         {
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Rating exist!'
             ],200);
         }
@@ -102,7 +125,7 @@ class InvoicesProductRatingController extends Controller
         if($data->censored_at != NULL)
         {
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Your rating was censored!'
             ],200);
         }
@@ -130,7 +153,7 @@ class InvoicesProductRatingController extends Controller
 
         $data->save();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Rating updated!'
         ],200);
     }

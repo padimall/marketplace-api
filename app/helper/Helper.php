@@ -5,6 +5,17 @@ use Xendit\Xendit;
 
 class Helper
 {
+    public $REQUEST_SUCCESS = 1;
+    public $REQUEST_FAILED = 0;
+    public $INVOICE_WAITING_FOR_PAYMENT = 0;
+    public $INVOICE_WAITING_FOR_RESI = 1;
+    public $INVOICE_ON_DELIVERY = 2;
+    public $INVOICE_SUCCESS = 3;
+    public $INVOICE_CANCELED = 4;
+    public $INVOICE_GROUP_WAITING_FOR_PAYMENT = 0;
+    public $INVOICE_GROUP_PAID = 1;
+    public $INVOICE_GROUP_CANCELED = 2;
+
     public function __construct(){
 		//CHANGE THIS TO EDIT XENDIT MODE
         Xendit::setApiKey(env('SECRET_API_KEY'));
