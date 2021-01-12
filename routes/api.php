@@ -52,7 +52,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/supplier-id','ProductController@product_supplier_id');
         Route::post('/rating','ProductController@ratings');
     });
-    
+
     Route::group(['prefix' => 'main-category'], function () {
         Route::post('/detail-id','AgentController@detail_id');
     });
@@ -144,6 +144,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/add-resi','InvoiceController@add_resi');
             Route::post('/pay','InvoiceController@pay');
             Route::post('/seller','InvoiceController@invoice_seller');
+            Route::post('/receive','InvoiceController@receive_product');
             Route::post('/group-detail','InvoiceController@invoice_group_detail');
             Route::post('/testing','InvoiceController@testing');
 
