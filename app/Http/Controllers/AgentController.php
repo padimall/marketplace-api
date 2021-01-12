@@ -8,15 +8,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use App\Helper\Helper;
 
 class AgentController extends Controller
 {
+    public $helper;
+
+    public function __construct(){
+        $this->helper = new Helper();
+    }
+
     public function showAll()
     {
         $data = Agent::all();
-        if(sizeOf($data)==0){
+        if(sizeOf($data)==$this->helper->EMPTY_ARRAY){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
@@ -29,7 +36,7 @@ class AgentController extends Controller
         }
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -42,14 +49,14 @@ class AgentController extends Controller
         ]);
 
         $data = Agent::inRandomOrder()->limit($request['limit'])->get();
-        if(sizeOf($data)==0){
+        if(sizeOf($data)==$this->helper->EMPTY_ARRAY){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -65,7 +72,7 @@ class AgentController extends Controller
 
         if(is_null($data)){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
@@ -76,7 +83,7 @@ class AgentController extends Controller
                     ->select('suppliers.*')
                     ->get();
 
-        if(sizeof($supplier)!=0)
+        if(sizeof($supplier)!=$this->helper->EMPTY_ARRAY)
         {
             for($i=0; $i<sizeof($supplier); $i++){
                 if(!is_null($supplier[$i]->image))
@@ -94,7 +101,7 @@ class AgentController extends Controller
         }
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -106,7 +113,7 @@ class AgentController extends Controller
 
             if(is_null($data)){
                 return response()->json([
-                    'status' => 0,
+                    'status' => $this->helper->REQUEST_FAILED,
                     'message' => 'You are not an agent!'
                 ],200);
             }
@@ -117,7 +124,7 @@ class AgentController extends Controller
                     ->select('suppliers.*')
                     ->get();
 
-        if(sizeof($supplier)!=0)
+        if(sizeof($supplier)!=$this->helper->EMPTY_ARRAY)
         {
             for($i=0; $i<sizeof($supplier); $i++){
                 if(!is_null($supplier[$i]->image))
@@ -135,7 +142,7 @@ class AgentController extends Controller
         }
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -147,14 +154,14 @@ class AgentController extends Controller
             'name' => 'required',
             'phone' => 'required|unique:agents,phone',
             'address' => 'required|string',
-            'image'=> 'mimes:png,jpg,jpeg|max:2008'
+            'image'=> 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $supplierExist = Supplier::where('user_id',request()->user()->id)->first();
 
         if(!is_null($supplierExist)){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Supplier Exist!'
             ],422);
         }
@@ -163,7 +170,7 @@ class AgentController extends Controller
 
         if(!is_null($agentExist)){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Agent Exist!'
             ],422);
         }
@@ -176,7 +183,7 @@ class AgentController extends Controller
         $data = $request->all();
         $data['user_id'] = request()->user()->id;
         $data['agent_code'] = $random;
-        $data['status'] = 1;
+        $data['status'] = $this->helper->AGENT_ACTIVE;
 
         if(!is_null($request['image']))
         {
@@ -188,7 +195,7 @@ class AgentController extends Controller
 
         $response = Agent::create($data);
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource created!'
         ],201);
     }
@@ -202,40 +209,40 @@ class AgentController extends Controller
 
         $data = Agent::where('id',$request['target_id'])->first();
 
-        if($request['status'] == 0 || $request['status'] == 1)
+        if($request['status'] == $this->helper->AGENT_DEACTIVE || $request['status'] == $this->helper->AGENT_ACTIVE)
         {
-            if($request['status'] == 1){
-                $data->status = 1;
+            if($request['status'] == $this->helper->AGENT_ACTIVE){
+                $data->status = $this->helper->AGENT_ACTIVE;
 
                 $data->save();
 
                 $product = DB::table('products')
                             ->where('agent_id',$data->id)
-                            ->update(['status' => 1,'updated_at' => Carbon::now()]);
+                            ->update(['status' => $this->helper->AGENT_ACTIVE,'updated_at' => Carbon::now()]);
 
                 return response()->json([
-                    'status' => 1,
+                    'status' => $this->helper->REQUEST_SUCCESS,
                     'message' => 'Agent activated! Products shown!'
                 ],200);
             }
-            else if($request['status'] == 0)
+            else if($request['status'] == $this->helper->AGENT_DEACTIVE)
             {
-                $data->status = 0;
+                $data->status = $this->helper->AGENT_DEACTIVE;
                 $data->save();
 
                 $product = DB::table('products')
                             ->where('agent_id',$data->id)
-                            ->update(['status' => 0,'updated_at' => Carbon::now()]);
+                            ->update(['status' => $this->helper->AGENT_DEACTIVE,'updated_at' => Carbon::now()]);
 
                 return response()->json([
-                    'status' => 1,
+                    'status' => $this->helper->REQUEST_SUCCESS,
                     'message' => 'Agent de-activated! Products hidden!'
                 ],200);
             }
         }
         else {
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'status is 0 or 1'
             ],200);
         }
@@ -270,7 +277,7 @@ class AgentController extends Controller
 
         if(!is_null($request['image'])){
             $request->validate([
-                'image' => 'required|mimes:png,jpg,jpeg|max:2008'
+                'image' => 'required|mimes:png,jpg,jpeg|max:2048'
             ]);
 
             $image_target = $data->image;
@@ -288,7 +295,7 @@ class AgentController extends Controller
 
         $data->save();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource updated!'
         ],200);
     }
@@ -304,7 +311,7 @@ class AgentController extends Controller
         $data->image = NULL;
         $data->save();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Image deleted!'
         ],200);
 

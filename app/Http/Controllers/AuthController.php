@@ -24,11 +24,17 @@ class AuthController extends Controller
      * @return [string] message
      */
 
+    public $helper;
+
+    public function __construct(){
+        $this->helper = new Helper();
+    }
+    
     public function getLog()
     {
         $data = User_register_log::all();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -67,7 +73,7 @@ class AuthController extends Controller
         $userRegisterLog = User_register_log::create($logDaftar);
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Successfully created user!'
         ], 201);
         // $user = new User([
@@ -94,13 +100,13 @@ class AuthController extends Controller
 
         if(hash('sha256',$request['keyword']) != 'a9eafe15a90225a6f53a9d25650edb7c243168d7d217c05fa202f0697f3350ac'){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Unauthorized'
             ], 401);
         }
 
         $data = $request->all();
-        $data['is_admin'] = 1;
+        $data['is_admin'] = $this->helper->IS_ADMIN;
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
 
@@ -111,7 +117,7 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Successfully created admin!'
         ], 201);
 
@@ -152,7 +158,7 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Unauthorized'
             ], 401);
 
@@ -203,23 +209,23 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Unauthorized'
             ], 200);
 
         if(hash('sha256',$request['keyword']) != 'c95f46c7236e806bf134ac4ebc372a8a0313845630ba7072b2ea743f8a030491'){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Unauthorized'
             ], 200);
         }
 
         $user = $request->user();
 
-        if($user->is_admin != 1)
+        if($user->is_admin != $this->helper->IS_ADMIN)
         {
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Unauthorized'
             ], 200);
         }
@@ -230,7 +236,7 @@ class AuthController extends Controller
         $token->save();
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
@@ -246,7 +252,7 @@ class AuthController extends Controller
     {
         $request->user()->token()->revoke();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Successfully logged out'
         ]);
     }
@@ -264,17 +270,17 @@ class AuthController extends Controller
     public function showAll(){
         $data = DB::table('users')
                 ->select('id','name','email','email_verified_at','address','phone','created_at','updated_at','device_id')
-                ->where('is_admin',0)
+                ->where('is_admin',$this->helper->IS_NOT_ADMIN)
                 ->get();
 
-        if(sizeOf($data)==0){
+        if(sizeOf($data)==$this->helper->EMPTY_ARRAY){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -289,18 +295,18 @@ class AuthController extends Controller
         $data = DB::table('users')
                 ->where('id',$request['target_id'])
                 ->select('id','name','email','email_verified_at','address','phone','created_at','updated_at','device_id')
-                ->where('is_admin',0)
+                ->where('is_admin',$this->helper->IS_NOT_ADMIN)
                 ->first();
 
         if(is_null($data)){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -320,13 +326,13 @@ class AuthController extends Controller
             $data->password = bcrypt($request['password']);
             $data->save();
             return response()->json([
-                'status' => 1,
+                'status' => $this->helper->REQUEST_SUCCESS,
                 'message' => 'Password updated!'
             ],200);
         }
         else {
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Wrong old password!'
             ],200);
         }
@@ -367,7 +373,7 @@ class AuthController extends Controller
 
         $data->save();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource updated!'
         ],200);
     }

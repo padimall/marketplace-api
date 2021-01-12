@@ -5,6 +5,7 @@ use Xendit\Xendit;
 
 class Helper
 {
+    public $EMPTY_ARRAY = 0;
     public $REQUEST_SUCCESS = 1;
     public $REQUEST_FAILED = 0;
     public $INVOICE_WAITING_FOR_PAYMENT = 0;
@@ -15,6 +16,15 @@ class Helper
     public $INVOICE_GROUP_WAITING_FOR_PAYMENT = 0;
     public $INVOICE_GROUP_PAID = 1;
     public $INVOICE_GROUP_CANCELED = 2;
+    public $AGENT_DEACTIVE = 0;
+    public $AGENT_ACTIVE = 1;
+    public $IS_NOT_ADMIN = 0;
+    public $IS_ADMIN = 1;
+
+    //usage
+    //$this->helper->EMPTY_ARRAY
+
+
 
     public function __construct(){
 		//CHANGE THIS TO EDIT XENDIT MODE

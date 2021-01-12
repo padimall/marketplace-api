@@ -10,13 +10,19 @@ use Illuminate\Support\Facades\File;
 
 class BannerController extends Controller
 {
+    public $helper;
+
+    public function __construct(){
+        $this->helper = new Helper();
+    }
+
     public function showAll()
     {
         $data = Banner::all();
 
-        if(sizeOf($data)==0){
+        if(sizeOf($data)==$this->helper->EMPTY_ARRAY){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
@@ -27,7 +33,7 @@ class BannerController extends Controller
         }
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -42,7 +48,7 @@ class BannerController extends Controller
         $data = Banner::find($request['target_id']);
         if(is_null($data)){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
@@ -50,7 +56,7 @@ class BannerController extends Controller
         $data->image = url('/').'/'.$data->image;
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -69,7 +75,7 @@ class BannerController extends Controller
 
         if(is_null($data)){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
@@ -77,7 +83,7 @@ class BannerController extends Controller
         $data->image = url('/').'/'.$data->image;
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -102,7 +108,7 @@ class BannerController extends Controller
         $response = Banner::create($data);
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource created!'
         ],201);
     }
@@ -142,7 +148,7 @@ class BannerController extends Controller
 
         $data->save();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource updated!'
         ],200);
     }
@@ -159,7 +165,7 @@ class BannerController extends Controller
         $data->image = NULL;
         $data->save();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Image deleted!'
         ],200);
 
@@ -175,7 +181,7 @@ class BannerController extends Controller
         if(is_null($data))
         {
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
@@ -190,7 +196,7 @@ class BannerController extends Controller
         $response = $data->delete();
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Banner deleted!'
         ],200);
     }

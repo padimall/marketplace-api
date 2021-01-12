@@ -109,7 +109,7 @@ class InvoicesProductRatingController extends Controller
         }
 
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Rating created!'
         ],201);
     }

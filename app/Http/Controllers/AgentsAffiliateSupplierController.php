@@ -7,27 +7,10 @@ use Illuminate\Http\Request;
 
 class AgentsAffiliateSupplierController extends Controller
 {
-    public function index(Request $request){
-        $request->validate([
-            'request_type'=>'required'
-        ]);
+    public $helper;
 
-        $type = $request['request_type'];
-        if($type == 1){
-            return $this->showAll();
-        }
-        else if($type == 2){
-            return $this->show($request);
-        }
-        else if($type == 3){
-            return $this->store($request);
-        }
-        else if($type == 4){
-            return $this->update($request);
-        }
-        else if($type == 5){
-            return $this->showLimit($request);
-        }
+    public function __construct(){
+        $this->helper = new Helper();
     }
 
     public function showAll()
@@ -35,12 +18,12 @@ class AgentsAffiliateSupplierController extends Controller
         $data = Agents_affiliate_supplier::all();
         if(sizeOf($data)==0){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -55,12 +38,12 @@ class AgentsAffiliateSupplierController extends Controller
         $data = Agents_affiliate_supplier::inRandomOrder()->limit($request['limit'])->get();
         if(sizeOf($data)==0){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -75,12 +58,12 @@ class AgentsAffiliateSupplierController extends Controller
         $data = Agents_affiliate_supplier::find($request['target_id']);
         if(is_null($data)){
             return response()->json([
-                'status' => 0,
+                'status' => $this->helper->REQUEST_FAILED,
                 'message' => 'Resource not found!'
             ],200);
         }
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource found!',
             'data' => $data
         ],200);
@@ -96,7 +79,7 @@ class AgentsAffiliateSupplierController extends Controller
         $data = $request->all();
         $response = Agents_affiliate_supplier::create($data);
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource created!'
         ],201);
     }
@@ -125,7 +108,7 @@ class AgentsAffiliateSupplierController extends Controller
 
         $data->save();
         return response()->json([
-            'status' => 1,
+            'status' => $this->helper->REQUEST_SUCCESS,
             'message' => 'Resource updated!'
         ],200);
     }
