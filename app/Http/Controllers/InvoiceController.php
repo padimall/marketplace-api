@@ -650,6 +650,7 @@ class InvoiceController extends Controller
         $reviewed = DB::table('invoices_product_ratings')
                     ->join('invoices_products','invoices_products.id','=','invoices_product_ratings.invoice_product_id')
                     ->whereIn('invoices_products.product_id',$listProduct)
+                    ->select('invoices_product_ratings.*')
                     ->get();
 
 
