@@ -53,15 +53,15 @@ class InvoicesProductRatingController extends Controller
             ],200);
         }
 
-        // $exist = Invoices_product_rating::where('invoice_product_id',$request['invoice_product_id'])->first();
+        $exist = Invoices_product_rating::where('invoice_product_id',$request['invoice_product_id'])->first();
 
-        // if(!is_null($exist))
-        // {
-        //     return response()->json([
-        //         'status' => 0,
-        //         'message' => 'Rating exist!'
-        //     ],201);
-        // }
+        if(!is_null($exist))
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Rating exist!'
+            ],200);
+        }
 
         $data = $request->all();
         $data['name'] = request()->user()->name;
