@@ -250,7 +250,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
         Route::group(['prefix' => 'invoice-product-rating'], function () {
-            Route::post('/censored','InvoicesProductRatingController@censored');
+            Route::post('/censor','InvoicesProductRatingController@censored');
         });
 
         Route::group(['prefix' => 'admin-price'], function () {
