@@ -238,9 +238,7 @@ class ProductController extends Controller
             $rating_summary = [
                 'average_star' => 0,
                 'total_ratings' => 0,
-                'sample' => [
-
-                ]
+                'sample' => NULL
             ];
         }
 

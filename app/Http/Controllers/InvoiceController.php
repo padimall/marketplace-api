@@ -985,6 +985,59 @@ class InvoiceController extends Controller
         }
     }
 
+    public function receive_product(Request $request){
+        $request->validate([
+            'target_id' => 'required|exists:invoices,id'
+        ]);
+
+        $up_invoice = Invoice::find($request['target_id']);
+
+        if($up_invoice->status == 0)
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Please pay the invoice first!'
+            ],200);
+        }
+        else if($up_invoice->status == 1)
+        {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Product not yet delivered!'
+            ],200);
+        }
+        else if($up_invoice->status == 2)
+        {
+            $up_invoice->status = 3;
+            if($up_invoice->save())
+            {
+                $log_inv = array(
+                    'invoice_id' => $request['target_id'],
+                    'status' => 3
+                );
+
+                $save_log = Invoices_log::create($log_inv);
+
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'Product received!'
+                ],200);
+            }
+            else {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Request failed!'
+                ],200);
+            }
+        }
+        else {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Request failed, status not supported!'
+            ],200);
+        }
+    }
+
     public function add_resi(Request $request)
     {
         $request->validate([
@@ -1175,6 +1228,7 @@ class InvoiceController extends Controller
                     ->join('agents','agents.id','=','invoices.agent_id')
                     ->whereIn('invoices.invoices_group_id',$listGroup)
                     ->select('invoices.*','agents.name AS agent_name','agents.image')
+                    ->orderBy('invoices.created_at','DESC')
                     ->get();
         }
 
@@ -1268,7 +1322,8 @@ class InvoiceController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Resource found!',
-            'invoice_groups' => $group
+            'invoice_groups' => $group,
+            'review'=>$reviewed
         ],200);
     }
 
